@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::gateway::{
-    CapabilityClass, ExecutionIdentityContext, GatewayStatus, IdempotencyContext, NonEmptyString,
-    PolicyProvenance, ResponseDecision, SchemaVersion, Timestamp, ToolCallRequest,
+    ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus, IdempotencyContext,
+    NonEmptyString, PolicyProvenance, ResponseDecision, SchemaVersion, Timestamp, ToolCallRequest,
     ToolCallResponse, WrapperExecutionContext,
 };
 
@@ -75,6 +75,7 @@ pub struct AuditRecordDetails {
     pub idempotency_context: Option<IdempotencyContext>,
     pub wrapper_context: Option<WrapperExecutionContext>,
     pub execution_identity_context: Option<ExecutionIdentityContext>,
+    pub approval_context: Option<ApprovalContext>,
 }
 
 impl AuditRecordDetails {
@@ -93,6 +94,7 @@ impl AuditRecordDetails {
             idempotency_context,
             None,
             None,
+            None,
         )
     }
 
@@ -102,6 +104,7 @@ impl AuditRecordDetails {
         idempotency_context: Option<IdempotencyContext>,
         wrapper_context: Option<WrapperExecutionContext>,
         execution_identity_context: Option<ExecutionIdentityContext>,
+        approval_context: Option<ApprovalContext>,
     ) -> Self {
         Self {
             request_id: Some(request.request_id.clone()),
@@ -110,6 +113,7 @@ impl AuditRecordDetails {
             idempotency_context,
             wrapper_context,
             execution_identity_context,
+            approval_context,
         }
     }
 
@@ -121,6 +125,7 @@ impl AuditRecordDetails {
             idempotency_context: None,
             wrapper_context: None,
             execution_identity_context: None,
+            approval_context: None,
         }
     }
 }

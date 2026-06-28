@@ -17,6 +17,7 @@ pub struct GatewayEntrypointContext {
     pub idempotency_context: Option<super::IdempotencyContext>,
     pub wrapper_context: Option<super::WrapperExecutionContext>,
     pub execution_identity_context: Option<super::ExecutionIdentityContext>,
+    pub approval_context: Option<super::ApprovalContext>,
 }
 
 pub struct GatewayPolicyAdapterContext<'a> {
@@ -27,6 +28,7 @@ pub struct GatewayPolicyAdapterContext<'a> {
     pub idempotency_context: Option<super::IdempotencyContext>,
     pub wrapper_context: Option<super::WrapperExecutionContext>,
     pub execution_identity_context: Option<super::ExecutionIdentityContext>,
+    pub approval_context: Option<super::ApprovalContext>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -45,6 +47,7 @@ pub struct GatewayEntrypointResult {
     pub idempotency_context: Option<super::IdempotencyContext>,
     pub wrapper_context: Option<super::WrapperExecutionContext>,
     pub execution_identity_context: Option<super::ExecutionIdentityContext>,
+    pub approval_context: Option<super::ApprovalContext>,
 }
 
 struct GatewayDecisionMappingContext {
@@ -53,6 +56,7 @@ struct GatewayDecisionMappingContext {
     supplied_idempotency_context: Option<super::IdempotencyContext>,
     supplied_wrapper_context: Option<super::WrapperExecutionContext>,
     supplied_execution_identity_context: Option<super::ExecutionIdentityContext>,
+    supplied_approval_context: Option<super::ApprovalContext>,
     summary: GatewayEntrypointSummary,
 }
 
@@ -117,6 +121,7 @@ fn map_supported_request(
             supplied_idempotency_context: context.idempotency_context,
             supplied_wrapper_context: context.wrapper_context,
             supplied_execution_identity_context: context.execution_identity_context,
+            supplied_approval_context: context.approval_context,
             summary: GatewayEntrypointSummary::PolicyDecisionMapped,
         },
     )
@@ -137,6 +142,7 @@ fn map_adapter_supported_request(
             supplied_idempotency_context: context.idempotency_context,
             supplied_wrapper_context: context.wrapper_context,
             supplied_execution_identity_context: context.execution_identity_context,
+            supplied_approval_context: context.approval_context,
             summary,
         },
     )
@@ -158,6 +164,7 @@ fn map_policy_decision_result(
         idempotency_context.clone(),
         context.supplied_wrapper_context.clone(),
         context.supplied_execution_identity_context.clone(),
+        context.supplied_approval_context.clone(),
     );
 
     GatewayEntrypointResult {
@@ -167,6 +174,7 @@ fn map_policy_decision_result(
         idempotency_context,
         wrapper_context: context.supplied_wrapper_context,
         execution_identity_context: context.supplied_execution_identity_context,
+        approval_context: context.supplied_approval_context,
     }
 }
 
@@ -180,6 +188,7 @@ fn denied_entrypoint_result(evidence: super::GatewayDecisionEvidence) -> Gateway
         idempotency_context: None,
         wrapper_context: None,
         execution_identity_context: None,
+        approval_context: None,
     }
 }
 

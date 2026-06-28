@@ -1,3 +1,4 @@
+mod approval;
 mod entrypoint;
 mod execution_identity;
 mod idempotency;
@@ -8,6 +9,10 @@ mod support;
 mod validation;
 mod wrapper;
 
+pub use approval::{
+    ApprovalBinding, ApprovalContext, ApprovalContextSource, ApprovalExpiration,
+    ApprovalRequirementRef, ApprovalStatus, ApprovalTokenRef, ApprovalTokenState, ApprovalTtl,
+};
 pub use entrypoint::{
     GatewayEntrypointContext, GatewayEntrypointResult, GatewayEntrypointSummary,
     GatewayPolicyAdapterContext,

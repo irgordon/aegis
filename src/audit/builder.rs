@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus};
 use crate::gateway::{
-    ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
+    ApprovalContext, ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
     ToolCallResponse, WrapperExecutionContext,
 };
 
@@ -30,6 +30,7 @@ impl AuditRecordBuilder {
             idempotency_context,
             None,
             None,
+            None,
         )
     }
 
@@ -40,6 +41,7 @@ impl AuditRecordBuilder {
         idempotency_context: Option<IdempotencyContext>,
         wrapper_context: Option<WrapperExecutionContext>,
         execution_identity_context: Option<ExecutionIdentityContext>,
+        approval_context: Option<ApprovalContext>,
     ) -> AuditRecord {
         AuditRecord {
             schema_version: response.schema_version.clone(),
@@ -62,6 +64,7 @@ impl AuditRecordBuilder {
                 idempotency_context,
                 wrapper_context,
                 execution_identity_context,
+                approval_context,
             ),
         }
     }

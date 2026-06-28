@@ -86,6 +86,7 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Add idempotency contract model | complete |
 | Add wrapper configuration contract models | complete |
 | Add execution identity contract models | complete |
+| Add approval token contract models | complete |
 | Implement request validation | complete |
 | Add schema-backed Rust request and response models | complete |
 | Add schema-backed gateway validation pipeline | complete |

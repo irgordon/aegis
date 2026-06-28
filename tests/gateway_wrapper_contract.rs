@@ -137,6 +137,7 @@ fn process_request(
             idempotency_context: None,
             wrapper_context,
             execution_identity_context: None,
+            approval_context: None,
         },
     )
 }

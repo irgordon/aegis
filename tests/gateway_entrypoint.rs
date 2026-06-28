@@ -149,6 +149,7 @@ where
             idempotency_context: None,
             wrapper_context: None,
             execution_identity_context: None,
+            approval_context: None,
         },
     )
 }

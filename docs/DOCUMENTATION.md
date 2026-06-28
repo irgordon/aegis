@@ -267,7 +267,11 @@ Examples:
 
 - **Gateway**: the checkpoint that reviews an AI action before it reaches an outside system.
 - **Policy**: a written rule that says what is allowed, denied, or requires approval.
-- **Policy Bundle**: a versioned package of policy files loaded by AEGIS.
+- **Policy Bundle**: a signed, immutable, versioned package containing gateway_policy, risk_matrix, manifest, signatures, and checksums.
+- **Capability Level**: the risk category assigned to a tool before execution, from L0 read-only actions through L3 irreversible or highly sensitive actions.
+- **Execution Identity**: the set of identifiers that uniquely describe an external action, including run ID, task ID, action ID, execution ID, attempt number, and replay token.
+- **Orchestrator**: the AI planning system that proposes actions and submits tool requests to AEGIS, but does not authorize execution.
+- **Fail Closed**: the rule that uncertainty results in denial rather than permission.
 - **Wrapper**: an enforcement layer that safely executes or blocks an approved action.
 - **Replay**: running a previously stored action again without asking the AI to rewrite it.
 - **Deterministic**: producing the same result when given the same inputs.
@@ -334,6 +338,16 @@ If two documents disagree, do not guess. Stop and resolve the conflict.
 ## Repository Documentation Categories
 
 AEGIS documentation is grouped by purpose.
+
+Top-level documentation-related directories support different parts of repository governance:
+
+- `docs/` contains governed project documents.
+- `schemas/` contains machine-readable protocol contracts.
+- `examples/` contains reference examples that support documentation and validation.
+- `prompts/` contains governed prompt artifacts where prompts are part of project behavior.
+- `invariants/` contains standalone invariant files when an invariant is maintained outside `docs/`.
+
+Standalone invariant files belong in `invariants/`. Invariants are not automatically placed under `docs/` unless they are part of a governed document such as `docs/INVARIANTS.md`.
 
 ### Governance
 

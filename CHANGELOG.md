@@ -4,6 +4,13 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.5] - 2026-06-28
+
+### Changed
+
+- Aligned DOCUMENTATION.md terminology with ARCHITECTURE.md.
+- Clarified policy bundle contents and top-level documentation-related directories.
+
 ## [0.1.4] - 2026-06-28
 
 ### Added

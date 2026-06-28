@@ -4,6 +4,19 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.16] - 2026-06-28
+
+### Added
+
+- Added a local Gateway MVP runtime entrypoint.
+- Added structured JSON output containing gateway response and audit evidence.
+- Added local runtime contract tests.
+
+### Changed
+
+- Updated README.md with local Gateway MVP usage.
+- Updated Phase 2 task tracking for executable gateway behavior.
+
 ## [0.1.15] - 2026-06-28
 
 ### Added

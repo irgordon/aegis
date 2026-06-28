@@ -83,6 +83,7 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Select initial implementation language and runtime | complete |
 | Create gateway entrypoint | complete |
 | Add minimal gateway entrypoint boundary | complete |
+| Add local gateway runtime entrypoint | complete |
 | Add idempotency contract model | complete |
 | Add wrapper configuration contract models | complete |
 | Add execution identity contract models | complete |

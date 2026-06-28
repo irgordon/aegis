@@ -46,7 +46,37 @@ Enable organizations to safely transition from Authority to Operate (ATO) toward
 
 ## Repository status
 
-AEGIS has completed its governance and protocol-contract foundation. Phase 2 begins the Rust Gateway MVP scaffold.
+AEGIS has completed its governance and protocol-contract foundation. Phase 2 is building the Rust Gateway MVP.
+
+## Local Gateway MVP
+
+The local Gateway MVP reads one `ToolCallRequest` JSON document, validates it, routes supported requests through a deterministic local policy adapter seam, maps the result to a bounded `ToolCallResponse`, builds audit evidence, and prints structured JSON containing:
+
+- `response`
+- `audit_record`
+
+This local runtime is for Phase 2 development only. It does not provide production policy enforcement, wrapper execution, credential injection, durable audit storage, approval workflow, replay execution, HTTP service, or UI.
+
+Run with stdin:
+
+```bash
+cargo run --bin aegis-gateway -- < schemas/examples/valid/ToolCallRequest.json
+```
+
+Run with an explicit file path:
+
+```bash
+cargo run --bin aegis-gateway -- schemas/examples/valid/ToolCallRequest.json
+```
+
+Run validation:
+
+```bash
+python3 scripts/verify.py
+cargo fmt --check
+cargo clippy --all-targets --all-features -- -D warnings
+cargo test
+```
 
 ## Core documents
 

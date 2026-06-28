@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecutionState",
+  "type": "object",
+  "required": [
+    "run_id",
+    "execution_id",
+    "state"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "action_id": {
+      "type": "string"
+    },
+    "execution_id": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "created",
+        "running",
+        "pending_hitl",
+        "approved",
+        "denied",
+        "executed",
+        "failed",
+        "canceled"
+      ]
+    },
+    "attempt_number": {
+      "type": "integer"
+    },
+    "replay_token": {
+      "type": "string"
+    },
+    "last_tool": {
+      "type": "object"
+    },
+    "policy_bundle_id": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

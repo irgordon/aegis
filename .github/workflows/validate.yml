@@ -42,18 +42,23 @@ jobs:
 
       - name: Validate schema examples
         run: |
+          set -euo pipefail
+
           for schema in schemas/*.schema.json; do
             base="$(basename "${schema}" .schema.json)"
             valid="schemas/examples/valid/${base}.json"
             invalid="schemas/examples/invalid/${base}.json"
 
-            echo "Validating good example for ${base}"
+            echo "Validating valid example for ${base}"
             check-jsonschema --schemafile "${schema}" "${valid}"
 
-            echo "Validating bad example for ${base}"
-            if check-jsonschema --schemafile "${schema}" "${invalid}"; then
-              echo "Invalid example unexpectedly passed for ${base}"
+            echo "Validating invalid example for ${base}"
+            if check-jsonschema --schemafile "${schema}" "${invalid}" > /tmp/aegis-invalid-example.log 2>&1; then
+              echo "FAIL: invalid example unexpectedly passed for ${base}"
+              cat /tmp/aegis-invalid-example.log
               exit 1
+            else
+              echo "PASS: invalid example correctly rejected for ${base}"
             fi
           done
 

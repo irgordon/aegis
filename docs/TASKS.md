@@ -84,6 +84,7 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Create gateway entrypoint | complete |
 | Add minimal gateway entrypoint boundary | complete |
 | Add idempotency contract model | complete |
+| Add wrapper configuration contract models | complete |
 | Implement request validation | complete |
 | Add schema-backed Rust request and response models | complete |
 | Add schema-backed gateway validation pipeline | complete |

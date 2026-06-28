@@ -5,6 +5,7 @@ mod response;
 mod schema;
 mod support;
 mod validation;
+mod wrapper;
 
 pub use entrypoint::{
     GatewayEntrypointContext, GatewayEntrypointResult, GatewayEntrypointSummary,
@@ -21,6 +22,10 @@ pub use response::{
 pub use schema::{NonEmptyString, SchemaVersion, Timestamp};
 pub use support::{GatewayDecisionEvidence, SupportedTools};
 pub use validation::GatewayValidationOutcome;
+pub use wrapper::{
+    ExternalSystemSchemaVersion, RedactionProfileRef, WrapperConfigRef, WrapperExecutionContext,
+    WrapperExecutionMode,
+};
 
 use crate::policy::PolicyDecision;
 

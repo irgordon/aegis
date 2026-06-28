@@ -147,6 +147,7 @@ where
             response_metadata: response_metadata(),
             audit_metadata: audit_metadata(),
             idempotency_context: None,
+            wrapper_context: None,
         },
     )
 }

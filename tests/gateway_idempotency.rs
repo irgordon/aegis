@@ -42,6 +42,7 @@ fn mutation_request_without_context_does_not_generate_idempotency_key() {
             response_metadata: response_metadata(),
             audit_metadata: audit_metadata(),
             idempotency_context: None,
+            wrapper_context: None,
         },
     );
 
@@ -96,6 +97,7 @@ fn process_request_with_capability(
             response_metadata: response_metadata(),
             audit_metadata: audit_metadata(),
             idempotency_context: Some(idempotency_context()),
+            wrapper_context: None,
         },
     )
 }

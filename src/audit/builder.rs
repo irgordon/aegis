@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 use super::{AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus};
-use crate::gateway::{IdempotencyContext, NonEmptyString, ToolCallRequest, ToolCallResponse};
+use crate::gateway::{
+    IdempotencyContext, NonEmptyString, ToolCallRequest, ToolCallResponse, WrapperExecutionContext,
+};
 
 pub struct AuditRecordBuilder;
 
@@ -20,6 +22,22 @@ impl AuditRecordBuilder {
         metadata: AuditRecordMetadata,
         idempotency_context: Option<IdempotencyContext>,
     ) -> AuditRecord {
+        Self::build_gateway_decision_record_with_contexts(
+            request,
+            response,
+            metadata,
+            idempotency_context,
+            None,
+        )
+    }
+
+    pub fn build_gateway_decision_record_with_contexts(
+        request: &ToolCallRequest,
+        response: &ToolCallResponse,
+        metadata: AuditRecordMetadata,
+        idempotency_context: Option<IdempotencyContext>,
+        wrapper_context: Option<WrapperExecutionContext>,
+    ) -> AuditRecord {
         AuditRecord {
             schema_version: response.schema_version.clone(),
             audit_record_id: response.audit_record_id.clone(),
@@ -35,10 +53,11 @@ impl AuditRecordBuilder {
             reason_code: response.reason_code.clone(),
             policy_provenance: response.policy_provenance.clone(),
             component: metadata.component,
-            details: AuditRecordDetails::from_gateway_decision_with_idempotency(
+            details: AuditRecordDetails::from_gateway_decision_with_contexts(
                 request,
                 response,
                 idempotency_context,
+                wrapper_context,
             ),
         }
     }

@@ -137,6 +137,7 @@ fn process_request_with_adapter(adapter: &dyn PolicyDecisionAdapter) -> GatewayE
             response_metadata: response_metadata(),
             audit_metadata: audit_metadata(),
             idempotency_context: None,
+            wrapper_context: None,
         },
     )
 }

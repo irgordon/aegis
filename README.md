@@ -8,7 +8,7 @@
 [![Governance](https://img.shields.io/badge/governance-documentation--driven-6f42c1)](docs/OPERATING_DOCTRINE.md)
 [![Security](https://img.shields.io/badge/security-fail--closed-critical)](docs/INVARIANTS.md)
 [![Policy](https://img.shields.io/badge/policy-immutable%20bundles-2ea44f)](docs/POLICY_DISTRIBUTION.md)
-[![License](https://img.shields.io/badge/license-TBD-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
 
 </div>
 
@@ -55,6 +55,12 @@ AEGIS is currently in the initial architecture and governance phase. The reposit
 - [Invariants](docs/INVARIANTS.md)
 - [Coding Style](docs/CODING_STYLE.md)
 - [Acceptance Criteria](docs/ACCEPTANCE_CRITERIA.md)
+- [Security Model](docs/SECURITY_MODEL.md)
+- [Threat Model](docs/THREAT_MODEL.md)
+- [Policy Distribution](docs/POLICY_DISTRIBUTION.md)
+- [API Specification](docs/API_SPEC.md)
+- [Test Strategy](docs/TEST_STRATEGY.md)
+- [Tasks](docs/TASKS.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Phasemap](docs/PHASEMAP.md)
 

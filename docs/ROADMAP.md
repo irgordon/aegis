@@ -36,6 +36,18 @@ Establish the repository as a documentation-driven engineering project.
 - ARCHITECTURAL_PRINCIPLES.md
 - ROADMAP.md
 - TASKS.md
+- SECURITY_MODEL.md
+- THREAT_MODEL.md
+- TRUST_BOUNDARIES.md
+- POLICY_ENGINE.md
+- POLICY_DISTRIBUTION.md
+- AUDIT_LOGGING.md
+- ORCHESTRATOR_FSM_CONTRACT.md
+- API_SPEC.md
+- RUNTIME_EVIDENCE.md
+- TEST_STRATEGY.md
+- ADR.md
+- RELEASE_PROCESS.md
 
 ### Exit Criteria
 - Core governance documents exist.
@@ -57,12 +69,18 @@ Define the stable protocol contracts used by orchestrators, gateways, policy eng
 - approval request schema
 - execution state schema
 - API specification
+- valid and invalid schema examples
+- compatibility documentation
+- repository verification script
+- changelog
 
 ### Exit Criteria
 - Schemas validate.
 - Required fields are documented.
 - Invalid requests are rejected by tests.
 - Tool call responses map to allowed, denied, and pending states.
+- Repository verification succeeds.
+- Compatibility expectations are documented.
 
 ## Phase 2: Gateway MVP
 

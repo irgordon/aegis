@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "audit_record_id": "audit_001",
+  "timestamp": "2026-06-28T00:00:00Z",
+  "event_type": "policy_decision",
+  "execution_id": "exec_001",
+  "run_id": "run_001",
+  "task_id": "task_001",
+  "action_id": "act_001",
+  "tool_name": "metrics.read",
+  "actor_identity": "agent_001",
+  "status": "allowed",
+  "reason_code": null,
+  "policy_provenance": {
+    "bundle_id": "bundle_001",
+    "version": "0.2.0",
+    "policy_hash": "sha256:abc",
+    "environment": "dev",
+    "signer_identity": "policy-admin",
+    "activated_at": "2026-06-28T00:00:00Z"
+  },
+  "component": "policy_engine",
+  "details": {
+    "decision": "allow"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aegis.local/schemas/AuditRecord.schema.json",
+  "title": "AuditRecord",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "audit_record_id",
+    "timestamp",
+    "event_type",
+    "execution_id",
+    "status",
+    "policy_provenance",
+    "component"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "audit_record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "request_received",
+        "validation_result",
+        "policy_decision",
+        "approval_decision",
+        "wrapper_result",
+        "execution_result",
+        "state_transition",
+        "replay_attempt",
+        "policy_activation",
+        "policy_rollback"
+      ]
+    },
+    "execution_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_identity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "allowed",
+        "denied",
+        "pending",
+        "failed",
+        "canceled",
+        "replayed",
+        "recorded"
+      ]
+    },
+    "reason_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "policy_provenance": {
+      "type": "object",
+      "required": [
+        "bundle_id",
+        "version",
+        "policy_hash",
+        "environment"
+      ],
+      "properties": {
+        "bundle_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policy_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signer_identity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "activated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "string",
+      "minLength": 1
+    },
+    "details": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

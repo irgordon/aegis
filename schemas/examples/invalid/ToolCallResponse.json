@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "execution_id": "exec_bad",
+  "status": "ok",
+  "policy_provenance": {
+    "bundle_id": "bundle_001",
+    "version": "0.2.0",
+    "policy_hash": "sha256:abc",
+    "environment": "dev"
+  },
+  "audit_record_id": "audit_001",
+  "completed_at": "2026-06-28T00:00:01Z"
+}

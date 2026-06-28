@@ -1,4 +1,13 @@
+mod bundle;
+
 use crate::gateway::{PendingReference, ToolCallRequest};
+
+pub use bundle::{
+    load_policy_bundle, BundleDigestRef, ChecksumMetadataStatus, ChecksumRef,
+    PolicyBundleLoadResult, PolicyBundleManifest, PolicyBundleRef, PolicyBundleVerification,
+    PolicyBundleVerificationStatus, PolicyVersion, RiskMatrixVersion, SignatureMetadataStatus,
+    SignatureRef,
+};
 
 pub trait PolicyDecisionAdapter {
     fn decide(&self, request: &ToolCallRequest) -> Result<PolicyDecision, PolicyAdapterError>;

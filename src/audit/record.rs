@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-use crate::gateway::{
-    ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus, IdempotencyContext,
-    NonEmptyString, PolicyProvenance, ResponseDecision, SchemaVersion, Timestamp, ToolCallRequest,
-    ToolCallResponse, WrapperExecutionContext,
+use crate::{
+    gateway::{
+        ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus,
+        IdempotencyContext, NonEmptyString, PolicyProvenance, ResponseDecision, SchemaVersion,
+        Timestamp, ToolCallRequest, ToolCallResponse, WrapperExecutionContext,
+    },
+    policy::PolicyBundleVerification,
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -76,6 +79,7 @@ pub struct AuditRecordDetails {
     pub wrapper_context: Option<WrapperExecutionContext>,
     pub execution_identity_context: Option<ExecutionIdentityContext>,
     pub approval_context: Option<ApprovalContext>,
+    pub policy_bundle_verification: Option<PolicyBundleVerification>,
 }
 
 impl AuditRecordDetails {
@@ -95,6 +99,7 @@ impl AuditRecordDetails {
             None,
             None,
             None,
+            None,
         )
     }
 
@@ -105,6 +110,7 @@ impl AuditRecordDetails {
         wrapper_context: Option<WrapperExecutionContext>,
         execution_identity_context: Option<ExecutionIdentityContext>,
         approval_context: Option<ApprovalContext>,
+        policy_bundle_verification: Option<PolicyBundleVerification>,
     ) -> Self {
         Self {
             request_id: Some(request.request_id.clone()),
@@ -114,6 +120,7 @@ impl AuditRecordDetails {
             wrapper_context,
             execution_identity_context,
             approval_context,
+            policy_bundle_verification,
         }
     }
 
@@ -126,6 +133,7 @@ impl AuditRecordDetails {
             wrapper_context: None,
             execution_identity_context: None,
             approval_context: None,
+            policy_bundle_verification: None,
         }
     }
 }

@@ -163,6 +163,7 @@ fn process_request(
             wrapper_context: None,
             execution_identity_context,
             approval_context: None,
+            policy_bundle_verification: None,
         },
     )
 }

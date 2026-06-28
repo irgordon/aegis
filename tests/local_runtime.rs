@@ -1,9 +1,13 @@
 use std::{
+    fs,
     io::Write,
+    path::{Path, PathBuf},
     process::{Command, Stdio},
 };
 
 use serde_json::Value;
+
+const LOCAL_DEV_BUNDLE: &str = "examples/policy-bundles/local-dev";
 
 #[test]
 fn valid_supported_request_returns_response_and_audit_json() {
@@ -13,6 +17,26 @@ fn valid_supported_request_returns_response_and_audit_json() {
     assert_eq!(output["response"]["decision"], "allow");
     assert_eq!(output["audit_record"]["status"], "allowed");
     assert_eq!(output["audit_record"]["event_type"], "policy_decision");
+}
+
+#[test]
+fn runtime_output_includes_verified_policy_bundle_identity() {
+    let output = run_gateway_with_stdin(&valid_request());
+
+    assert_eq!(output["policy_bundle"]["bundle"], "local-dev");
+    assert_eq!(output["policy_bundle"]["policy_version"], "0.1.0-local");
+    assert_eq!(
+        output["policy_bundle"]["risk_matrix_version"],
+        "risk-0.1.0-local"
+    );
+    assert_eq!(
+        output["policy_bundle"]["verification_status"],
+        "signature_cryptographic_verification_not_implemented"
+    );
+    assert_eq!(
+        output["audit_record"]["details"]["policy_bundle_verification"]["bundle"],
+        "local-dev"
+    );
 }
 
 #[test]
@@ -54,11 +78,30 @@ fn policy_adapter_error_fails_closed_with_denied_response_and_audit_record() {
 }
 
 #[test]
+fn bundle_verification_failure_fails_closed_with_denied_response_and_audit_record() {
+    let bundle = invalid_runtime_bundle();
+    let output = run_gateway_with_bundle_and_stdin(&bundle, &valid_request());
+
+    assert_eq!(output["response"]["status"], "denied");
+    assert_eq!(
+        output["response"]["reason_code"],
+        "policy_bundle_verification_failed"
+    );
+    assert_eq!(output["policy_bundle"]["verification_status"], "rejected");
+    assert!(output["policy_bundle"]["failure_reason"].is_string());
+    assert_eq!(
+        output["audit_record"]["details"]["policy_bundle_verification"]["verification_status"],
+        "rejected"
+    );
+}
+
+#[test]
 fn output_is_valid_json() {
     let output = run_gateway_with_stdin(&valid_request());
 
     assert!(output.get("response").is_some());
     assert!(output.get("audit_record").is_some());
+    assert!(output.get("policy_bundle").is_some());
 }
 
 #[test]
@@ -70,7 +113,13 @@ fn runtime_stdin_path_does_not_require_external_runtime_dependencies() {
 }
 
 fn run_gateway_with_stdin(input: &str) -> Value {
+    run_gateway_with_bundle_and_stdin(Path::new(LOCAL_DEV_BUNDLE), input)
+}
+
+fn run_gateway_with_bundle_and_stdin(bundle_path: &Path, input: &str) -> Value {
     let mut command = Command::new(env!("CARGO_BIN_EXE_aegis-gateway"))
+        .arg("--bundle")
+        .arg(bundle_path)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -96,6 +145,43 @@ fn run_gateway_with_stdin(input: &str) -> Value {
 
     serde_json::from_slice(&output.stdout)
         .unwrap_or_else(|error| panic!("runtime stdout should be valid JSON: {error}"))
+}
+
+fn invalid_runtime_bundle() -> PathBuf {
+    let target = Path::new("target")
+        .join("local-runtime-policy-bundles")
+        .join("missing_manifest");
+
+    if target.exists() {
+        fs::remove_dir_all(&target)
+            .unwrap_or_else(|error| panic!("old runtime fixture should be removable: {error}"));
+    }
+
+    copy_dir(Path::new(LOCAL_DEV_BUNDLE), &target);
+    fs::remove_file(target.join("manifest.yaml"))
+        .unwrap_or_else(|error| panic!("runtime manifest fixture should be removable: {error}"));
+    target
+}
+
+fn copy_dir(source: &Path, target: &Path) {
+    fs::create_dir_all(target)
+        .unwrap_or_else(|error| panic!("target fixture directory should be creatable: {error}"));
+
+    for entry in fs::read_dir(source)
+        .unwrap_or_else(|error| panic!("source fixture directory should be readable: {error}"))
+    {
+        let entry =
+            entry.unwrap_or_else(|error| panic!("fixture entry should be readable: {error}"));
+        let source_path = entry.path();
+        let target_path = target.join(entry.file_name());
+
+        if source_path.is_dir() {
+            copy_dir(&source_path, &target_path);
+        } else {
+            fs::copy(&source_path, &target_path)
+                .unwrap_or_else(|error| panic!("fixture file should copy: {error}"));
+        }
+    }
 }
 
 fn request_with_tool(tool_name: &str) -> String {

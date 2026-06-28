@@ -5,8 +5,18 @@ use crate::gateway::{
     ApprovalContext, ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
     ToolCallResponse, WrapperExecutionContext,
 };
+use crate::policy::PolicyBundleVerification;
 
 pub struct AuditRecordBuilder;
+
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct GatewayAuditContexts {
+    pub idempotency_context: Option<IdempotencyContext>,
+    pub wrapper_context: Option<WrapperExecutionContext>,
+    pub execution_identity_context: Option<ExecutionIdentityContext>,
+    pub approval_context: Option<ApprovalContext>,
+    pub policy_bundle_verification: Option<PolicyBundleVerification>,
+}
 
 impl AuditRecordBuilder {
     pub fn build_gateway_decision_record(
@@ -27,10 +37,10 @@ impl AuditRecordBuilder {
             request,
             response,
             metadata,
-            idempotency_context,
-            None,
-            None,
-            None,
+            GatewayAuditContexts {
+                idempotency_context,
+                ..GatewayAuditContexts::default()
+            },
         )
     }
 
@@ -38,10 +48,7 @@ impl AuditRecordBuilder {
         request: &ToolCallRequest,
         response: &ToolCallResponse,
         metadata: AuditRecordMetadata,
-        idempotency_context: Option<IdempotencyContext>,
-        wrapper_context: Option<WrapperExecutionContext>,
-        execution_identity_context: Option<ExecutionIdentityContext>,
-        approval_context: Option<ApprovalContext>,
+        contexts: GatewayAuditContexts,
     ) -> AuditRecord {
         AuditRecord {
             schema_version: response.schema_version.clone(),
@@ -61,10 +68,11 @@ impl AuditRecordBuilder {
             details: AuditRecordDetails::from_gateway_decision_with_contexts(
                 request,
                 response,
-                idempotency_context,
-                wrapper_context,
-                execution_identity_context,
-                approval_context,
+                contexts.idempotency_context,
+                contexts.wrapper_context,
+                contexts.execution_identity_context,
+                contexts.approval_context,
+                contexts.policy_bundle_verification,
             ),
         }
     }

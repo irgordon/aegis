@@ -1,5 +1,5 @@
 use crate::{
-    audit::{AuditRecord, AuditRecordBuilder, AuditRecordMetadata},
+    audit::{AuditRecord, AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts},
     policy::{PolicyAdapterError, PolicyDecision, PolicyDecisionAdapter, PolicyDenial},
 };
 
@@ -18,6 +18,7 @@ pub struct GatewayEntrypointContext {
     pub wrapper_context: Option<super::WrapperExecutionContext>,
     pub execution_identity_context: Option<super::ExecutionIdentityContext>,
     pub approval_context: Option<super::ApprovalContext>,
+    pub policy_bundle_verification: Option<crate::policy::PolicyBundleVerification>,
 }
 
 pub struct GatewayPolicyAdapterContext<'a> {
@@ -29,6 +30,7 @@ pub struct GatewayPolicyAdapterContext<'a> {
     pub wrapper_context: Option<super::WrapperExecutionContext>,
     pub execution_identity_context: Option<super::ExecutionIdentityContext>,
     pub approval_context: Option<super::ApprovalContext>,
+    pub policy_bundle_verification: Option<crate::policy::PolicyBundleVerification>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -48,6 +50,7 @@ pub struct GatewayEntrypointResult {
     pub wrapper_context: Option<super::WrapperExecutionContext>,
     pub execution_identity_context: Option<super::ExecutionIdentityContext>,
     pub approval_context: Option<super::ApprovalContext>,
+    pub policy_bundle_verification: Option<crate::policy::PolicyBundleVerification>,
 }
 
 struct GatewayDecisionMappingContext {
@@ -57,6 +60,7 @@ struct GatewayDecisionMappingContext {
     supplied_wrapper_context: Option<super::WrapperExecutionContext>,
     supplied_execution_identity_context: Option<super::ExecutionIdentityContext>,
     supplied_approval_context: Option<super::ApprovalContext>,
+    supplied_policy_bundle_verification: Option<crate::policy::PolicyBundleVerification>,
     summary: GatewayEntrypointSummary,
 }
 
@@ -122,6 +126,7 @@ fn map_supported_request(
             supplied_wrapper_context: context.wrapper_context,
             supplied_execution_identity_context: context.execution_identity_context,
             supplied_approval_context: context.approval_context,
+            supplied_policy_bundle_verification: context.policy_bundle_verification,
             summary: GatewayEntrypointSummary::PolicyDecisionMapped,
         },
     )
@@ -143,6 +148,7 @@ fn map_adapter_supported_request(
             supplied_wrapper_context: context.wrapper_context,
             supplied_execution_identity_context: context.execution_identity_context,
             supplied_approval_context: context.approval_context,
+            supplied_policy_bundle_verification: context.policy_bundle_verification,
             summary,
         },
     )
@@ -161,10 +167,13 @@ fn map_policy_decision_result(
         &request,
         &response,
         context.audit_metadata,
-        idempotency_context.clone(),
-        context.supplied_wrapper_context.clone(),
-        context.supplied_execution_identity_context.clone(),
-        context.supplied_approval_context.clone(),
+        GatewayAuditContexts {
+            idempotency_context: idempotency_context.clone(),
+            wrapper_context: context.supplied_wrapper_context.clone(),
+            execution_identity_context: context.supplied_execution_identity_context.clone(),
+            approval_context: context.supplied_approval_context.clone(),
+            policy_bundle_verification: context.supplied_policy_bundle_verification.clone(),
+        },
     );
 
     GatewayEntrypointResult {
@@ -175,6 +184,7 @@ fn map_policy_decision_result(
         wrapper_context: context.supplied_wrapper_context,
         execution_identity_context: context.supplied_execution_identity_context,
         approval_context: context.supplied_approval_context,
+        policy_bundle_verification: context.supplied_policy_bundle_verification,
     }
 }
 
@@ -189,6 +199,7 @@ fn denied_entrypoint_result(evidence: super::GatewayDecisionEvidence) -> Gateway
         wrapper_context: None,
         execution_identity_context: None,
         approval_context: None,
+        policy_bundle_verification: None,
     }
 }
 

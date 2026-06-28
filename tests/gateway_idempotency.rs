@@ -45,6 +45,7 @@ fn mutation_request_without_context_does_not_generate_idempotency_key() {
             wrapper_context: None,
             execution_identity_context: None,
             approval_context: None,
+            policy_bundle_verification: None,
         },
     );
 
@@ -102,6 +103,7 @@ fn process_request_with_capability(
             wrapper_context: None,
             execution_identity_context: None,
             approval_context: None,
+            policy_bundle_verification: None,
         },
     )
 }

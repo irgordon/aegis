@@ -50,23 +50,36 @@ AEGIS has completed its governance and protocol-contract foundation. Phase 2 is 
 
 ## Local Gateway MVP
 
-The local Gateway MVP reads one `ToolCallRequest` JSON document, validates it, routes supported requests through a deterministic local policy adapter seam, maps the result to a bounded `ToolCallResponse`, builds audit evidence, and prints structured JSON containing:
+The local Gateway MVP reads one `ToolCallRequest` JSON document, verifies a local policy bundle structure, validates the request, routes supported requests through a deterministic local policy adapter seam, maps the result to a bounded `ToolCallResponse`, builds audit evidence, and prints structured JSON containing:
 
 - `response`
 - `audit_record`
+- `policy_bundle`
 
-This local runtime is for Phase 2 development only. It does not provide production policy enforcement, wrapper execution, credential injection, durable audit storage, approval workflow, replay execution, HTTP service, or UI.
+The bundle loader verifies required local files and metadata:
+
+- `manifest.yaml`
+- `gateway_policy.yaml`
+- `risk_matrix.yaml`
+- `signatures/`
+- `checksums/`
+- manifest policy identity
+- risk matrix version binding
+- checksum metadata presence
+- signature metadata presence
+
+Cryptographic signature verification is not implemented yet, and the runtime says so in structured output. The local runtime is for Phase 2 development only. It does not provide production policy enforcement, risk matrix evaluation, wrapper execution, credential injection, durable audit storage, approval workflow, replay execution, HTTP service, or UI.
 
 Run with stdin:
 
 ```bash
-cargo run --bin aegis-gateway -- < schemas/examples/valid/ToolCallRequest.json
+cargo run --bin aegis-gateway -- --bundle examples/policy-bundles/local-dev < schemas/examples/valid/ToolCallRequest.json
 ```
 
 Run with an explicit file path:
 
 ```bash
-cargo run --bin aegis-gateway -- schemas/examples/valid/ToolCallRequest.json
+cargo run --bin aegis-gateway -- --bundle examples/policy-bundles/local-dev schemas/examples/valid/ToolCallRequest.json
 ```
 
 Run validation:

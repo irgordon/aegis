@@ -1,7 +1,7 @@
 mod builder;
 mod record;
 
-pub use builder::{AuditRecordBuilder, AuditRecordMetadata};
+pub use builder::{AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts};
 pub use record::{AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus};
 
 #[derive(Debug, Clone, Eq, PartialEq)]

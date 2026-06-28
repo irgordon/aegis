@@ -140,6 +140,7 @@ fn process_request_with_adapter(adapter: &dyn PolicyDecisionAdapter) -> GatewayE
             wrapper_context: None,
             execution_identity_context: None,
             approval_context: None,
+            policy_bundle_verification: None,
         },
     )
 }

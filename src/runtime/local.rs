@@ -1,58 +1,81 @@
+use std::path::Path;
+
 use serde::Serialize;
 
 use crate::{
     audit::{AuditRecord, AuditRecordMetadata},
     gateway::{
         CapabilityClass, Gateway, GatewayEntrypointResult, GatewayPolicyAdapterContext,
-        GatewayStatus, PolicyProvenance, ResponseDecision, ResponseMetadata, SupportedTools,
-        ToolCallRequest, ToolCallResponse,
+        GatewayStatus, ResponseDecision, ResponseMetadata, SupportedTools, ToolCallRequest,
+        ToolCallResponse,
     },
-    policy::{PolicyAdapterError, PolicyDecision, PolicyDecisionAdapter, PolicyDenial},
+    policy::{
+        load_policy_bundle, PolicyAdapterError, PolicyBundleVerification, PolicyDecision,
+        PolicyDecisionAdapter, PolicyDenial,
+    },
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct LocalRuntimeOutput {
     pub response: ToolCallResponse,
     pub audit_record: AuditRecord,
+    pub policy_bundle: PolicyBundleVerification,
 }
 
-pub fn process_local_gateway_request(input: &str) -> LocalRuntimeOutput {
-    let adapter = LocalMvpPolicyAdapter;
+pub fn process_local_gateway_request(input: &str, bundle_path: &Path) -> LocalRuntimeOutput {
+    let policy_bundle = verified_or_rejected_bundle(bundle_path);
+    let adapter = LocalMvpPolicyAdapter {
+        bundle_verified: policy_bundle.is_verified(),
+    };
     let result = Gateway::process_entrypoint_request_with_policy_adapter(
         input,
         GatewayPolicyAdapterContext {
             supported_tools: local_supported_tools(),
             policy_adapter: &adapter,
-            response_metadata: local_response_metadata(),
+            response_metadata: local_response_metadata(&policy_bundle),
             audit_metadata: local_audit_metadata(),
             idempotency_context: None,
             wrapper_context: None,
             execution_identity_context: None,
             approval_context: None,
+            policy_bundle_verification: Some(policy_bundle.clone()),
         },
     );
 
-    LocalRuntimeOutput::from(result)
+    LocalRuntimeOutput::from_result(result, policy_bundle)
 }
 
-impl From<GatewayEntrypointResult> for LocalRuntimeOutput {
-    fn from(result: GatewayEntrypointResult) -> Self {
+impl LocalRuntimeOutput {
+    fn from_result(
+        result: GatewayEntrypointResult,
+        policy_bundle: PolicyBundleVerification,
+    ) -> Self {
         Self {
             response: result.response,
             audit_record: result.audit_record,
+            policy_bundle,
         }
     }
 }
 
-struct LocalMvpPolicyAdapter;
+struct LocalMvpPolicyAdapter {
+    bundle_verified: bool,
+}
 
 impl PolicyDecisionAdapter for LocalMvpPolicyAdapter {
     fn decide(&self, request: &ToolCallRequest) -> Result<PolicyDecision, PolicyAdapterError> {
-        local_policy_decision(request)
+        local_policy_decision(request, self.bundle_verified)
     }
 }
 
-fn local_policy_decision(request: &ToolCallRequest) -> Result<PolicyDecision, PolicyAdapterError> {
+fn local_policy_decision(
+    request: &ToolCallRequest,
+    bundle_verified: bool,
+) -> Result<PolicyDecision, PolicyAdapterError> {
+    if !bundle_verified {
+        return Err(policy_bundle_verification_error());
+    }
+
     if request.tool_name() == "policy.error" {
         return Err(local_policy_adapter_error());
     }
@@ -87,12 +110,26 @@ fn local_policy_adapter_error() -> PolicyAdapterError {
     }
 }
 
+fn policy_bundle_verification_error() -> PolicyAdapterError {
+    PolicyAdapterError {
+        reason_code: Some("policy_bundle_verification_failed".to_string()),
+        safe_message: "Policy bundle verification failed closed.".to_string(),
+    }
+}
+
+fn verified_or_rejected_bundle(bundle_path: &Path) -> PolicyBundleVerification {
+    match load_policy_bundle(bundle_path) {
+        Ok(verification) => verification,
+        Err(verification) => *verification,
+    }
+}
+
 fn local_supported_tools() -> SupportedTools {
     SupportedTools::from_names(["metrics.read", "policy.error"])
 }
 
-fn local_response_metadata() -> ResponseMetadata {
-    let fixture = local_response_metadata_fixture();
+fn local_response_metadata(policy_bundle: &PolicyBundleVerification) -> ResponseMetadata {
+    let fixture = local_response_metadata_fixture(policy_bundle);
 
     ResponseMetadata {
         execution_id: fixture.execution_id,
@@ -102,7 +139,7 @@ fn local_response_metadata() -> ResponseMetadata {
     }
 }
 
-fn local_response_metadata_fixture() -> ToolCallResponse {
+fn local_response_metadata_fixture(policy_bundle: &PolicyBundleVerification) -> ToolCallResponse {
     serde_json::from_value(serde_json::json!({
         "schema_version": "1.0",
         "execution_id": "local_exec_001",
@@ -114,23 +151,11 @@ fn local_response_metadata_fixture() -> ToolCallResponse {
         "safe_message": null,
         "pending_reference": null,
         "replay_reference": null,
-        "policy_provenance": local_policy_provenance(),
+        "policy_provenance": policy_bundle.policy_provenance(),
         "audit_record_id": "local_audit_001",
         "completed_at": "2026-06-28T00:00:00Z"
     }))
     .unwrap_or_else(|error| panic!("static local MVP response metadata should parse: {error}"))
-}
-
-fn local_policy_provenance() -> PolicyProvenance {
-    serde_json::from_value(serde_json::json!({
-        "bundle_id": "local_mvp_static_bundle",
-        "version": "local-mvp",
-        "policy_hash": "static-local-mvp-policy",
-        "environment": "local",
-        "signer_identity": "local-mvp",
-        "activated_at": "2026-06-28T00:00:00Z"
-    }))
-    .unwrap_or_else(|error| panic!("static local MVP policy provenance should parse: {error}"))
 }
 
 fn local_audit_metadata() -> AuditRecordMetadata {

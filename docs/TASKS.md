@@ -82,7 +82,8 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | --- | --- |
 | Select initial implementation language and runtime | complete |
 | Create gateway entrypoint | in_progress |
-| Implement request validation | planned |
+| Implement request validation | in_progress |
+| Add schema-backed Rust request and response models | complete |
 | Implement policy decision interface | planned |
 | Implement deterministic response mapping | planned |
 | Implement basic audit record creation | planned |

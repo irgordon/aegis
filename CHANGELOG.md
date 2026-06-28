@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.2] - 2026-06-28
+
+### Added
+
+- Added schema-backed Rust request and response models.
+- Added Rust fixture tests for valid and invalid ToolCallRequest and ToolCallResponse examples.
+
+### Changed
+
+- Updated Phase 2 task tracking for request and response contract work.
+
 ## [0.1.1] - 2026-06-28
 
 ### Added

@@ -88,6 +88,7 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Add schema-backed Rust request and response models | complete |
 | Add schema-backed gateway validation pipeline | complete |
 | Implement policy decision interface | complete |
+| Add policy decision adapter interface | complete |
 | Implement deterministic response mapping | complete |
 | Implement basic audit record creation | in_progress |
 | Add minimal audit record builder | complete |

@@ -1,4 +1,14 @@
-use crate::gateway::PendingReference;
+use crate::gateway::{PendingReference, ToolCallRequest};
+
+pub trait PolicyDecisionAdapter {
+    fn decide(&self, request: &ToolCallRequest) -> Result<PolicyDecision, PolicyAdapterError>;
+}
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct PolicyAdapterError {
+    pub reason_code: Option<String>,
+    pub safe_message: String,
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum PolicyDecision {

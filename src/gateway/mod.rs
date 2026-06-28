@@ -1,4 +1,5 @@
 mod entrypoint;
+mod idempotency;
 mod request;
 mod response;
 mod schema;
@@ -6,6 +7,7 @@ mod support;
 mod validation;
 
 pub use entrypoint::{GatewayEntrypointContext, GatewayEntrypointResult, GatewayEntrypointSummary};
+pub use idempotency::{IdempotencyContext, IdempotencyKey, OperationType};
 pub use request::{
     ActorType, CapabilityClass, OrchestratorReference, RequestActor, RequestedTool, ToolCallRequest,
 };

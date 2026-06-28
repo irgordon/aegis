@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::{AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus};
-use crate::gateway::{NonEmptyString, ToolCallRequest, ToolCallResponse};
+use crate::gateway::{IdempotencyContext, NonEmptyString, ToolCallRequest, ToolCallResponse};
 
 pub struct AuditRecordBuilder;
 
@@ -10,6 +10,15 @@ impl AuditRecordBuilder {
         request: &ToolCallRequest,
         response: &ToolCallResponse,
         metadata: AuditRecordMetadata,
+    ) -> AuditRecord {
+        Self::build_gateway_decision_record_with_idempotency(request, response, metadata, None)
+    }
+
+    pub fn build_gateway_decision_record_with_idempotency(
+        request: &ToolCallRequest,
+        response: &ToolCallResponse,
+        metadata: AuditRecordMetadata,
+        idempotency_context: Option<IdempotencyContext>,
     ) -> AuditRecord {
         AuditRecord {
             schema_version: response.schema_version.clone(),
@@ -26,7 +35,11 @@ impl AuditRecordBuilder {
             reason_code: response.reason_code.clone(),
             policy_provenance: response.policy_provenance.clone(),
             component: metadata.component,
-            details: AuditRecordDetails::from_gateway_decision(request, response),
+            details: AuditRecordDetails::from_gateway_decision_with_idempotency(
+                request,
+                response,
+                idempotency_context,
+            ),
         }
     }
 

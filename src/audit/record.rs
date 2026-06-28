@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::gateway::{
-    CapabilityClass, GatewayStatus, NonEmptyString, PolicyProvenance, ResponseDecision,
-    SchemaVersion, Timestamp, ToolCallRequest, ToolCallResponse,
+    CapabilityClass, GatewayStatus, IdempotencyContext, NonEmptyString, PolicyProvenance,
+    ResponseDecision, SchemaVersion, Timestamp, ToolCallRequest, ToolCallResponse,
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -71,14 +71,24 @@ pub struct AuditRecordDetails {
     pub request_id: Option<NonEmptyString>,
     pub decision: Option<ResponseDecision>,
     pub capability_class: Option<CapabilityClass>,
+    pub idempotency_context: Option<IdempotencyContext>,
 }
 
 impl AuditRecordDetails {
     pub fn from_gateway_decision(request: &ToolCallRequest, response: &ToolCallResponse) -> Self {
+        Self::from_gateway_decision_with_idempotency(request, response, None)
+    }
+
+    pub fn from_gateway_decision_with_idempotency(
+        request: &ToolCallRequest,
+        response: &ToolCallResponse,
+        idempotency_context: Option<IdempotencyContext>,
+    ) -> Self {
         Self {
             request_id: Some(request.request_id.clone()),
             decision: response.decision.clone(),
             capability_class: request.tool.capability_class.clone(),
+            idempotency_context,
         }
     }
 
@@ -87,6 +97,7 @@ impl AuditRecordDetails {
             request_id: response.request_id.clone(),
             decision: response.decision.clone(),
             capability_class: None,
+            idempotency_context: None,
         }
     }
 }

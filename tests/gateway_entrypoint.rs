@@ -146,6 +146,7 @@ where
             policy_decision,
             response_metadata: response_metadata(),
             audit_metadata: audit_metadata(),
+            idempotency_context: None,
         },
     )
 }

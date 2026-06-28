@@ -14,6 +14,7 @@ pub struct GatewayEntrypointContext {
     pub policy_decision: PolicyDecision,
     pub response_metadata: ResponseMetadata,
     pub audit_metadata: AuditRecordMetadata,
+    pub idempotency_context: Option<super::IdempotencyContext>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -28,6 +29,7 @@ pub struct GatewayEntrypointResult {
     pub response: ToolCallResponse,
     pub audit_record: AuditRecord,
     pub summary: GatewayEntrypointSummary,
+    pub idempotency_context: Option<super::IdempotencyContext>,
 }
 
 impl Gateway {
@@ -58,18 +60,21 @@ fn map_supported_request(
     request: super::ToolCallRequest,
     context: GatewayEntrypointContext,
 ) -> GatewayEntrypointResult {
+    let idempotency_context = idempotency_context_for_request(&request, &context);
     let response =
         Gateway::map_policy_decision(&request, context.policy_decision, context.response_metadata);
-    let audit_record = AuditRecordBuilder::build_gateway_decision_record(
+    let audit_record = AuditRecordBuilder::build_gateway_decision_record_with_idempotency(
         &request,
         &response,
         context.audit_metadata,
+        idempotency_context.clone(),
     );
 
     GatewayEntrypointResult {
         response,
         audit_record,
         summary: GatewayEntrypointSummary::PolicyDecisionMapped,
+        idempotency_context,
     }
 }
 
@@ -80,7 +85,19 @@ fn denied_entrypoint_result(evidence: super::GatewayDecisionEvidence) -> Gateway
         response: evidence.response,
         audit_record: evidence.audit_record,
         summary,
+        idempotency_context: None,
     }
+}
+
+fn idempotency_context_for_request(
+    request: &super::ToolCallRequest,
+    context: &GatewayEntrypointContext,
+) -> Option<super::IdempotencyContext> {
+    if request.carries_mutation_risk() {
+        return context.idempotency_context.clone();
+    }
+
+    None
 }
 
 fn denied_summary(response: &ToolCallResponse) -> GatewayEntrypointSummary {

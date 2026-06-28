@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.11] - 2026-06-28
+
+### Added
+
+- Added typed idempotency contract models for caller-supplied gateway idempotency context.
+- Added gateway idempotency tests for L1, L2, and L3 mutation-capable request evidence.
+
+### Changed
+
+- Updated audit evidence details to reference supplied idempotency context where applicable.
+- Updated Phase 2 task tracking for idempotency contract modeling.
+
 ## [0.1.10] - 2026-06-28
 
 ### Added

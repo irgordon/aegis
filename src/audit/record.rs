@@ -68,7 +68,7 @@ impl From<&GatewayStatus> for AuditStatus {
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AuditRecordDetails {
-    pub request_id: NonEmptyString,
+    pub request_id: Option<NonEmptyString>,
     pub decision: Option<ResponseDecision>,
     pub capability_class: Option<CapabilityClass>,
 }
@@ -76,9 +76,17 @@ pub struct AuditRecordDetails {
 impl AuditRecordDetails {
     pub fn from_gateway_decision(request: &ToolCallRequest, response: &ToolCallResponse) -> Self {
         Self {
-            request_id: request.request_id.clone(),
+            request_id: Some(request.request_id.clone()),
             decision: response.decision.clone(),
             capability_class: request.tool.capability_class.clone(),
+        }
+    }
+
+    pub fn from_response(response: &ToolCallResponse) -> Self {
+        Self {
+            request_id: response.request_id.clone(),
+            decision: response.decision.clone(),
+            capability_class: None,
         }
     }
 }

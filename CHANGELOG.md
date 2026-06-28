@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.8] - 2026-06-28
+
+### Added
+
+- Added schema-backed gateway validation pipeline for ToolCallRequest JSON input.
+- Added fail-closed denial evidence for malformed and unsupported request validation.
+
+### Changed
+
+- Updated Phase 2 task tracking for request validation pipeline work.
+
 ## [0.1.7] - 2026-06-28
 
 ### Changed

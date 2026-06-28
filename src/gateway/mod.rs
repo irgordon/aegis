@@ -2,6 +2,7 @@ mod request;
 mod response;
 mod schema;
 mod support;
+mod validation;
 
 pub use request::{
     ActorType, CapabilityClass, OrchestratorReference, RequestActor, RequestedTool, ToolCallRequest,
@@ -12,6 +13,7 @@ pub use response::{
 };
 pub use schema::{NonEmptyString, SchemaVersion, Timestamp};
 pub use support::{GatewayDecisionEvidence, SupportedTools};
+pub use validation::GatewayValidationOutcome;
 
 use crate::policy::PolicyDecision;
 

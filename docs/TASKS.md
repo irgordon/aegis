@@ -82,15 +82,16 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | --- | --- |
 | Select initial implementation language and runtime | complete |
 | Create gateway entrypoint | in_progress |
-| Implement request validation | in_progress |
+| Implement request validation | complete |
 | Add schema-backed Rust request and response models | complete |
+| Add schema-backed gateway validation pipeline | complete |
 | Implement policy decision interface | complete |
 | Implement deterministic response mapping | complete |
 | Implement basic audit record creation | in_progress |
 | Add minimal audit record builder | complete |
 | Enforce deny-by-default behavior | in_progress |
 | Add deny-by-default unsupported tool handling | complete |
-| Add allowed and denied path tests | planned |
+| Add allowed and denied path tests | in_progress |
 
 ## Phase 3: Policy Engine
 

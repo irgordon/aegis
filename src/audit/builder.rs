@@ -29,6 +29,29 @@ impl AuditRecordBuilder {
             details: AuditRecordDetails::from_gateway_decision(request, response),
         }
     }
+
+    pub fn build_gateway_validation_denial_record(
+        response: &ToolCallResponse,
+        metadata: AuditRecordMetadata,
+    ) -> AuditRecord {
+        AuditRecord {
+            schema_version: response.schema_version.clone(),
+            audit_record_id: response.audit_record_id.clone(),
+            timestamp: response.completed_at.clone(),
+            event_type: AuditEventType::ValidationResult,
+            execution_id: response.execution_id.clone(),
+            run_id: None,
+            task_id: None,
+            action_id: None,
+            tool_name: None,
+            actor_identity: None,
+            status: AuditStatus::from(&response.status),
+            reason_code: response.reason_code.clone(),
+            policy_provenance: response.policy_provenance.clone(),
+            component: metadata.component,
+            details: AuditRecordDetails::from_response(response),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolCallResponse",
+  "type": "object",
+  "required": [
+    "status",
+    "exit_code"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "denied",
+        "pending",
+        "failed"
+      ]
+    },
+    "exit_code": {
+      "type": "integer",
+      "enum": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "execution_id": {
+      "type": "string"
+    },
+    "approval_id": {
+      "type": "string"
+    },
+    "audit_event_id": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

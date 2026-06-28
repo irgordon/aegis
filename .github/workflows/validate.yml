@@ -1,0 +1,68 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  governance-and-contracts:
+    name: Governance and contract validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install check-jsonschema
+
+      - name: Run repository verifier
+        run: python scripts/verify.py
+
+      - name: Validate schema documents
+        run: |
+          for schema in schemas/*.schema.json; do
+            echo "Validating schema document: ${schema}"
+            python -m json.tool "${schema}" > /dev/null
+            check-jsonschema --check-metaschema "${schema}"
+          done
+
+      - name: Validate schema examples
+        run: |
+          for schema in schemas/*.schema.json; do
+            base="$(basename "${schema}" .schema.json)"
+            valid="schemas/examples/valid/${base}.json"
+            invalid="schemas/examples/invalid/${base}.json"
+
+            echo "Validating good example for ${base}"
+            check-jsonschema --schemafile "${schema}" "${valid}"
+
+            echo "Validating bad example for ${base}"
+            if check-jsonschema --schemafile "${schema}" "${invalid}"; then
+              echo "Invalid example unexpectedly passed for ${base}"
+              exit 1
+            fi
+          done
+
+      - name: Scan for blocked markers
+        run: |
+          if grep -RInE '\b(TODO|TBD|FIXME|placeholder)\b' README.md CHANGELOG.md docs schemas scripts --exclude='verify.py'; then
+            echo "Blocked marker found. Replace unresolved markers before merge."
+            exit 1
+          fi
+
+      - name: Report validation success
+        run: echo "AEGIS GitHub Actions validation passed."

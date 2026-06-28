@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "request_id": "req_001",
+  "run_id": "run_001",
+  "task_id": "task_001",
+  "action_id": "act_001",
+  "actor": {
+    "actor_id": "agent_001",
+    "actor_type": "agent",
+    "display_name": "Example Agent"
+  },
+  "tool": {
+    "name": "metrics.read",
+    "capability_class": "L0"
+  },
+  "params": {
+    "metric": "cpu_usage"
+  },
+  "environment": "dev",
+  "requested_at": "2026-06-28T00:00:00Z",
+  "orchestrator": {
+    "name": "example",
+    "run_reference": "orch_run_001"
+  }
+}

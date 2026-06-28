@@ -59,6 +59,19 @@ Establish documentation-driven engineering for the project.
 - ARCHITECTURAL_PRINCIPLES.md
 - ROADMAP.md
 - PHASEMAP.md
+- TASKS.md
+- SECURITY_MODEL.md
+- THREAT_MODEL.md
+- TRUST_BOUNDARIES.md
+- POLICY_ENGINE.md
+- POLICY_DISTRIBUTION.md
+- AUDIT_LOGGING.md
+- ORCHESTRATOR_FSM_CONTRACT.md
+- API_SPEC.md
+- RUNTIME_EVIDENCE.md
+- TEST_STRATEGY.md
+- ADR.md
+- RELEASE_PROCESS.md
 
 ### Exit Criteria
 - documentation hierarchy is defined
@@ -79,12 +92,18 @@ Define stable request, response, audit, policy, and execution contracts.
 - approval request schema
 - execution state schema
 - API specification
+- valid and invalid schema examples
+- compatibility documentation
+- repository verification script
+- changelog
 
 ### Exit Criteria
 - schemas validate
 - required fields are defined
 - malformed input behavior is documented
 - contract tests exist or are planned in TASKS.md
+- repository verification succeeds
+- compatibility expectations are documented
 
 ## v0.3.0: Gateway MVP
 

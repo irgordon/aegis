@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "request_id": "req_bad",
+  "run_id": "run_001",
+  "task_id": "task_001",
+  "action_id": "act_001",
+  "actor": {
+    "actor_id": "agent_001",
+    "actor_type": "agent"
+  },
+  "params": {},
+  "environment": "dev",
+  "requested_at": "2026-06-28T00:00:00Z"
+}

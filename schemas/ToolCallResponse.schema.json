@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aegis.local/schemas/ToolCallResponse.schema.json",
+  "title": "ToolCallResponse",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "execution_id",
+    "status",
+    "policy_provenance",
+    "audit_record_id",
+    "completed_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "execution_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "allowed",
+        "denied",
+        "pending",
+        "failed",
+        "canceled",
+        "replayed"
+      ]
+    },
+    "decision": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "allow",
+        "deny",
+        "pending_approval",
+        null
+      ]
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "reason_code": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "safe_message": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pending_reference": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "approval_id"
+      ],
+      "properties": {
+        "approval_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "replay_reference": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "replay_token"
+      ],
+      "properties": {
+        "replay_token": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attempt_number": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy_provenance": {
+      "type": "object",
+      "required": [
+        "bundle_id",
+        "version",
+        "policy_hash",
+        "environment"
+      ],
+      "properties": {
+        "bundle_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policy_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signer_identity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "activated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "audit_record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

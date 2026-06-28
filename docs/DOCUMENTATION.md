@@ -1,655 +1,584 @@
-AEGIS
+# AEGIS
+# Documentation Governance Standard v1.1
 
-AI Execution Governance & Interception System
+## Purpose
 
-DOCUMENTATION.md
+This document explains how AEGIS documentation should be written, organized, reviewed, and maintained.
 
-Documentation Governance Standard v1.0
+AEGIS protects people and organizations from unsafe AI-driven actions. That protection only works when people can understand what the system does, why it exists, and how it should be used.
 
-⸻
+Documentation is part of the product. If the documentation cannot answer core questions clearly, define terms plainly, and guide the reader to the right next document, then the documentation has failed.
 
-Purpose
+## Plain-Language Introduction
 
-This document defines how documentation is created, maintained, reviewed, versioned, and governed throughout the AEGIS project.
+AEGIS is designed to answer one simple question:
 
-The repository follows Documentation-Driven Engineering (DDE).
+**Should an AI system be allowed to do this?**
 
-Documentation is not supplementary material.
+Modern AI systems can ask to send emails, change databases, open tickets, deploy software, or interact with business systems.
 
-Documentation is the authoritative description of the system.
+Before those actions happen, AEGIS checks whether the action is allowed, whether a person needs to approve it, and what evidence must be recorded.
 
-Implementation exists to satisfy documentation.
+This repository is built documentation-first.
 
-Documentation never exists to explain undocumented implementation.
+That means the documents explain the rules before the software is written. The code must follow the documents, not the other way around.
 
-⸻
+## Documentation Audience Model
 
-Philosophy
+AEGIS documentation must support three audiences.
 
-The quality of software is directly proportional to the quality of its documentation.
+Each document should start simply and become more technical as needed.
 
-Good documentation enables:
+### Audience 1: Non-Technical or Brand-New Readers
 
-* consistent engineering
-* deterministic implementation
-* maintainability
-* onboarding
-* security reviews
-* architecture reviews
-* AI-assisted development
-* compliance
-* auditing
+This reader may not know software engineering, cybersecurity, artificial intelligence, or enterprise architecture.
 
-Poor documentation creates:
+Write for approximately an 11th-grade reading level.
 
-* architectural drift
-* inconsistent implementations
-* duplicated logic
-* undocumented assumptions
-* institutional knowledge
-* security mistakes
+That does not mean the writing should be shallow. It means the writing should be clear.
 
-AEGIS treats documentation as part of the product.
+For this audience, documentation should answer:
 
-⸻
+- What is this?
+- Why does it matter?
+- What problem does it solve?
+- What should I read next?
 
-Documentation Principles
+Avoid starting with dense abstractions.
 
-The repository follows ten governing principles.
-
-1. Documentation First
-
-Documentation precedes implementation.
-
-Requirements must exist before code.
-
-Architecture must exist before implementation.
-
-Acceptance criteria must exist before testing.
-
-⸻
-
-2. Documentation is Authoritative
-
-If implementation and documentation disagree:
-
-The documentation is presumed correct until formally updated.
-
-Developers should not silently “fix” documentation to match implementation.
-
-The discrepancy should be investigated.
-
-⸻
-
-3. Documentation Evolves with the System
-
-Every meaningful architectural or behavioral change requires documentation updates.
-
-Documentation debt is engineering debt.
-
-⸻
-
-4. Documentation Explains Intent
-
-Documentation explains:
-
-* why something exists
-* what problem it solves
-* how it should behave
-
-Implementation explains:
-
-* how it works
-
-These are different responsibilities.
-
-⸻
-
-5. Documentation Must Be Version Controlled
-
-Documentation belongs in source control.
-
-Every significant documentation update should accompany the implementation that requires it.
-
-⸻
-
-6. Documentation Should Age Well
-
-Avoid documenting temporary implementation details unless necessary.
-
-Document concepts.
-
-Not incidental implementation choices.
-
-⸻
-
-7. Documentation Should Be Searchable
-
-Documents should use:
-
-* consistent terminology
-* descriptive headings
-* stable structure
-
-Avoid hidden knowledge.
-
-⸻
-
-8. Documentation Should Be Independent
-
-Each document has a single responsibility.
-
-Avoid duplicating large sections across multiple documents.
-
-Reference documents instead.
-
-⸻
-
-9. Documentation Should Be Reviewable
-
-Documentation changes deserve review.
-
-Architecture documentation is code.
-
-Treat it accordingly.
-
-⸻
-
-10. Documentation Should Reduce Risk
-
-Every document should reduce uncertainty.
-
-If documentation creates ambiguity, improve it.
-
-⸻
-
-Documentation Hierarchy
-
-The repository follows strict precedence.
-
-OPERATING_DOCTRINE.md
-↓
-PRD.md
-↓
-ARCHITECTURE.md
-↓
-INVARIANTS.md
-↓
-DOCUMENTATION.md
-↓
-USER_FLOWS.md
-↓
-ACCEPTANCE_CRITERIA.md
-↓
-CODING_STYLE.md
-↓
-TASKS.md
-
-Higher documents override lower documents.
-
-⸻
-
-Repository Documentation
-
-The repository contains four categories of documentation.
-
-Governance
-
-Defines how the project operates.
-
-Examples:
-
-* OPERATING_DOCTRINE.md
-* DOCUMENTATION.md
-* CODING_STYLE.md
-
-⸻
-
-Product
-
-Defines what is being built.
-
-Examples:
-
-* PRD.md
-* USER_FLOWS.md
-* ROADMAP.md
-
-⸻
-
-Architecture
-
-Defines system structure.
-
-Examples:
-
-* ARCHITECTURE.md
-* INVARIANTS.md
-* SECURITY_MODEL.md
-* THREAT_MODEL.md
-* POLICY_ENGINE.md
-
-⸻
-
-Verification
-
-Defines how correctness is demonstrated.
-
-Examples:
-
-* ACCEPTANCE_CRITERIA.md
-* VALIDATION.md
-* TEST_STRATEGY.md
-
-⸻
-
-Required Repository Documents
-
-OPERATING_DOCTRINE.md
-
-Defines engineering governance.
-
-Answers:
-
-How do we build software?
-
-⸻
-
-PRD.md
-
-Defines product requirements.
-
-Answers:
-
-What are we building?
-
-⸻
-
-ARCHITECTURE.md
-
-Defines structure.
-
-Answers:
-
-How is the system organized?
-
-⸻
-
-INVARIANTS.md
-
-Defines permanent properties.
-
-Answers:
-
-What must never change?
-
-⸻
-
-DOCUMENTATION.md
-
-Defines documentation governance.
-
-Answers:
-
-How is documentation maintained?
-
-⸻
-
-USER_FLOWS.md
-
-Defines user interaction.
-
-Answers:
-
-How should the product behave?
-
-⸻
-
-CODING_STYLE.md
-
-Defines implementation standards.
-
-Answers:
-
-How should code be written?
-
-⸻
-
-ACCEPTANCE_CRITERIA.md
-
-Defines completion.
-
-Answers:
-
-How do we know a feature is done?
-
-⸻
-
-TASKS.md
-
-Defines current execution.
-
-Answers:
-
-What is being worked on?
-
-⸻
-
-Document Lifecycle
-
-Every document follows the same lifecycle.
-
-Draft
-↓
-Review
-↓
-Approval
-↓
-Implementation
-↓
-Maintenance
-↓
-Revision
-↓
-Archive
-
-No document should become abandoned.
-
-⸻
-
-Change Management
-
-Documentation changes fall into three categories.
-
-Editorial
-
-Grammar
-
-Formatting
-
-Clarification
-
-No architectural review required.
-
-⸻
-
-Functional
-
-Behavior changes.
-
-Requires review.
-
-⸻
-
-Architectural
-
-Changes affecting:
-
-* architecture
-* invariants
-* governance
-* security
-
-Require formal review.
-
-⸻
-
-Documentation Reviews
-
-Reviewers should ask:
-
-Does the document:
-
-* explain intent?
-* match architecture?
-* conflict with another document?
-* define terminology consistently?
-* remain implementation independent?
-* support future contributors?
-
-⸻
-
-Terminology
-
-Terminology should remain consistent.
-
-Examples:
-
-Always use:
-
-Policy Bundle
-
-Execution Identity
-
-Replay Token
-
-Capability Class
-
-Human-in-the-Loop
-
-Policy Engine
-
-Security Wrapper
-
-Avoid inventing alternate names.
-
-⸻
-
-Diagrams
-
-Diagrams should illustrate:
-
-* architecture
-* execution
-* state transitions
-* trust boundaries
-* policy flow
-
-Avoid decorative diagrams.
-
-Every diagram should answer a question.
-
-⸻
-
-Tables
-
-Prefer tables for:
-
-* comparisons
-* capabilities
-* permissions
-* mappings
-* responsibilities
-
-Avoid large prose when a table communicates more clearly.
-
-⸻
-
-Cross References
-
-Documents should reference:
-
-concepts
-
-not implementation.
+Start with the concrete problem.
 
 Example:
 
-Correct
+> An AI wants to send an email outside the company. AEGIS checks whether that action is allowed before the email is sent.
 
-See INVARIANTS.md, Invariant 12.
+Then introduce the technical term:
 
-Incorrect
+> This is called governed execution.
 
-See line 384 of gateway.py.
+### Audience 2: Contributors and Developers
 
-Documentation should survive refactoring.
+This reader wants to help improve the project.
 
-⸻
+They need to know where things belong, what rules govern changes, and how to avoid breaking the architecture.
 
-Architecture Decisions
+For this audience, documentation should answer:
 
-Major decisions should reference:
+- Which document should I read first?
+- Where should I make a change?
+- What rules must I follow?
+- What tests or validation must pass?
+- What should I update when behavior changes?
 
-DECISIONS.md
+This audience needs clear instructions, not vague principles.
 
-Every architectural change should answer:
+### Audience 3: Engineers and Architects
 
-Why was this chosen?
+This reader needs deeper technical structure.
 
-What alternatives existed?
+They may be reviewing security, designing a feature, integrating an orchestrator, or implementing a runtime component.
 
-Why were they rejected?
+For this audience, documentation should answer:
 
-⸻
+- What are the trust boundaries?
+- What are the runtime contracts?
+- What must be deterministic?
+- What state must be durable?
+- What policy or schema version applies?
+- What evidence proves correct behavior?
 
-AI-Generated Documentation
+Technical depth belongs here, but it should still be readable.
 
-AI-generated documentation must satisfy the same quality standards as human-written documentation.
+Complexity is acceptable when the problem is complex. Unnecessary confusion is not.
 
-AI should:
+## Documentation Reading Map
 
-* preserve terminology
-* preserve hierarchy
-* avoid inventing requirements
-* avoid contradicting architecture
+Use this map when entering the repository.
 
-Human review remains mandatory.
+```text
+New reader
+   |
+   v
+README.md
+   |
+   v
+PRD.md
+   |
+   v
+ARCHITECTURE.md
+   |
+   v
+INVARIANTS.md
+   |
+   v
+API_SPEC.md and schemas/
+   |
+   v
+Implementation
+```
 
-⸻
+For governance and contribution work, use this path:
 
-Source Code Comments
+```text
+Contributor
+   |
+   v
+OPERATING_DOCTRINE.md
+   |
+   v
+DOCUMENTATION.md
+   |
+   v
+CODING_STYLE.md
+   |
+   v
+ACCEPTANCE_CRITERIA.md
+   |
+   v
+TASKS.md
+```
 
-Comments are not documentation.
+For security and architecture review, use this path:
 
-Comments explain:
+```text
+Engineer or architect
+   |
+   v
+ARCHITECTURE.md
+   |
+   v
+SECURITY_MODEL.md
+   |
+   v
+TRUST_BOUNDARIES.md
+   |
+   v
+POLICY_ENGINE.md
+   |
+   v
+ORCHESTRATOR_FSM_CONTRACT.md
+   |
+   v
+AUDIT_LOGGING.md
+```
 
-small local context.
+## If You Are Looking For...
 
-Documentation explains:
+| Goal | Read |
+| --- | --- |
+| Understand AEGIS in plain language | `README.md` |
+| Understand the problem being solved | `docs/PRD.md` |
+| Understand how the system is organized | `docs/ARCHITECTURE.md` |
+| Understand what must never change | `docs/INVARIANTS.md` |
+| Understand security assumptions | `docs/SECURITY_MODEL.md` |
+| Understand attacks and mitigations | `docs/THREAT_MODEL.md` |
+| Understand trust boundaries | `docs/TRUST_BOUNDARIES.md` |
+| Understand policy decisions | `docs/POLICY_ENGINE.md` |
+| Understand policy deployment | `docs/POLICY_DISTRIBUTION.md` |
+| Understand API behavior | `docs/API_SPEC.md` |
+| Understand audit evidence | `docs/AUDIT_LOGGING.md` |
+| Understand test expectations | `docs/TEST_STRATEGY.md` |
+| Write or review code | `docs/CODING_STYLE.md` |
+| Find current work | `docs/TASKS.md` |
+| Understand release rules | `docs/RELEASE_PROCESS.md` |
+| Understand architecture decisions | `docs/ADR.md` |
 
-system behavior.
+## Core Documentation Standard
 
-Do not replace missing documentation with excessive comments.
+Every document should answer four questions near the beginning:
 
-⸻
+1. What is this?
+2. Why does it exist?
+3. Who should read it?
+4. What should the reader do next?
 
-Documentation Metrics
+If a document does not answer these questions, it is not ready.
 
-Good documentation should answer:
+## Documentation Quality Rules
 
-What?
+AEGIS documentation should be:
 
-Why?
+- clear
+- structured
+- searchable
+- consistent
+- readable by a broad audience
+- precise enough for engineering work
 
-Who?
+Use short sections.
 
-When?
+Use plain terms first.
 
-How?
+Define unfamiliar terms before relying on them.
 
-Without requiring the reader to inspect implementation.
+Prefer examples before abstract rules.
 
-⸻
+Use cross-references instead of copying the same large explanation into multiple documents.
 
-Review Checklist
+## Reading Level Requirement
 
-Before merging documentation:
+General explanations should target approximately an 11th-grade reading level.
 
-□ Is terminology consistent?
+This means:
 
-□ Does it contradict another document?
+- use direct sentences
+- avoid unnecessary jargon
+- explain acronyms
+- define specialized terms
+- use examples
+- avoid large walls of text
 
-□ Does it duplicate information unnecessarily?
+It does not mean removing technical detail.
 
-□ Does it explain intent?
+It means introducing technical detail in an order the reader can follow.
 
-□ Is it technically accurate?
+## Progressive Disclosure
 
-□ Is it implementation independent?
+Documents should move from simple to detailed.
 
-□ Is it maintainable?
+Use this pattern where practical:
 
-□ Is it readable?
+```text
+Plain-language summary
+   |
+   v
+Problem being solved
+   |
+   v
+Key terms
+   |
+   v
+Practical examples
+   |
+   v
+Technical details
+   |
+   v
+Formal rules or contracts
+```
 
-⸻
+This allows a non-technical reader to understand the purpose while still giving engineers the detail they need.
 
-Documentation Anti-Patterns
+## Term Definitions
+
+Define important terms clearly.
+
+Examples:
+
+- **Gateway**: the checkpoint that reviews an AI action before it reaches an outside system.
+- **Policy**: a written rule that says what is allowed, denied, or requires approval.
+- **Policy Bundle**: a versioned package of policy files loaded by AEGIS.
+- **Wrapper**: an enforcement layer that safely executes or blocks an approved action.
+- **Replay**: running a previously stored action again without asking the AI to rewrite it.
+- **Deterministic**: producing the same result when given the same inputs.
+- **Audit Record**: evidence showing what happened and why.
+- **Human-in-the-Loop**: a required human approval step before a sensitive action can continue.
+
+Do not assume the reader already knows these terms.
+
+## Why So Much Documentation?
+
+Most repositories start with code and slowly add documentation later.
+
+AEGIS deliberately reverses that order.
+
+The documents define the system before code is written.
+
+This helps prevent:
+
+- architecture drift
+- hidden assumptions
+- unsafe AI-generated code
+- unclear security rules
+- inconsistent implementation
+- weak review standards
+
+AEGIS is security-sensitive infrastructure. The software must be understandable before it can be trusted.
+
+## Documentation Hierarchy
+
+The repository follows strict precedence.
+
+```text
+OPERATING_DOCTRINE.md
+   |
+   v
+PRD.md
+   |
+   v
+ARCHITECTURE.md
+   |
+   v
+INVARIANTS.md
+   |
+   v
+DOCUMENTATION.md
+   |
+   v
+USER_FLOWS.md
+   |
+   v
+ACCEPTANCE_CRITERIA.md
+   |
+   v
+CODING_STYLE.md
+   |
+   v
+TASKS.md
+```
+
+Higher documents override lower documents when they conflict.
+
+If two documents disagree, do not guess. Stop and resolve the conflict.
+
+## Repository Documentation Categories
+
+AEGIS documentation is grouped by purpose.
+
+### Governance
+
+Governance documents explain how the project operates.
+
+Examples:
+
+- `OPERATING_DOCTRINE.md`
+- `DOCUMENTATION.md`
+- `CODING_STYLE.md`
+- `ADR.md`
+- `RELEASE_PROCESS.md`
+
+### Product
+
+Product documents explain what is being built and why.
+
+Examples:
+
+- `PRD.md`
+- `USER_FLOWS.md`
+- `ROADMAP.md`
+- `PHASEMAP.md`
+
+### Architecture
+
+Architecture documents explain how the system is structured.
+
+Examples:
+
+- `ARCHITECTURE.md`
+- `INVARIANTS.md`
+- `SECURITY_MODEL.md`
+- `TRUST_BOUNDARIES.md`
+- `POLICY_ENGINE.md`
+- `POLICY_DISTRIBUTION.md`
+
+### Runtime Contracts
+
+Runtime contract documents and schemas define how components communicate.
+
+Examples:
+
+- `API_SPEC.md`
+- `ORCHESTRATOR_FSM_CONTRACT.md`
+- `schemas/`
+
+### Verification
+
+Verification documents explain how correctness is proven.
+
+Examples:
+
+- `ACCEPTANCE_CRITERIA.md`
+- `VALIDATION.md`
+- `TEST_STRATEGY.md`
+- `RUNTIME_EVIDENCE.md`
+
+## Required Repository Documents
+
+| Document | Core question answered |
+| --- | --- |
+| `README.md` | What is AEGIS? |
+| `OPERATING_DOCTRINE.md` | How do we build the project? |
+| `PRD.md` | What are we building and why? |
+| `ARCHITECTURE.md` | How is the system organized? |
+| `INVARIANTS.md` | What must never change? |
+| `DOCUMENTATION.md` | How should documentation work? |
+| `USER_FLOWS.md` | How should people and systems move through AEGIS? |
+| `ACCEPTANCE_CRITERIA.md` | How do we know work is complete? |
+| `CODING_STYLE.md` | How should code be written? |
+| `TASKS.md` | What work is planned or complete? |
+| `SECURITY_MODEL.md` | What does the system protect? |
+| `THREAT_MODEL.md` | What can attack the system? |
+| `API_SPEC.md` | How do systems communicate with AEGIS? |
+| `TEST_STRATEGY.md` | How is behavior tested? |
+| `ADR.md` | Why were major decisions made? |
+
+## Document Lifecycle
+
+Documents should move through a clear lifecycle.
+
+```text
+Draft
+   |
+   v
+Review
+   |
+   v
+Approval
+   |
+   v
+Implementation
+   |
+   v
+Maintenance
+   |
+   v
+Revision
+```
+
+No document should become abandoned.
+
+If a document no longer reflects the system, it must be updated or deliberately archived.
+
+## Change Management
+
+Documentation changes fall into three categories.
+
+### Editorial Changes
+
+These improve grammar, wording, formatting, or clarity.
+
+They do not change behavior.
+
+### Functional Changes
+
+These change what the system does or how users interact with it.
+
+They require review and may require updates to acceptance criteria, tests, and tasks.
+
+### Architectural Changes
+
+These affect architecture, invariants, governance, security, policy, runtime contracts, or compatibility.
+
+They require formal review and should update `ADR.md` when the decision matters long term.
+
+## Documentation Reviews
+
+Reviewers should ask:
+
+- Is the purpose clear?
+- Is the intended audience clear?
+- Are important terms defined?
+- Does the document answer core reader questions?
+- Does it conflict with another document?
+- Does it match the architecture?
+- Does it preserve invariants?
+- Is it readable by a broad audience?
+- Is the technical detail accurate?
+- Does it point readers to the right next document?
+
+## Cross References
+
+Documents should reference concepts and stable document names.
+
+Good:
+
+> See `INVARIANTS.md` for non-negotiable architectural rules.
 
 Avoid:
 
-Documentation written after implementation
+> See line 384 of gateway.py.
 
-Duplicate documents
+Documentation should survive refactoring.
 
-Architecture hidden in source code
+## Diagrams and Tables
 
-Large undocumented assumptions
+Use diagrams when they explain structure, sequence, trust boundaries, state transitions, or policy flow.
 
-Copy/paste across files
+Use tables when comparing documents, responsibilities, requirements, or decisions.
 
-Outdated diagrams
+Do not use diagrams or tables as decoration.
 
-Broken cross references
+Every diagram and table should answer a reader question.
 
-Temporary notes committed permanently
+## AI-Generated Documentation
 
-Design decisions only recorded in pull requests
+AI-generated documentation must meet the same quality standard as human-written documentation.
 
-Tribal knowledge
+AI-generated changes must:
 
-⸻
+- preserve terminology
+- preserve hierarchy
+- avoid inventing requirements
+- avoid contradicting architecture
+- define unfamiliar terms
+- remain readable
+- pass review
 
-Versioning
+Human review remains required.
 
-Documentation versions follow repository evolution.
+## Source Code Comments Are Not Documentation
 
-Major architectural revisions should update:
+Comments explain small local details in code.
 
-* version number
-* revision history
-* affected documents
+Repository documentation explains system behavior, governance, architecture, and contracts.
 
-Older documentation should remain available through version control.
+Do not use excessive comments to compensate for missing documentation.
 
-⸻
+## Documentation Anti-Patterns
 
-Ownership
+Avoid:
 
-Every repository contributor owns documentation quality.
+- documentation written only after implementation
+- unexplained jargon
+- duplicate documents
+- hidden architecture in source code
+- undocumented assumptions
+- large walls of text
+- broken cross-references
+- outdated diagrams
+- design decisions recorded only in pull requests
+- tribal knowledge
 
-Maintainers own documentation governance.
+## Documentation Review Checklist
 
-Reviewers own documentation consistency.
+Before merging documentation, confirm:
 
-AI assistants assist documentation.
+- The purpose is clear.
+- The audience is clear.
+- The first page answers the core questions.
+- Unfamiliar terms are defined.
+- The document starts in plain language.
+- Technical depth increases gradually.
+- Examples are used where helpful.
+- Related documents are linked.
+- Terminology is consistent.
+- The document does not contradict higher-precedence documents.
+- The document is readable.
+- The document supports future contributors.
 
-Humans approve documentation.
-
-⸻
-
-Definition of Complete Documentation
+## Definition of Complete Documentation
 
 Documentation is complete when:
 
-* requirements are defined
-* architecture is documented
-* terminology is consistent
-* invariants are identified
-* acceptance criteria exist
-* diagrams explain structure
-* implementation can proceed without guessing
+- requirements are defined
+- architecture is documented
+- terms are clear
+- invariants are identified
+- acceptance criteria exist
+- reader questions are answered
+- examples exist where concepts are unfamiliar
+- implementation can proceed without guessing
 
 If implementation requires guessing, the documentation is incomplete.
 
-⸻
+## Final Principle
 
-Final Principle
+Documentation is not paperwork.
+
+Documentation is how AEGIS explains what it protects, what it connects, and what it prevents.
 
 The purpose of documentation is not to describe software after it has been written.
 
-The purpose of documentation is to make correct software inevitable.
+The purpose of documentation is to make correct software easier to build and unsafe software harder to introduce.
 
-Every document in AEGIS should reduce uncertainty, preserve architectural intent, and enable future contributors—human or AI—to build the system consistently.
-
-Documentation is the foundation upon which the entire project is built.
+Every document in AEGIS should reduce uncertainty, define terms clearly, preserve architectural intent, and help future contributors build the system consistently.

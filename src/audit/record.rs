@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 use crate::gateway::{
-    CapabilityClass, GatewayStatus, IdempotencyContext, NonEmptyString, PolicyProvenance,
-    ResponseDecision, SchemaVersion, Timestamp, ToolCallRequest, ToolCallResponse,
-    WrapperExecutionContext,
+    CapabilityClass, ExecutionIdentityContext, GatewayStatus, IdempotencyContext, NonEmptyString,
+    PolicyProvenance, ResponseDecision, SchemaVersion, Timestamp, ToolCallRequest,
+    ToolCallResponse, WrapperExecutionContext,
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -74,6 +74,7 @@ pub struct AuditRecordDetails {
     pub capability_class: Option<CapabilityClass>,
     pub idempotency_context: Option<IdempotencyContext>,
     pub wrapper_context: Option<WrapperExecutionContext>,
+    pub execution_identity_context: Option<ExecutionIdentityContext>,
 }
 
 impl AuditRecordDetails {
@@ -86,7 +87,13 @@ impl AuditRecordDetails {
         response: &ToolCallResponse,
         idempotency_context: Option<IdempotencyContext>,
     ) -> Self {
-        Self::from_gateway_decision_with_contexts(request, response, idempotency_context, None)
+        Self::from_gateway_decision_with_contexts(
+            request,
+            response,
+            idempotency_context,
+            None,
+            None,
+        )
     }
 
     pub fn from_gateway_decision_with_contexts(
@@ -94,6 +101,7 @@ impl AuditRecordDetails {
         response: &ToolCallResponse,
         idempotency_context: Option<IdempotencyContext>,
         wrapper_context: Option<WrapperExecutionContext>,
+        execution_identity_context: Option<ExecutionIdentityContext>,
     ) -> Self {
         Self {
             request_id: Some(request.request_id.clone()),
@@ -101,6 +109,7 @@ impl AuditRecordDetails {
             capability_class: request.tool.capability_class.clone(),
             idempotency_context,
             wrapper_context,
+            execution_identity_context,
         }
     }
 
@@ -111,6 +120,7 @@ impl AuditRecordDetails {
             capability_class: None,
             idempotency_context: None,
             wrapper_context: None,
+            execution_identity_context: None,
         }
     }
 }

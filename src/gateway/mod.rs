@@ -1,4 +1,5 @@
 mod entrypoint;
+mod execution_identity;
 mod idempotency;
 mod request;
 mod response;
@@ -10,6 +11,10 @@ mod wrapper;
 pub use entrypoint::{
     GatewayEntrypointContext, GatewayEntrypointResult, GatewayEntrypointSummary,
     GatewayPolicyAdapterContext,
+};
+pub use execution_identity::{
+    ExecutionIdentity, ExecutionIdentityBinding, ExecutionIdentityContext, ExecutionIdentitySource,
+    ExecutionNonceRef,
 };
 pub use idempotency::{IdempotencyContext, IdempotencyKey, OperationType};
 pub use request::{

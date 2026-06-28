@@ -16,6 +16,7 @@ pub struct GatewayEntrypointContext {
     pub audit_metadata: AuditRecordMetadata,
     pub idempotency_context: Option<super::IdempotencyContext>,
     pub wrapper_context: Option<super::WrapperExecutionContext>,
+    pub execution_identity_context: Option<super::ExecutionIdentityContext>,
 }
 
 pub struct GatewayPolicyAdapterContext<'a> {
@@ -25,6 +26,7 @@ pub struct GatewayPolicyAdapterContext<'a> {
     pub audit_metadata: AuditRecordMetadata,
     pub idempotency_context: Option<super::IdempotencyContext>,
     pub wrapper_context: Option<super::WrapperExecutionContext>,
+    pub execution_identity_context: Option<super::ExecutionIdentityContext>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
@@ -42,6 +44,16 @@ pub struct GatewayEntrypointResult {
     pub summary: GatewayEntrypointSummary,
     pub idempotency_context: Option<super::IdempotencyContext>,
     pub wrapper_context: Option<super::WrapperExecutionContext>,
+    pub execution_identity_context: Option<super::ExecutionIdentityContext>,
+}
+
+struct GatewayDecisionMappingContext {
+    response_metadata: ResponseMetadata,
+    audit_metadata: AuditRecordMetadata,
+    supplied_idempotency_context: Option<super::IdempotencyContext>,
+    supplied_wrapper_context: Option<super::WrapperExecutionContext>,
+    supplied_execution_identity_context: Option<super::ExecutionIdentityContext>,
+    summary: GatewayEntrypointSummary,
 }
 
 impl Gateway {
@@ -99,11 +111,14 @@ fn map_supported_request(
     map_policy_decision_result(
         request,
         context.policy_decision,
-        context.response_metadata,
-        context.audit_metadata,
-        context.idempotency_context,
-        context.wrapper_context,
-        GatewayEntrypointSummary::PolicyDecisionMapped,
+        GatewayDecisionMappingContext {
+            response_metadata: context.response_metadata,
+            audit_metadata: context.audit_metadata,
+            supplied_idempotency_context: context.idempotency_context,
+            supplied_wrapper_context: context.wrapper_context,
+            supplied_execution_identity_context: context.execution_identity_context,
+            summary: GatewayEntrypointSummary::PolicyDecisionMapped,
+        },
     )
 }
 
@@ -116,40 +131,42 @@ fn map_adapter_supported_request(
     map_policy_decision_result(
         request,
         decision,
-        context.response_metadata,
-        context.audit_metadata,
-        context.idempotency_context,
-        context.wrapper_context,
-        summary,
+        GatewayDecisionMappingContext {
+            response_metadata: context.response_metadata,
+            audit_metadata: context.audit_metadata,
+            supplied_idempotency_context: context.idempotency_context,
+            supplied_wrapper_context: context.wrapper_context,
+            supplied_execution_identity_context: context.execution_identity_context,
+            summary,
+        },
     )
 }
 
 fn map_policy_decision_result(
     request: super::ToolCallRequest,
     policy_decision: PolicyDecision,
-    response_metadata: ResponseMetadata,
-    audit_metadata: AuditRecordMetadata,
-    supplied_idempotency_context: Option<super::IdempotencyContext>,
-    supplied_wrapper_context: Option<super::WrapperExecutionContext>,
-    summary: GatewayEntrypointSummary,
+    context: GatewayDecisionMappingContext,
 ) -> GatewayEntrypointResult {
     let idempotency_context =
-        idempotency_context_for_request(&request, &supplied_idempotency_context);
-    let response = Gateway::map_policy_decision(&request, policy_decision, response_metadata);
+        idempotency_context_for_request(&request, &context.supplied_idempotency_context);
+    let response =
+        Gateway::map_policy_decision(&request, policy_decision, context.response_metadata);
     let audit_record = AuditRecordBuilder::build_gateway_decision_record_with_contexts(
         &request,
         &response,
-        audit_metadata,
+        context.audit_metadata,
         idempotency_context.clone(),
-        supplied_wrapper_context.clone(),
+        context.supplied_wrapper_context.clone(),
+        context.supplied_execution_identity_context.clone(),
     );
 
     GatewayEntrypointResult {
         response,
         audit_record,
-        summary,
+        summary: context.summary,
         idempotency_context,
-        wrapper_context: supplied_wrapper_context,
+        wrapper_context: context.supplied_wrapper_context,
+        execution_identity_context: context.supplied_execution_identity_context,
     }
 }
 
@@ -162,6 +179,7 @@ fn denied_entrypoint_result(evidence: super::GatewayDecisionEvidence) -> Gateway
         summary,
         idempotency_context: None,
         wrapper_context: None,
+        execution_identity_context: None,
     }
 }
 

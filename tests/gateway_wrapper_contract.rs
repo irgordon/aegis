@@ -136,6 +136,7 @@ fn process_request(
             audit_metadata: audit_metadata(),
             idempotency_context: None,
             wrapper_context,
+            execution_identity_context: None,
         },
     )
 }

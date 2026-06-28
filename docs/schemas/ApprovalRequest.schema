@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ApprovalRequest",
+  "type": "object",
+  "required": [
+    "approval_id",
+    "execution_id",
+    "action_id",
+    "request_hash",
+    "status"
+  ],
+  "properties": {
+    "approval_id": {
+      "type": "string"
+    },
+    "execution_id": {
+      "type": "string"
+    },
+    "action_id": {
+      "type": "string"
+    },
+    "request_hash": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "denied",
+        "expired"
+      ]
+    },
+    "approver_identity": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "decided_at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}

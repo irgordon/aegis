@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PolicyBundleManifest",
+  "type": "object",
+  "required": [
+    "bundle_id",
+    "version",
+    "policy_hash",
+    "schema_version"
+  ],
+  "properties": {
+    "bundle_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "policy_hash": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "signer_identity": {
+      "type": "string"
+    },
+    "requires_gateway": {
+      "type": "string"
+    },
+    "compatible_wrappers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

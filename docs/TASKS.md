@@ -88,7 +88,8 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Implement deterministic response mapping | complete |
 | Implement basic audit record creation | in_progress |
 | Add minimal audit record builder | complete |
-| Enforce deny-by-default behavior | planned |
+| Enforce deny-by-default behavior | in_progress |
+| Add deny-by-default unsupported tool handling | complete |
 | Add allowed and denied path tests | planned |
 
 ## Phase 3: Policy Engine

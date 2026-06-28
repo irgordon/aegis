@@ -1,6 +1,7 @@
 mod request;
 mod response;
 mod schema;
+mod support;
 
 pub use request::{
     ActorType, CapabilityClass, OrchestratorReference, RequestActor, RequestedTool, ToolCallRequest,
@@ -10,6 +11,7 @@ pub use response::{
     ResponseDecision, ResponseMetadata, ToolCallResponse,
 };
 pub use schema::{NonEmptyString, SchemaVersion, Timestamp};
+pub use support::{GatewayDecisionEvidence, SupportedTools};
 
 use crate::policy::PolicyDecision;
 

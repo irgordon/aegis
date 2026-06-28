@@ -23,6 +23,12 @@ For runtime or API work, also read:
 * `docs/COMPATIBILITY.md`
 * `schemas/`
 
+For UI or frontend work, also read:
+
+* `docs/UI-DESIGN.md`
+
+For UI changes, read `docs/UI-DESIGN.md` and complete the UI Integrity Review before implementing.
+
 ## Do Not
 
 * Do not create code outside the current phase.

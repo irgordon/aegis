@@ -182,6 +182,7 @@ AUDIT_LOGGING.md
 | Find current work | `docs/TASKS.md` |
 | Understand release rules | `docs/RELEASE_PROCESS.md` |
 | Understand architecture decisions | `docs/ADR.md` |
+| Understand UI review requirements | `docs/UI-DESIGN.md` |
 
 ## Core Documentation Standard
 
@@ -394,6 +395,14 @@ Examples:
 - `API_SPEC.md`
 - `ORCHESTRATOR_FSM_CONTRACT.md`
 - `schemas/`
+
+### User Interface
+
+User interface documents define review standards for future UI work.
+
+Examples:
+
+- `UI-DESIGN.md`
 
 ### Verification
 

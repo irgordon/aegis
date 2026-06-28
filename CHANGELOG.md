@@ -4,6 +4,16 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.10] - 2026-06-28
+
+### Added
+
+- Added UI-DESIGN.md to define required UI integrity review standards for future frontend work.
+
+### Changed
+
+- Updated AGENTS.md and DOCUMENTATION.md to reference UI design review requirements.
+
 ## [0.1.9] - 2026-06-28
 
 ### Added

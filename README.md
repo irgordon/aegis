@@ -4,11 +4,12 @@
 
 **AI Execution Governance & Interception System**
 
-[![Status](https://img.shields.io/badge/status-initial%20architecture-blue)](https://github.com/irgordon/aegis)
-[![Governance](https://img.shields.io/badge/governance-documentation--driven-6f42c1)](docs/OPERATING_DOCTRINE.md)
-[![Security](https://img.shields.io/badge/security-fail--closed-critical)](docs/INVARIANTS.md)
-[![Policy](https://img.shields.io/badge/policy-immutable%20bundles-2ea44f)](docs/POLICY_DISTRIBUTION.md)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+[![Rust](https://img.shields.io/badge/RUST-rust-red)](https://www.rust-lang.org/)
+[![Bash](https://img.shields.io/badge/BASH-shell%20script-4EAA25)](https://www.gnu.org/software/bash/)
+[![TypeScript](https://img.shields.io/badge/TYPESCRIPT-ui-3178C6)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/PYTHON-validation-3776AB)](https://www.python.org/)
+[![GitHub Actions](https://img.shields.io/badge/GITHUB%20ACTIONS-workflows-2088FF)](https://github.com/features/actions)
+[![License](https://img.shields.io/badge/LICENSE-MIT-lightgrey)](LICENSE)
 
 </div>
 
@@ -45,7 +46,7 @@ Enable organizations to safely transition from Authority to Operate (ATO) toward
 
 ## Repository status
 
-AEGIS is currently in the initial architecture and governance phase. The repository is being built documentation-first so the implementation follows a clear security and execution model before code is added.
+AEGIS is currently in the governance, protocol-contract, and validation phase. The repository is being built documentation-first and workflow-verified so implementation follows a clear security and execution model before runtime code is added.
 
 ## Core documents
 

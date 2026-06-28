@@ -61,6 +61,14 @@ impl ToolCallResponse {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct ResponseMetadata {
+    pub execution_id: NonEmptyString,
+    pub policy_provenance: PolicyProvenance,
+    pub audit_record_id: NonEmptyString,
+    pub completed_at: Timestamp,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct PendingReference {

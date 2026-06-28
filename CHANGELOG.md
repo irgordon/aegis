@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.9] - 2026-06-28
+
+### Added
+
+- Added a minimal internal Gateway entrypoint boundary.
+- Added entrypoint contract tests for malformed, unsupported, allowed, denied, and pending request outcomes.
+
+### Changed
+
+- Updated Phase 2 task tracking for gateway entrypoint coordination.
+
 ## [0.1.8] - 2026-06-28
 
 ### Added

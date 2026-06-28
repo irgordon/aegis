@@ -1,9 +1,11 @@
+mod entrypoint;
 mod request;
 mod response;
 mod schema;
 mod support;
 mod validation;
 
+pub use entrypoint::{GatewayEntrypointContext, GatewayEntrypointResult, GatewayEntrypointSummary};
 pub use request::{
     ActorType, CapabilityClass, OrchestratorReference, RequestActor, RequestedTool, ToolCallRequest,
 };

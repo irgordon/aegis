@@ -81,7 +81,8 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Task | Status |
 | --- | --- |
 | Select initial implementation language and runtime | complete |
-| Create gateway entrypoint | in_progress |
+| Create gateway entrypoint | complete |
+| Add minimal gateway entrypoint boundary | complete |
 | Implement request validation | complete |
 | Add schema-backed Rust request and response models | complete |
 | Add schema-backed gateway validation pipeline | complete |

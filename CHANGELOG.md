@@ -4,6 +4,12 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.7] - 2026-06-28
+
+### Changed
+
+- Hardened ARCHITECTURE.md execution semantics for identity binding, approval liveness, policy bundle pinning, wrapper determinism, replay fidelity, and idempotency.
+
 ## [0.1.6] - 2026-06-28
 
 ### Added

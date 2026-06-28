@@ -344,6 +344,24 @@ Return Response
 
 Every step produces deterministic output.
 
+Execution Identity Binding
+
+Execution identity is assigned after schema validation and before policy evaluation.
+
+The execution_id is derived from or bound to:
+
+* orchestrator_id
+* workflow_id
+* tool_call_id
+* policy_bundle_version
+* nonce
+
+The architecture does not require a specific final hash algorithm.
+
+Execution identity must remain stable across Gateway replicas for the same accepted execution context. It must prevent replay ambiguity across workflows, tool calls, policy bundle versions, and retries.
+
+The accepted Policy Bundle version is pinned when Execution Identity is assigned.
+
 ⸻
 
 Policy Architecture
@@ -366,6 +384,8 @@ Gateway
 
 The gateway never evaluates live registry state.
 
+The gateway must not evaluate live registry state during request execution. Runtime policy selection is based only on the activated local immutable bundle pinned to the accepted execution context.
+
 ⸻
 
 Policy Bundle
@@ -383,6 +403,14 @@ Bundles are:
 * immutable
 * signed
 * versioned
+
+The Gateway must reject a Policy Bundle when:
+
+* signatures fail
+* checksums fail
+* required bundle files are missing
+* manifest.yaml policy version does not match the referenced risk matrix version
+* bundle identity does not match the version pinned during Execution Identity assignment
 
 ⸻
 
@@ -419,7 +447,7 @@ L2
 
 High-risk mutation.
 
-Requires human approval.
+Requires human approval according to the active Policy Bundle.
 
 Examples:
 
@@ -433,13 +461,27 @@ L3
 
 Irreversible.
 
+Requires quorum-based approval according to the active Policy Bundle.
+
 Examples:
 
 * delete production data
 * terminate infrastructure
 * financial transfers
 
-Multiple approvals may be required.
+L2 and L3 approval requirements are defined by the Policy Bundle, not hardcoded into Gateway runtime logic.
+
+Policy defines:
+
+* quorum size
+* approver roles
+* break-glass rules
+* expiration
+* approval context requirements
+
+The Gateway enforces the policy decision. It does not invent approval rules.
+
+Break-glass use must be auditable and must not bypass evidence requirements.
 
 ⸻
 
@@ -473,6 +515,22 @@ Credential Destroyed
 
 No credential survives execution.
 
+Wrapper Determinism and Redaction
+
+Wrappers must remain deterministic from the Gateway perspective.
+
+Credential injection, secret material, tokens, and volatile external values must not be written into audit records or replay payloads.
+
+Audit redaction follows this contract:
+
+* secrets are never recorded in plaintext
+* redacted fields preserve field presence
+* redacted fields preserve enough metadata to prove the wrapper path used
+* replay uses stored wrapper configuration, not stored secrets
+* secret values are reacquired through approved runtime mechanisms during real execution
+
+Redaction is part of deterministic replay safety.
+
 ⸻
 
 Human Approval
@@ -490,6 +548,17 @@ The orchestrator must:
 * await approval event
 
 No blocking loops.
+
+Approval tokens must be:
+
+* single-use
+* scoped to execution_id
+* scoped to tool_call_hash
+* time-limited by TTL
+* revocable before execution
+* invalid after use, expiration, revocation, or execution context mismatch
+
+Approval state must not be reused across a changed request, changed tool parameters, changed wrapper configuration, or changed policy bundle.
 
 ⸻
 
@@ -510,6 +579,19 @@ Stored Policy
 Stored Approval
 ↓
 Execution
+
+Replay evidence includes:
+
+* stored action
+* stored parameters
+* stored policy bundle identity
+* stored approval evidence where applicable
+* stored wrapper configuration
+* stored external system schema version
+* stored response mapping version if versioned
+* stored audit redaction metadata
+
+Wrapper updates or external API and schema changes must not silently alter replay interpretation.
 
 ⸻
 
@@ -558,6 +640,22 @@ Determinism requires:
 * idempotency
 
 No hidden randomness.
+
+Idempotency
+
+For L1 through L3 mutation-capable actions, the Gateway must generate or assign an idempotency key and pass it to supported external systems.
+
+The idempotency key must bind to:
+
+* execution_id
+* tool_call_hash
+* target system
+* operation type
+* policy bundle version
+
+Idempotency protects against double execution after crashes, retries, network failures, or partial state persistence.
+
+If an external system does not support idempotency keys, the Gateway must record that limitation in audit evidence and apply the safer behavior required by policy.
 
 ⸻
 

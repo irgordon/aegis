@@ -4,12 +4,12 @@
 
 **AI Execution Governance & Interception System**
 
-[![Rust](https://img.shields.io/badge/RUST-rust-red)](https://www.rust-lang.org/)
-[![Bash](https://img.shields.io/badge/BASH-shell%20script-4EAA25)](https://www.gnu.org/software/bash/)
-[![TypeScript](https://img.shields.io/badge/TYPESCRIPT-ui-3178C6)](https://www.typescriptlang.org/)
-[![Python](https://img.shields.io/badge/PYTHON-validation-3776AB)](https://www.python.org/)
-[![GitHub Actions](https://img.shields.io/badge/GITHUB%20ACTIONS-workflows-2088FF)](https://github.com/features/actions)
-[![License](https://img.shields.io/badge/LICENSE-MIT-lightgrey)](LICENSE)
+[![Rust](https://img.shields.io/badge/RUST-%23E05D44.svg?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![Bash](https://img.shields.io/badge/BASH-%234EAA25.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
+[![TypeScript](https://img.shields.io/badge/TYPESCRIPT-%233178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Python](https://img.shields.io/badge/PYTHON-%233776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![GitHub Actions](https://img.shields.io/badge/CI-GITHUB%20ACTIONS-%232088FF.svg?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
+[![License](https://img.shields.io/badge/LICENSE-MIT-brightgreen.svg?style=for-the-badge)](LICENSE)
 
 </div>
 

@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [Unreleased]
+
+### Added
+
+- Accepted the Rust Gateway MVP runtime decision.
+- Added the initial Rust Gateway MVP crate scaffold.
+- Added gateway contract tests for bounded response states.
+- Added Rust formatting, linting, and test validation to CI.
+
+### Changed
+
+- Updated repository status for Phase 2 Gateway MVP scaffolding.
+- Updated Phase 2 task state for runtime selection and gateway entrypoint scaffolding.
+
 ## [0.1.0] - 2026-06-28
 
 ### Governance Foundation

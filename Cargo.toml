@@ -1,0 +1,14 @@
+[package]
+name = "aegis"
+version = "0.2.0"
+edition = "2021"
+license = "MIT"
+description = "AI Execution Governance and Interception System"
+
+[lib]
+name = "aegis"
+path = "src/lib.rs"
+
+[[bin]]
+name = "aegis-gateway"
+path = "src/main.rs"

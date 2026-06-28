@@ -80,8 +80,8 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 
 | Task | Status |
 | --- | --- |
-| Select initial implementation language and runtime | planned |
-| Create gateway entrypoint | planned |
+| Select initial implementation language and runtime | complete |
+| Create gateway entrypoint | in_progress |
 | Implement request validation | planned |
 | Implement policy decision interface | planned |
 | Implement deterministic response mapping | planned |

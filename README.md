@@ -46,7 +46,7 @@ Enable organizations to safely transition from Authority to Operate (ATO) toward
 
 ## Repository status
 
-AEGIS is currently in the governance, protocol-contract, and validation phase. The repository is being built documentation-first and workflow-verified so implementation follows a clear security and execution model before runtime code is added.
+AEGIS has completed its governance and protocol-contract foundation. Phase 2 begins the Rust Gateway MVP scaffold.
 
 ## Core documents
 

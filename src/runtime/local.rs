@@ -223,7 +223,7 @@ fn process_validated_request(
         );
     }
 
-    if response.status == GatewayStatus::Denied {
+    if response.status != GatewayStatus::Allowed {
         transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
     }
 

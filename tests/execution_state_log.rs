@@ -1,13 +1,23 @@
 use std::{
+    collections::BTreeMap,
     fs,
     io::Write,
     path::{Path, PathBuf},
     process::{Command, Output, Stdio},
 };
 
-use aegis::state::{
-    ExecutionLifecycle, ExecutionState, ExecutionStateLogContext, ExecutionStateSink,
-    ExecutionStateWriter, ExecutionTransition,
+use aegis::{
+    auth::{CredentialRequirement, ExecutionAuthorization},
+    gateway::{
+        ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
+        WrapperExecutor,
+    },
+    runtime::local::{process_local_gateway_request_with_wrapper_registry, LocalRuntimeOutput},
+    state::{
+        valid_transition, ExecutionLifecycle, ExecutionState, ExecutionStateLogContext,
+        ExecutionStateSink, ExecutionStateWriter, ExecutionTransition,
+    },
+    wrappers::HealthCheckWrapper,
 };
 use serde_json::Value;
 
@@ -103,6 +113,168 @@ fn denied_policy_writes_fail_closed_lifecycle_evidence() {
             "validated",
             "bundle_verified",
             "policy_evaluated",
+            "failed_closed",
+        ],
+    );
+}
+
+#[test]
+fn pending_policy_writes_terminal_non_execution_lifecycle_evidence() {
+    let paths = case_paths("pending_policy_writes_terminal_non_execution_lifecycle_evidence");
+
+    run_gateway_success(
+        &request_with_tool_and_capability("deploy.prod", "L2"),
+        &paths,
+        |_| {},
+    );
+
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &[
+            "validated",
+            "bundle_verified",
+            "policy_evaluated",
+            "failed_closed",
+        ],
+    );
+}
+
+#[test]
+fn invalid_bundle_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("invalid_bundle_writes_fail_closed_lifecycle_evidence");
+    let bundle = bundle_without_manifest("invalid_bundle_writes_fail_closed_lifecycle_evidence");
+
+    run_gateway_success_with_bundle(&health_request(), &paths, &bundle, |_| {});
+
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &["validated", "failed_closed"],
+    );
+}
+
+#[test]
+fn checksum_mismatch_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("checksum_mismatch_writes_fail_closed_lifecycle_evidence");
+    let bundle =
+        checksum_mismatch_bundle("checksum_mismatch_writes_fail_closed_lifecycle_evidence");
+
+    run_gateway_success_with_bundle(&health_request(), &paths, &bundle, |_| {});
+
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &["validated", "failed_closed"],
+    );
+}
+
+#[test]
+fn invalid_signature_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("invalid_signature_writes_fail_closed_lifecycle_evidence");
+    let bundle =
+        signature_mismatch_bundle("invalid_signature_writes_fail_closed_lifecycle_evidence");
+
+    run_gateway_success_with_bundle(&health_request(), &paths, &bundle, |_| {});
+
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &["validated", "failed_closed"],
+    );
+}
+
+#[test]
+fn missing_wrapper_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("missing_wrapper_writes_fail_closed_lifecycle_evidence");
+    let output = process_local_gateway_request_with_wrapper_registry(
+        &health_request(),
+        Path::new(LOCAL_DEV_BUNDLE),
+        &[],
+        None,
+    );
+
+    write_output_state_log(&output, &paths);
+
+    assert_output_ended_failed_closed(&output);
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &[
+            "validated",
+            "bundle_verified",
+            "policy_evaluated",
+            "authorized",
+            "dispatching",
+            "failed_closed",
+        ],
+    );
+}
+
+#[test]
+fn wrapper_version_mismatch_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("wrapper_version_mismatch_writes_fail_closed_lifecycle_evidence");
+    let output = process_local_gateway_request_with_wrapper_registry(
+        &health_request(),
+        Path::new(LOCAL_DEV_BUNDLE),
+        &[&HealthCheckWrapper],
+        Some(wrapper_context("health.check", "2.0.0")),
+    );
+
+    write_output_state_log(&output, &paths);
+
+    assert_output_ended_failed_closed(&output);
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &[
+            "validated",
+            "bundle_verified",
+            "policy_evaluated",
+            "failed_closed",
+        ],
+    );
+}
+
+#[test]
+fn authorization_failure_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("authorization_failure_writes_fail_closed_lifecycle_evidence");
+    let output = process_local_gateway_request_with_wrapper_registry(
+        &health_request(),
+        Path::new(LOCAL_DEV_BUNDLE),
+        &[&HealthCheckWrapper],
+        Some(wrapper_context("metrics.read", "1.0.0")),
+    );
+
+    write_output_state_log(&output, &paths);
+
+    assert_output_ended_failed_closed(&output);
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &[
+            "validated",
+            "bundle_verified",
+            "policy_evaluated",
+            "failed_closed",
+        ],
+    );
+}
+
+#[test]
+fn credential_boundary_failure_writes_fail_closed_lifecycle_evidence() {
+    let paths = case_paths("credential_boundary_failure_writes_fail_closed_lifecycle_evidence");
+    let output = process_local_gateway_request_with_wrapper_registry(
+        &health_request(),
+        Path::new(LOCAL_DEV_BUNDLE),
+        &[&LocalRuntimeCredentialWrapper],
+        Some(wrapper_context("health.check", "1.0.0")),
+    );
+
+    write_output_state_log(&output, &paths);
+
+    assert_output_ended_failed_closed(&output);
+    assert_new_states(
+        &state_records(&paths.state_log),
+        &[
+            "validated",
+            "bundle_verified",
+            "policy_evaluated",
+            "authorized",
+            "dispatching",
             "failed_closed",
         ],
     );
@@ -239,6 +411,7 @@ fn audit_log_and_state_log_are_separate_files() {
     assert_eq!(state_records(&paths.state_log).len(), 8);
     assert!(audit_log_content(&paths.audit_log).contains("\"event_type\""));
     assert!(state_log_content(&paths.state_log).contains("\"new_state\""));
+    assert_state_log_has_no_full_audit_records(&state_records(&paths.state_log));
 }
 
 #[test]
@@ -265,6 +438,46 @@ fn invalid_lifecycle_transitions_are_not_written() {
     assert!(!paths.state_log.exists());
 }
 
+#[test]
+fn terminal_states_do_not_transition_further() {
+    for terminal in [
+        ExecutionState::Completed,
+        ExecutionState::FailedClosed,
+        ExecutionState::AuditFailed,
+    ] {
+        for next in all_execution_states() {
+            assert!(
+                !valid_transition(&terminal, &next),
+                "terminal state {terminal:?} must not transition to {next:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn lifecycle_indexes_are_strictly_ordered() {
+    let paths = case_paths("lifecycle_indexes_are_strictly_ordered");
+
+    run_gateway_success(&health_request(), &paths, |_| {});
+
+    for (index, record) in state_records(&paths.state_log).iter().enumerate() {
+        assert_eq!(record["lifecycle_index"], index);
+    }
+}
+
+#[test]
+fn state_log_uses_only_known_execution_state_names() {
+    let paths = case_paths("state_log_uses_only_known_execution_state_names");
+
+    run_gateway_success(&health_request(), &paths, |_| {});
+
+    let known_states = known_state_names();
+    for record in state_records(&paths.state_log) {
+        assert!(known_states.contains(&record["previous_state"].as_str().unwrap()));
+        assert!(known_states.contains(&record["new_state"].as_str().unwrap()));
+    }
+}
+
 struct CasePaths {
     audit_log: PathBuf,
     state_log: PathBuf,
@@ -277,6 +490,20 @@ fn run_gateway_success(
     configure: impl FnOnce(&mut Command),
 ) -> Value {
     let output = run_gateway_raw(input, paths, configure);
+    assert_runtime_success(output)
+}
+
+fn run_gateway_success_with_bundle(
+    input: &str,
+    paths: &CasePaths,
+    bundle_path: &Path,
+    configure: impl FnOnce(&mut Command),
+) -> Value {
+    let output = run_gateway_raw_with_bundle(input, paths, bundle_path, configure);
+    assert_runtime_success(output)
+}
+
+fn assert_runtime_success(output: Output) -> Value {
     assert!(
         output.status.success(),
         "runtime should succeed: {}",
@@ -286,7 +513,16 @@ fn run_gateway_success(
 }
 
 fn run_gateway_raw(input: &str, paths: &CasePaths, configure: impl FnOnce(&mut Command)) -> Output {
-    run_gateway_command(input, |command| {
+    run_gateway_raw_with_bundle(input, paths, Path::new(LOCAL_DEV_BUNDLE), configure)
+}
+
+fn run_gateway_raw_with_bundle(
+    input: &str,
+    paths: &CasePaths,
+    bundle_path: &Path,
+    configure: impl FnOnce(&mut Command),
+) -> Output {
+    run_gateway_command_with_bundle(input, bundle_path, |command| {
         command.arg("--audit-log").arg(&paths.audit_log);
         command.arg("--state-log").arg(&paths.state_log);
         configure(command);
@@ -294,12 +530,16 @@ fn run_gateway_raw(input: &str, paths: &CasePaths, configure: impl FnOnce(&mut C
 }
 
 fn run_gateway_without_state_log(input: &str) -> Output {
-    run_gateway_command(input, |_| {})
+    run_gateway_command_with_bundle(input, Path::new(LOCAL_DEV_BUNDLE), |_| {})
 }
 
-fn run_gateway_command(input: &str, configure: impl FnOnce(&mut Command)) -> Output {
+fn run_gateway_command_with_bundle(
+    input: &str,
+    bundle_path: &Path,
+    configure: impl FnOnce(&mut Command),
+) -> Output {
     let mut command = Command::new(env!("CARGO_BIN_EXE_aegis-gateway"));
-    command.arg("--bundle").arg(LOCAL_DEV_BUNDLE);
+    command.arg("--bundle").arg(bundle_path);
     configure(&mut command);
     command
         .stdin(Stdio::piped())
@@ -335,6 +575,58 @@ fn assert_new_states(records: &[Value], expected: &[&str]) {
     for (index, record) in records.iter().enumerate() {
         assert_eq!(record["lifecycle_index"], index);
     }
+    assert_logged_transitions_are_valid(records);
+}
+
+fn assert_logged_transitions_are_valid(records: &[Value]) {
+    for record in records {
+        let previous_state = execution_state_from_value(&record["previous_state"]);
+        let new_state = execution_state_from_value(&record["new_state"]);
+
+        assert!(
+            valid_transition(&previous_state, &new_state),
+            "state log must not write invalid transition {previous_state:?} -> {new_state:?}"
+        );
+    }
+}
+
+fn execution_state_from_value(value: &Value) -> ExecutionState {
+    serde_json::from_value(value.clone())
+        .unwrap_or_else(|error| panic!("state name should be known: {error}"))
+}
+
+fn assert_output_ended_failed_closed(output: &LocalRuntimeOutput) {
+    assert_eq!(
+        output.execution_lifecycle.execution_state,
+        ExecutionState::FailedClosed
+    );
+}
+
+fn assert_state_log_has_no_full_audit_records(records: &[Value]) {
+    for record in records {
+        assert!(record.get("event_type").is_none());
+        assert!(record.get("audit_record_id").is_none());
+        assert!(record.get("details").is_none());
+        assert!(record.get("status").is_none());
+    }
+}
+
+fn write_output_state_log(output: &LocalRuntimeOutput, paths: &CasePaths) {
+    let writer = ExecutionStateWriter::new(paths.state_log.clone());
+    writer
+        .append_lifecycle(
+            &output.execution_lifecycle,
+            &ExecutionStateLogContext {
+                execution_id: output.response.execution_id.as_str().to_string(),
+                request_id: output
+                    .response
+                    .request_id
+                    .as_ref()
+                    .map(|request_id| request_id.as_str().to_string()),
+                ..ExecutionStateLogContext::default()
+            },
+        )
+        .unwrap_or_else(|error| panic!("direct runtime lifecycle should write: {error}"));
 }
 
 fn state_records(path: &Path) -> Vec<Value> {
@@ -396,6 +688,68 @@ fn case_paths(name: &str) -> CasePaths {
     }
 }
 
+fn bundle_without_manifest(name: &str) -> PathBuf {
+    let target = policy_bundle_copy(name);
+    fs::remove_file(target.join("manifest.yaml"))
+        .unwrap_or_else(|error| panic!("manifest should remove from bundle fixture: {error}"));
+    target
+}
+
+fn checksum_mismatch_bundle(name: &str) -> PathBuf {
+    let target = policy_bundle_copy(name);
+    fs::write(
+        target.join("gateway_policy.yaml"),
+        "policy_version: 0.1.0-local\nrules:\n",
+    )
+    .unwrap_or_else(|error| panic!("gateway policy fixture should be writable: {error}"));
+    target
+}
+
+fn signature_mismatch_bundle(name: &str) -> PathBuf {
+    let target = policy_bundle_copy(name);
+    let checksum_path = target.join("checksums").join("SHA256SUMS");
+    let mut checksum_content = fs::read_to_string(&checksum_path)
+        .unwrap_or_else(|error| panic!("checksum manifest should be readable: {error}"));
+    checksum_content.push_str("# unsigned state log invariant test change\n");
+    fs::write(checksum_path, checksum_content)
+        .unwrap_or_else(|error| panic!("checksum manifest should be writable: {error}"));
+    target
+}
+
+fn policy_bundle_copy(name: &str) -> PathBuf {
+    let target = Path::new("target")
+        .join("execution-state-log-policy-bundles")
+        .join(name);
+    if target.exists() {
+        fs::remove_dir_all(&target)
+            .unwrap_or_else(|error| panic!("old policy bundle fixture should remove: {error}"));
+    }
+
+    copy_dir(Path::new(LOCAL_DEV_BUNDLE), &target);
+    target
+}
+
+fn copy_dir(source: &Path, target: &Path) {
+    fs::create_dir_all(target)
+        .unwrap_or_else(|error| panic!("target fixture directory should create: {error}"));
+
+    for entry in fs::read_dir(source)
+        .unwrap_or_else(|error| panic!("source fixture directory should be readable: {error}"))
+    {
+        let entry =
+            entry.unwrap_or_else(|error| panic!("fixture entry should be readable: {error}"));
+        let source_path = entry.path();
+        let target_path = target.join(entry.file_name());
+
+        if source_path.is_dir() {
+            copy_dir(&source_path, &target_path);
+        } else {
+            fs::copy(&source_path, &target_path)
+                .unwrap_or_else(|error| panic!("fixture file should copy: {error}"));
+        }
+    }
+}
+
 fn request_with_tool_and_capability(tool_name: &str, capability_class: &str) -> String {
     let mut request: Value = serde_json::from_str(&sandbox_note_request())
         .unwrap_or_else(|error| panic!("sandbox note request should parse: {error}"));
@@ -416,4 +770,83 @@ fn sandbox_note_request() -> String {
 fn read_fixture(path: &str) -> String {
     fs::read_to_string(path)
         .unwrap_or_else(|error| panic!("fixture should be readable at {path}: {error}"))
+}
+
+fn wrapper_context(wrapper_name: &str, wrapper_version: &str) -> WrapperExecutionContext {
+    serde_json::from_value(serde_json::json!({
+        "config": {
+            "wrapper_name": wrapper_name,
+            "wrapper_version": wrapper_version,
+            "target_system": "local",
+            "config_reference": format!("builtins/{wrapper_name}"),
+            "config_digest": format!("builtin:{wrapper_name}@{wrapper_version}")
+        },
+        "external_system_schema_version": "aegis-local-v1",
+        "redaction_profile": "no-secrets",
+        "execution_mode": "enforce",
+        "credential_injection_required": false
+    }))
+    .unwrap_or_else(|error| panic!("wrapper context should parse: {error}"))
+}
+
+fn all_execution_states() -> [ExecutionState; 11] {
+    [
+        ExecutionState::Created,
+        ExecutionState::Validated,
+        ExecutionState::BundleVerified,
+        ExecutionState::PolicyEvaluated,
+        ExecutionState::Authorized,
+        ExecutionState::Dispatching,
+        ExecutionState::Executed,
+        ExecutionState::Audited,
+        ExecutionState::Completed,
+        ExecutionState::FailedClosed,
+        ExecutionState::AuditFailed,
+    ]
+}
+
+fn known_state_names() -> [&'static str; 11] {
+    [
+        "created",
+        "validated",
+        "bundle_verified",
+        "policy_evaluated",
+        "authorized",
+        "dispatching",
+        "executed",
+        "audited",
+        "completed",
+        "failed_closed",
+        "audit_failed",
+    ]
+}
+
+struct LocalRuntimeCredentialWrapper;
+
+impl WrapperExecutor for LocalRuntimeCredentialWrapper {
+    fn wrapper_name(&self) -> &str {
+        "health.check"
+    }
+
+    fn wrapper_version(&self) -> &str {
+        "1.0.0"
+    }
+
+    fn credential_requirement(&self) -> CredentialRequirement {
+        CredentialRequirement::local_runtime()
+    }
+
+    fn execute(
+        &self,
+        _request: &ToolCallRequest,
+        _context: &WrapperExecutionContext,
+        _authorization: &ExecutionAuthorization,
+    ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
+        Ok(WrapperExecutionOutput {
+            result: Some(BTreeMap::from([(
+                "wrapper".to_string(),
+                Value::String("health.check".to_string()),
+            )])),
+        })
+    }
 }

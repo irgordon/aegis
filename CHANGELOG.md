@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.12] - 2026-06-29
+
+### Added
+
+- Added execution state log invariant tests for pending decisions, invalid bundles, checksum mismatch, invalid signatures, wrapper lookup, authorization, credential boundary, terminal states, lifecycle ordering, known state names, and audit/state separation.
+
+### Fixed
+
+- Ensured pending policy decisions transition to the existing fail-closed terminal lifecycle state instead of stopping at policy evaluation.
+
+### Changed
+
+- Updated Phase 3 task tracking for execution state log invariant hardening.
+
 ## [0.2.11] - 2026-06-29
 
 ### Added

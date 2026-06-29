@@ -6,6 +6,7 @@ use crate::{
         ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus,
         IdempotencyContext, NonEmptyString, PolicyProvenance, ResponseDecision, SchemaVersion,
         Timestamp, ToolCallRequest, ToolCallResponse, WrapperExecutionContext,
+        WrapperExecutionEvidence,
     },
     policy::{PolicyBundleVerification, PolicyEvaluation},
 };
@@ -78,6 +79,8 @@ pub struct AuditRecordDetails {
     pub capability_class: Option<CapabilityClass>,
     pub idempotency_context: Option<IdempotencyContext>,
     pub wrapper_context: Option<WrapperExecutionContext>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub wrapper_execution_evidence: Option<WrapperExecutionEvidence>,
     pub execution_identity_context: Option<ExecutionIdentityContext>,
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
@@ -90,6 +93,7 @@ pub struct AuditRecordDetails {
 pub struct AuditRecordDetailContexts {
     pub idempotency_context: Option<IdempotencyContext>,
     pub wrapper_context: Option<WrapperExecutionContext>,
+    pub wrapper_execution_evidence: Option<WrapperExecutionEvidence>,
     pub execution_identity_context: Option<ExecutionIdentityContext>,
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
@@ -128,6 +132,7 @@ impl AuditRecordDetails {
             capability_class: request.tool.capability_class.clone(),
             idempotency_context: contexts.idempotency_context,
             wrapper_context: contexts.wrapper_context,
+            wrapper_execution_evidence: contexts.wrapper_execution_evidence,
             execution_identity_context: contexts.execution_identity_context,
             approval_context: contexts.approval_context,
             policy_bundle_verification: contexts.policy_bundle_verification,
@@ -143,6 +148,7 @@ impl AuditRecordDetails {
             capability_class: None,
             idempotency_context: None,
             wrapper_context: None,
+            wrapper_execution_evidence: None,
             execution_identity_context: None,
             approval_context: None,
             policy_bundle_verification: None,

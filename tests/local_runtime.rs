@@ -11,17 +11,18 @@ const LOCAL_DEV_BUNDLE: &str = "examples/policy-bundles/local-dev";
 
 #[test]
 fn valid_supported_request_returns_response_and_audit_json() {
-    let output = run_gateway_with_stdin(&valid_request());
+    let output = run_gateway_with_stdin(&health_request());
 
     assert_eq!(output["response"]["status"], "allowed");
     assert_eq!(output["response"]["decision"], "allow");
+    assert_eq!(output["response"]["result"]["wrapper"], "health.check");
     assert_eq!(output["audit_record"]["status"], "allowed");
     assert_eq!(output["audit_record"]["event_type"], "policy_decision");
 }
 
 #[test]
 fn runtime_output_includes_verified_policy_bundle_identity() {
-    let output = run_gateway_with_stdin(&valid_request());
+    let output = run_gateway_with_stdin(&health_request());
 
     assert_eq!(output["policy_bundle"]["bundle"], "local-dev");
     assert_eq!(output["policy_bundle"]["policy_version"], "0.1.0-local");
@@ -53,11 +54,11 @@ fn runtime_output_includes_verified_policy_bundle_identity() {
     );
     assert_eq!(
         output["policy_evaluation"]["policy_rule_id"],
-        "allow_metrics_read_agent"
+        "allow_health_check_agent"
     );
     assert_eq!(
         output["audit_record"]["details"]["policy_evaluation"]["risk_matrix_entry_id"],
-        "local_l0_allow"
+        "local_l0_health_allow"
     );
 }
 
@@ -160,20 +161,21 @@ fn checksum_verification_failure_prevents_policy_evaluation() {
 
 #[test]
 fn output_is_valid_json() {
-    let output = run_gateway_with_stdin(&valid_request());
+    let output = run_gateway_with_stdin(&health_request());
 
     assert!(output.get("response").is_some());
     assert!(output.get("audit_record").is_some());
     assert!(output.get("policy_bundle").is_some());
     assert!(output.get("policy_evaluation").is_some());
+    assert!(output.get("wrapper_execution").is_some());
 }
 
 #[test]
 fn runtime_stdin_path_does_not_require_external_runtime_dependencies() {
-    let output = run_gateway_with_stdin(&valid_request());
+    let output = run_gateway_with_stdin(&health_request());
 
     assert_eq!(output["audit_record"]["component"], "local_gateway_mvp");
-    assert!(output["response"]["result"].is_null());
+    assert_eq!(output["response"]["result"]["status"], "healthy");
 }
 
 fn run_gateway_with_stdin(input: &str) -> Value {
@@ -287,6 +289,10 @@ fn request_with_tool_and_capability(tool_name: &str, capability_class: &str) -> 
 
 fn valid_request() -> String {
     read_fixture("schemas/examples/valid/ToolCallRequest.json")
+}
+
+fn health_request() -> String {
+    read_fixture("schemas/examples/valid/HealthCheckRequest.json")
 }
 
 fn read_fixture(path: &str) -> String {

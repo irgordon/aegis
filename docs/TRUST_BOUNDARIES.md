@@ -81,6 +81,16 @@ Required controls:
 - no secret exposure to agents
 - wrapper result auditability
 
+### Local Built-In Wrapper Execution
+
+Phase 3 begins wrapper execution with one built-in local L0 wrapper: `health.check`.
+
+For a new reader: AEGIS can now run one safe local health check after verified policy allows it. This does not mean AEGIS can execute real external actions yet.
+
+For contributors: `health.check` is registered in the local Rust runtime, allowed by the local development policy bundle, and exercised by the health check wrapper tests. Policy changes to the local bundle require regenerating checksums and signatures with `scripts/regenerate-local-policy-signature.sh`.
+
+For engineers: the allowed-only execution rule is strict. Denied and pending decisions do not dispatch wrappers. Missing wrappers, version mismatches, and wrapper execution errors fail closed with structured error reports and audit evidence. The built-in health check does not use credentials, network access, subprocesses, shell execution, filesystem writes, approval workflow, replay, or durable execution state.
+
 ## Boundary 4: Gateway and Wrappers to External Systems
 
 External systems include APIs, cloud providers, databases, source control, ticketing systems, email, deployment systems, and enterprise applications.

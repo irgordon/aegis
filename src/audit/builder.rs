@@ -6,7 +6,7 @@ use super::{
 use crate::error::AuditErrorReport;
 use crate::gateway::{
     ApprovalContext, ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
-    ToolCallResponse, WrapperExecutionContext,
+    ToolCallResponse, WrapperExecutionContext, WrapperExecutionEvidence,
 };
 use crate::policy::{PolicyBundleVerification, PolicyEvaluation};
 
@@ -16,6 +16,7 @@ pub struct AuditRecordBuilder;
 pub struct GatewayAuditContexts {
     pub idempotency_context: Option<IdempotencyContext>,
     pub wrapper_context: Option<WrapperExecutionContext>,
+    pub wrapper_execution_evidence: Option<WrapperExecutionEvidence>,
     pub execution_identity_context: Option<ExecutionIdentityContext>,
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
@@ -76,6 +77,7 @@ impl AuditRecordBuilder {
                 AuditRecordDetailContexts {
                     idempotency_context: contexts.idempotency_context,
                     wrapper_context: contexts.wrapper_context,
+                    wrapper_execution_evidence: contexts.wrapper_execution_evidence,
                     execution_identity_context: contexts.execution_identity_context,
                     approval_context: contexts.approval_context,
                     policy_bundle_verification: contexts.policy_bundle_verification,

@@ -106,6 +106,11 @@ Example local rule shape:
 
 ```text
 rules:
+  - id: allow_health_check_agent
+    tool: health.check
+    capability: L0
+    actor_type: agent
+    risk: local_l0_health_allow
   - id: allow_metrics_read_agent
     tool: metrics.read
     capability: L0
@@ -131,6 +136,8 @@ Supported local decisions are bounded:
 - `pending_approval`
 
 Local evaluation fails closed when policy state is missing, malformed, ambiguous, unsupported, or not backed by a verified bundle.
+
+The local development policy now allows `health.check` as an L0 request so the Phase 3 runtime can prove allowed-only built-in wrapper execution. Policy evaluation still does not execute the wrapper; it only returns the bounded decision that the gateway later enforces through the wrapper boundary.
 
 ## Policy Bundle Contract
 

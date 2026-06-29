@@ -75,6 +75,35 @@ pub struct WrapperExecutionResult {
     pub result: Option<BTreeMap<String, Value>>,
 }
 
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct WrapperExecutionEvidence {
+    pub wrapper_name: NonEmptyString,
+    pub wrapper_version: NonEmptyString,
+    pub wrapper_status: WrapperExecutionStatus,
+    pub wrapper_execution_mode: WrapperExecutionMode,
+    pub wrapper_result_summary: Option<BTreeMap<String, String>>,
+}
+
+impl From<&WrapperExecutionResult> for WrapperExecutionEvidence {
+    fn from(result: &WrapperExecutionResult) -> Self {
+        Self {
+            wrapper_name: result.context.config.wrapper_name.clone(),
+            wrapper_version: result.context.config.wrapper_version.clone(),
+            wrapper_status: result.status.clone(),
+            wrapper_execution_mode: result.context.execution_mode.clone(),
+            wrapper_result_summary: result.result.as_ref().map(string_result_summary),
+        }
+    }
+}
+
+fn string_result_summary(result: &BTreeMap<String, Value>) -> BTreeMap<String, String> {
+    result
+        .iter()
+        .filter_map(|(key, value)| value.as_str().map(|text| (key.clone(), text.to_string())))
+        .collect()
+}
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct WrapperExecutionError {
     pub reason_code: Option<String>,

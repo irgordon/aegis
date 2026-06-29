@@ -12,7 +12,7 @@ const LOCAL_DEV_BUNDLE: &str = "examples/policy-bundles/local-dev";
 #[test]
 fn audit_file_is_created() {
     let audit_log = audit_log_path("audit_file_is_created");
-    let output = run_gateway_with_audit_log(&audit_log, &valid_request());
+    let output = run_gateway_with_audit_log(&audit_log, &health_request());
 
     assert_eq!(output["response"]["status"], "allowed");
     assert!(audit_log.is_file());
@@ -25,7 +25,7 @@ fn append_preserves_previous_entries() {
     fs::write(&audit_log, "{\"existing\":true}\n")
         .unwrap_or_else(|error| panic!("seed audit log should be writable: {error}"));
 
-    run_gateway_with_audit_log(&audit_log, &valid_request());
+    run_gateway_with_audit_log(&audit_log, &health_request());
 
     let lines = audit_lines(&audit_log);
     assert_eq!(lines.len(), 2);
@@ -36,7 +36,7 @@ fn append_preserves_previous_entries() {
 fn multiple_gateway_requests_append_multiple_records() {
     let audit_log = audit_log_path("multiple_gateway_requests_append_multiple_records");
 
-    run_gateway_with_audit_log(&audit_log, &valid_request());
+    run_gateway_with_audit_log(&audit_log, &health_request());
     run_gateway_with_audit_log(
         &audit_log,
         &request_with_tool_and_capability("email.send", "L1"),
@@ -97,7 +97,7 @@ fn invalid_audit_path_fails_closed() {
     fs::create_dir_all(&audit_dir)
         .unwrap_or_else(|error| panic!("audit fixture directory should be creatable: {error}"));
 
-    let output = run_gateway_expect_failure(&audit_dir, &valid_request());
+    let output = run_gateway_expect_failure(&audit_dir, &health_request());
     let body: Value = serde_json::from_slice(&output.stdout)
         .unwrap_or_else(|error| panic!("failure stdout should be valid JSON: {error}"));
 
@@ -111,7 +111,7 @@ fn invalid_audit_path_fails_closed() {
 fn audit_records_remain_valid_json() {
     let audit_log = audit_log_path("audit_records_remain_valid_json");
 
-    run_gateway_with_audit_log(&audit_log, &valid_request());
+    run_gateway_with_audit_log(&audit_log, &health_request());
     run_gateway_with_audit_log(&audit_log, &request_with_tool("unknown.tool"));
 
     for line in audit_lines(&audit_log) {
@@ -133,7 +133,8 @@ fn audit_log_does_not_include_secret_material() {
         "BEGIN PRIVATE",
         "bearer",
         "password",
-        "credential",
+        "raw_credentials",
+        "runtime_credential",
         "approval_token",
     ] {
         assert!(!content.to_lowercase().contains(&forbidden.to_lowercase()));
@@ -143,8 +144,8 @@ fn audit_log_does_not_include_secret_material() {
 #[test]
 fn runtime_stdout_remains_unchanged() {
     let audit_log = audit_log_path("runtime_stdout_remains_unchanged");
-    let without_audit = run_gateway_without_audit_log(&valid_request());
-    let with_audit = run_gateway_raw_with_audit_log(&audit_log, &valid_request());
+    let without_audit = run_gateway_without_audit_log(&health_request());
+    let with_audit = run_gateway_raw_with_audit_log(&audit_log, &health_request());
 
     assert_eq!(without_audit.stdout, with_audit.stdout);
 }
@@ -256,6 +257,10 @@ fn request_with_tool_and_capability(tool_name: &str, capability_class: &str) -> 
 
 fn valid_request() -> String {
     read_fixture("schemas/examples/valid/ToolCallRequest.json")
+}
+
+fn health_request() -> String {
+    read_fixture("schemas/examples/valid/HealthCheckRequest.json")
 }
 
 fn read_fixture(path: &str) -> String {

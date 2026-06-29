@@ -34,8 +34,9 @@ pub use support::{GatewayDecisionEvidence, SupportedTools};
 pub use validation::GatewayValidationOutcome;
 pub use wrapper::{
     ExternalSystemSchemaVersion, RedactionProfileRef, WrapperConfigRef, WrapperDispatchError,
-    WrapperDispatcher, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionMode,
-    WrapperExecutionOutput, WrapperExecutionResult, WrapperExecutionStatus, WrapperExecutor,
+    WrapperDispatcher, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionEvidence,
+    WrapperExecutionMode, WrapperExecutionOutput, WrapperExecutionResult, WrapperExecutionStatus,
+    WrapperExecutor,
 };
 
 use crate::policy::PolicyDecision;

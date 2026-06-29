@@ -195,6 +195,24 @@ For contributors: do not copy large error objects, stack traces, dependency erro
 
 For engineers: audit error evidence is diagnostic metadata, not a recovery protocol. It preserves fail-closed behavior while making validation, policy, wrapper, and persistence boundaries observable enough for later UI and incident review.
 
+## Local Wrapper Execution Evidence
+
+The Phase 3 local runtime records wrapper execution evidence when the built-in `health.check` wrapper runs after an allowed policy decision.
+
+Wrapper execution evidence includes:
+
+- wrapper name
+- wrapper version
+- wrapper status
+- wrapper execution mode
+- bounded wrapper result summary
+
+Denied and pending decisions do not include wrapper execution evidence because the wrapper is not dispatched.
+
+For contributors: wrapper evidence belongs in audit details alongside policy evaluation evidence. Do not store raw credentials, tokens, unbounded external responses, or stack traces in wrapper result summaries.
+
+For engineers: this is the first governed execution evidence path. It proves the gateway can connect verified policy, allowed-only wrapper dispatch, response result mapping, and durable JSONL audit persistence without adding external systems, credential injection, replay, or durable execution state.
+
 ## Durability Assumptions
 
 The local writer flushes process buffers before exit.

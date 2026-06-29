@@ -170,6 +170,7 @@ fn map_policy_decision_result(
         GatewayAuditContexts {
             idempotency_context: idempotency_context.clone(),
             wrapper_context: context.supplied_wrapper_context.clone(),
+            wrapper_execution_evidence: None,
             execution_identity_context: context.supplied_execution_identity_context.clone(),
             approval_context: context.supplied_approval_context.clone(),
             policy_bundle_verification: context.supplied_policy_bundle_verification.clone(),

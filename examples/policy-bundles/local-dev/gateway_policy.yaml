@@ -1,5 +1,10 @@
 policy_version: 0.1.0-local
 rules:
+  - id: allow_health_check_agent
+    tool: health.check
+    capability: L0
+    actor_type: agent
+    risk: local_l0_health_allow
   - id: allow_metrics_read_agent
     tool: metrics.read
     capability: L0

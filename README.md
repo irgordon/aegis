@@ -6,7 +6,9 @@ AI Execution Governance & Interception System
 
 AEGIS is pre-alpha.
 
-Do not install, deploy, or rely on this repository to protect real systems yet. The project is still proving its governance model, protocol contracts, and early local Rust gateway behavior.
+Do not install, deploy, or rely on this repository to protect real systems yet.
+
+Phase 2 is complete. The repository now contains a working local Rust Gateway MVP that can validate a fixture request, verify a local policy bundle, evaluate simple local policy, return a bounded response, emit audit evidence, and optionally append a local JSONL audit record.
 
 ## What AEGIS Is
 
@@ -37,6 +39,14 @@ This repository currently contains:
 
 The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, produce a bounded response, optionally append a local JSONL audit record, and emit structured audit evidence. This is development evidence, not production enforcement.
 
+## Roadmap Summary
+
+The next milestone is Phase 3: Governed Execution Engine.
+
+Phase 3 focuses on safely executing real AI actions under governance. The priority order is wrapper execution, credential injection, execution lifecycle, approval workflow, durable execution state, replay and recovery, mutation execution, and integration testing.
+
+HTTP, service deployment, plugin architecture, and UI belong to Phase 4. Production PKI, remote policy distribution, high availability, performance, security review, fuzzing, compatibility guarantees, release engineering, and operational documentation belong to Phase 5.
+
 ## What Does Not Exist Yet
 
 AEGIS does not yet provide:
@@ -52,30 +62,6 @@ AEGIS does not yet provide:
 - UI
 - production public key infrastructure
 - remote policy registry trust
-
-## Policy Bundle Integrity
-
-The current local policy bundle check proves that the gateway can reject a bundle when required local metadata is missing or changed.
-
-A checksum is a fingerprint for a file. If a required policy bundle file changes, its checksum changes.
-
-A signature proves that trusted bundle metadata has not changed since it was signed. In the local fixture, AEGIS verifies an Ed25519 signature over:
-
-```text
-examples/policy-bundles/local-dev/checksums/SHA256SUMS
-```
-
-That signed checksum manifest then controls the expected fingerprints for:
-
-- `manifest.yaml`
-- `gateway_policy.yaml`
-- `risk_matrix.yaml`
-
-This is not production PKI, certificate validation, or remote trust distribution.
-
-The local Rust gateway can now use this verified development bundle to decide whether a matching request is allowed, denied, or pending approval. This is still pre-alpha and is not ready for real protection.
-
-Local audit logging is available for development. Audit logs are local append-only JSONL files. AEGIS remains pre-alpha.
 
 ## Where To Read Next
 

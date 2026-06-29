@@ -8,9 +8,11 @@ This changelog follows the Keep a Changelog structure and is governed by the AEG
 
 ### Changed
 
+- Completed Phase 2 Gateway MVP.
 - Completed Phase 2 exit review and v0.2.0 readiness alignment.
-- Updated ROADMAP.md and PHASEMAP.md to reflect the implemented local Gateway MVP readiness scope.
-- Updated Phase 2 task tracking for completed audit, deny-by-default, test, and exit-review work.
+- Realigned roadmap around executable runtime development.
+- Established Phase 3 priorities.
+- Updated ROADMAP.md, PHASEMAP.md, TASKS.md, and README.md to reflect the post-Phase-2 repository state.
 
 ## [0.1.21] - 2026-06-28
 

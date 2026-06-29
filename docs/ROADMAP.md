@@ -18,6 +18,18 @@ AEGIS development follows these principles:
 - evidence before claims
 - small verifiable phases before broad expansion
 
+## Current Repository State
+
+AEGIS now has a working local Gateway MVP.
+
+For a new reader, this means the repository can prove the gateway decision path locally: it reads a structured request, verifies a local policy bundle, evaluates simple policy, returns allowed, denied, or pending, records audit evidence, and can append a local audit record.
+
+It does not yet execute real external actions. That is why Phase 3 focuses on governed execution.
+
+For contributors, the backlog has been reorganized around the shortest path from decision evidence to safe execution. Completed Phase 2 implementation work is no longer an active task list. Active work now starts with Phase 3 runtime execution boundaries.
+
+For engineers and architects, execution is now the primary architectural concern. Phase-level governance still precedes implementation, but execution-specific documentation must evolve with implementation evidence as wrappers, credentials, lifecycle state, approval, replay, and mutation behavior become concrete. Documentation updates remain part of the same Definition of Done as implementation and validation.
+
 ## Phase 0: Governance Baseline
 
 ### Objective
@@ -84,221 +96,121 @@ Define the stable protocol contracts used by orchestrators, gateways, policy eng
 
 ## Phase 2: Gateway MVP
 
+### Status
+Complete.
+
 ### Objective
 Implement the minimum local gateway capable of receiving requests, validating schema, verifying a local policy bundle, evaluating simple local policy, returning deterministic decisions, emitting audit evidence, and optionally persisting local audit records.
 
-### Deliverables
-- gateway entrypoint
-- request validation
-- policy decision interface
-- response mapping
-- basic audit record creation
-- deny-by-default behavior
+### Completed Capabilities
+- Rust request and response models
+- request validation pipeline
+- deterministic response mapping
+- explicit policy decision adapter boundary
+- deny-by-default unsupported tool handling
 - local runtime JSON output
-- local policy bundle loading
+- verified local policy bundle loading
 - SHA-256 checksum verification
 - Ed25519 signature verification
 - local policy and risk matrix evaluation
 - append-only local JSONL audit logging
+- contract and integration tests for allowed, denied, pending, malformed, unsupported, policy failure, bundle failure, and audit persistence paths
 
 ### Exit Criteria
-- valid L0 requests can pass through the local gateway path
+- valid L0 requests pass through the local gateway path
 - unknown tools are denied
 - malformed requests are denied
 - all decisions emit audit evidence
-- verified local policy bundles can produce allowed, denied, and pending decisions
+- verified local policy bundles produce allowed, denied, and pending decisions
 - invalid or unverifiable policy bundles fail closed
 - optional local audit logging appends one JSONL record per completed decision
-- tests cover allowed, denied, pending, malformed, unsupported, bundle failure, policy failure, and audit persistence paths
+- validation passes
 
-## Phase 3: Policy Engine Hardening
+## Phase 3: Governed Execution Engine
 
 ### Objective
-Harden declarative policy evaluation beyond the local development MVP while preserving independence from wrappers and orchestration logic.
+Execute real AI actions safely under governance.
+
+Phase 2 proved that AEGIS can decide and record. Phase 3 must prove that AEGIS can execute without violating the architecture: wrappers enforce decisions, credentials stay out of agent hands, approval state is durable, replay is mechanical, and mutations are idempotent where required.
 
 ### Deliverables
-- production-oriented gateway_policy.yaml validation
-- production-oriented risk_matrix.yaml validation
-- expanded capability class handling
-- policy compatibility validation
-- complete policy provenance capture
-- compatibility metadata
+- wrapper execution boundary
+- credential injection boundary
+- execution lifecycle state machine
+- approval workflow boundary
+- durable execution state
+- replay and recovery behavior
+- mutation-capable execution path
+- integration tests for governed execution
+
+### Priority Order
+1. Wrapper execution boundary
+2. Credential injection
+3. Execution lifecycle
+4. Approval workflow
+5. Durable execution state
+6. Replay and recovery
+7. Mutation execution
+8. Integration testing
 
 ### Exit Criteria
-- policy evaluation is side-effect free
-- policy output is deterministic
-- policy version and hash appear in audit records
-- unclassified tools deny by default
+- allowed actions execute only through wrappers
+- denied actions never execute
+- pending actions persist state and do not block active execution
+- credentials are injected only at execution time and never exposed to agents
+- wrapper failures fail closed
+- terminal execution state is durable
+- replay uses stored intent and does not call the planning layer
+- mutation-capable requests are idempotent or fail closed according to policy
+- audit evidence links request, policy, wrapper, approval where applicable, execution outcome, and persisted state
+- no HTTP service or UI is required for Phase 3 completion
 
-## Phase 4: Security Wrappers
+## Phase 4: Platform Capabilities
 
 ### Objective
-Implement the enforcement layer that acts on gateway and policy decisions.
+Expose and operate the governed execution engine through platform boundaries after runtime behavior is stable.
 
 ### Deliverables
-- task-scoped authorization wrapper
-- permission isolation wrapper
-- credential injection wrapper
-- HITL approval verification wrapper
-- wrapper failure handling
+- HTTP API boundary
+- service deployment model
+- runtime configuration model
+- operational observability
+- plugin or wrapper extension architecture
+- desktop UI only after runtime behavior is stable
+- orchestrator integration references
 
 ### Exit Criteria
-- wrappers fail closed
-- secrets are not exposed to agents
-- wrapper decisions are auditable
-- wrapper tests cover failure paths
+- service API preserves ToolCallRequest and ToolCallResponse contracts
+- deployment guidance preserves immutable policy and fail-closed behavior
+- configuration is explicit and validated
+- operational telemetry does not replace audit evidence
+- plugins cannot bypass gateway, policy, wrapper, or audit boundaries
+- UI, if present, displays runtime state without owning policy decisions
 
-## Phase 5: Durable State and Replay
-
-### Objective
-Support long-running workflows, pending approvals, crash recovery, and deterministic replay.
-
-### Deliverables
-- execution state model
-- pending approval state
-- replay token handling
-- idempotency locks
-- exactly-once execution checks
-- resume protocol
-
-### Exit Criteria
-- pending state survives restart
-- replay does not call planning layer
-- duplicate execution is prevented
-- terminal state is durable
-
-## Phase 6: Human Approval Workflows
+## Phase 5: Production Hardening
 
 ### Objective
-Implement explicit human-in-the-loop approval behavior for high-risk actions.
+Prepare AEGIS for production-oriented evaluation.
 
 ### Deliverables
-- approval request model
-- approval decision model
-- approver identity binding
-- approval expiration
-- stale approval denial
-- approval audit evidence
-
-### Exit Criteria
-- L2 and L3 actions can be routed to pending
-- approval is bound to action identity
-- denied approvals prevent execution
-- stale approvals cannot be reused
-
-## Phase 7: Policy Distribution
-
-### Objective
-Support signed, immutable, locally enforced policy bundles.
-
-### Deliverables
-- policy bundle manifest
-- checksum verification
-- signature verification
-- bundle compatibility checks
-- activation rules
-- rollback guidance
-
-### Exit Criteria
-- invalid bundles are rejected
-- active policy is identifiable
-- gateway decisions include policy provenance
-- runtime silent policy mutation is prohibited
-
-## Phase 8: Observability and Audit
-
-### Objective
-Make execution, policy decisions, approval state, and failure modes visible and investigable.
-
-### Deliverables
-- structured audit records
-- operational logs
-- metrics
-- trace IDs
-- audit export format
-- SIEM-friendly field names
-
-### Exit Criteria
-- every decision emits audit evidence
-- audit records are structured
-- audit records include execution and policy provenance
-- operational logs do not expose secrets
-
-## Phase 9: Deployment Reference
-
-### Objective
-Provide reference deployment patterns for local, container, and enterprise environments.
-
-### Deliverables
-- local development guide
-- container build
-- Kubernetes deployment example
-- GitOps deployment example
-- configuration examples
-- secret handling guidance
-
-### Exit Criteria
-- gateway can run locally
-- gateway can run as a container
-- policy bundle can be mounted or deployed immutably
-- deployment guidance preserves invariants
-
-## Phase 10: Orchestrator Integrations
-
-### Objective
-Demonstrate how different AI orchestrators can integrate without changing AEGIS architecture.
-
-### Deliverables
-- generic HTTP integration example
-- LangGraph adapter example
-- AutoGen adapter example
-- CrewAI adapter example
-- reference FSM integration
-
-### Exit Criteria
-- each integration uses ToolCallRequest and ToolCallResponse
-- each integration handles pending correctly
-- no integration bypasses the gateway
-- replay does not re-plan
-
-## Phase 11: Production Hardening
-
-### Objective
-Prepare AEGIS for production-like environments.
-
-### Deliverables
-- high availability guidance
-- migration strategy
-- backup and restore guidance
-- rate limiting
-- concurrency controls
+- production PKI or trust distribution
+- remote policy distribution
+- high-availability deployment guidance
+- performance and load testing
 - security review
-- performance profiling
+- fuzz testing
+- compatibility guarantees
+- release engineering
+- operational documentation
 
 ### Exit Criteria
-- gateway failure modes are documented
-- state recovery is tested
-- concurrency does not break exactly-once execution
-- release process is documented
-
-## Phase 12: Reference Implementation Maturity
-
-### Objective
-Stabilize AEGIS as a reference architecture and implementation.
-
-### Deliverables
-- versioned release
-- changelog
-- compatibility matrix
-- complete test suite
-- documented limitations
-- contribution guide
-
-### Exit Criteria
-- release artifacts are reproducible
-- documentation matches implementation
-- public APIs are stable enough for external use
-- known risks are documented
+- production trust anchors are documented and verified
+- policy distribution supports explicit activation and rollback
+- HA behavior preserves deterministic execution and durable state
+- security review findings are resolved or tracked
+- fuzz and negative-path tests cover critical parsers and boundaries
+- compatibility guarantees are documented and tested
+- release artifacts and operational procedures are reproducible
 
 ## Future Tracks
 

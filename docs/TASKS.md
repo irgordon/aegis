@@ -76,74 +76,64 @@ Objective: define stable protocol contracts used by orchestrators, gateways, pol
 
 ## Phase 2: Gateway MVP
 
-Objective: implement the minimum gateway path after protocol contracts are stable.
+Objective: implement the minimum local gateway path after protocol contracts are stable.
+
+Status: complete.
 
 | Task | Status |
 | --- | --- |
-| Select initial implementation language and runtime | complete |
-| Create gateway entrypoint | complete |
-| Add minimal gateway entrypoint boundary | complete |
-| Add local gateway runtime entrypoint | complete |
-| Add durable append-only local audit logging | complete |
-| Add policy bundle loader and verifier | complete |
-| Add real policy bundle checksum verification | complete |
-| Add policy bundle signature verification | complete |
-| Add local policy and risk matrix evaluation | complete |
-| Add idempotency contract model | complete |
-| Add wrapper configuration contract models | complete |
-| Add execution identity contract models | complete |
-| Add approval token contract models | complete |
-| Implement request validation | complete |
-| Add schema-backed Rust request and response models | complete |
-| Add schema-backed gateway validation pipeline | complete |
-| Implement policy decision interface | complete |
-| Add policy decision adapter interface | complete |
-| Implement deterministic response mapping | complete |
-| Implement basic audit record creation | complete |
-| Add minimal audit record builder | complete |
-| Enforce deny-by-default behavior | complete |
-| Add deny-by-default unsupported tool handling | complete |
-| Add allowed and denied path tests | complete |
+| Complete local Rust Gateway MVP | complete |
+| Validate request and response contracts in Rust | complete |
+| Verify local policy bundle structure, checksums, and signatures | complete |
+| Evaluate local policy and risk matrix decisions | complete |
+| Emit structured JSON response and audit evidence | complete |
+| Persist optional append-only local JSONL audit records | complete |
 | Complete Phase 2 exit review and v0.2.0 readiness check | complete |
 
-## Phase 3: Policy Engine
+## Phase 3: Governed Execution Engine
 
-Objective: create declarative policy evaluation independent of wrappers and orchestration logic.
-
-| Task | Status |
-| --- | --- |
-| Define gateway_policy.yaml format | planned |
-| Define risk_matrix.yaml format | planned |
-| Implement capability class handling | planned |
-| Implement policy validation | planned |
-| Capture policy provenance in decisions | planned |
-| Add deterministic policy tests | planned |
-
-## Phase 4: Security Wrappers
-
-Objective: implement enforcement wrappers after gateway and policy contracts exist.
+Objective: execute real AI actions safely under governance.
 
 | Task | Status |
 | --- | --- |
-| Define wrapper interface | planned |
-| Implement task-scoped authorization wrapper | planned |
-| Implement permission isolation wrapper | planned |
-| Implement credential injection wrapper | planned |
-| Implement HITL approval verification wrapper | planned |
-| Add wrapper failure tests | planned |
+| Add wrapper execution boundary | planned |
+| Add credential injection boundary | planned |
+| Add execution lifecycle state machine | planned |
+| Add approval workflow boundary | planned |
+| Add durable execution state | planned |
+| Add replay and recovery behavior | planned |
+| Add mutation-capable execution path | planned |
+| Add governed execution integration tests | planned |
 
-## Phase 5: Durable State and Replay
+## Phase 4: Platform Capabilities
 
-Objective: support long-running workflows, approval waits, crash recovery, and deterministic replay.
+Objective: expose and operate the governed execution engine through platform boundaries after runtime behavior is stable.
 
 | Task | Status |
 | --- | --- |
-| Define execution state model | planned |
-| Implement pending approval persistence | planned |
-| Implement replay token handling | planned |
-| Implement idempotency locks | planned |
-| Implement exactly-once checks | planned |
-| Add replay validation tests | planned |
+| Add HTTP API boundary | planned |
+| Add service deployment model | planned |
+| Add runtime configuration model | planned |
+| Add operational observability | planned |
+| Add plugin or wrapper extension architecture | planned |
+| Add orchestrator integration references | planned |
+| Add desktop UI only after runtime behavior is stable | planned |
+
+## Phase 5: Production Hardening
+
+Objective: prepare AEGIS for production-oriented evaluation.
+
+| Task | Status |
+| --- | --- |
+| Add production PKI or trust distribution | planned |
+| Add remote policy distribution | planned |
+| Add high-availability deployment guidance | planned |
+| Add performance and load testing | planned |
+| Complete security review | planned |
+| Add fuzz testing for critical parsers and boundaries | planned |
+| Add compatibility guarantees | planned |
+| Add release engineering | planned |
+| Add operational documentation | planned |
 
 ## Governance Maintenance Tasks
 

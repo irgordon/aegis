@@ -79,10 +79,13 @@ Establish documentation-driven engineering for the project.
 - acceptance criteria exist
 - architecture intent is clear enough for implementation to begin
 
-## v0.2.0: Local Gateway MVP Readiness
+## v0.2.0: Phase 2 Complete
 
 ### Purpose
 Define stable request, response, audit, policy, and execution contracts, and prove the local Rust gateway can process a request through governed output without executing external tools.
+
+### Status
+Complete.
 
 ### Required Contents
 - ToolCallRequest schema
@@ -121,196 +124,78 @@ Define stable request, response, audit, policy, and execution contracts, and pro
 - repository verification succeeds
 - compatibility expectations are documented
 
-## v0.3.0: Gateway Runtime Hardening
+## v0.3.0: Governed Execution Engine
 
 ### Purpose
-Harden the executable gateway boundary beyond the local development MVP before adding wrapper execution.
+Execute real AI actions safely under governance.
 
 ### Required Capabilities
-- explicit runtime configuration validation
-- execution identity assignment or verification
-- idempotency assignment or verification
-- policy bundle compatibility checks
-- operational failure handling
-- gateway boundary tests beyond local fixtures
-
-### Exit Criteria
-- valid low-risk requests pass through the hardened gateway path
-- unknown tools are denied
-- malformed requests are denied
-- missing or incompatible runtime configuration fails closed
-- every decision emits audit evidence
-
-## v0.4.0: Policy Engine Baseline
-
-### Purpose
-Introduce production-oriented declarative policy evaluation.
-
-### Required Capabilities
-- gateway_policy.yaml support
-- risk_matrix.yaml support
-- capability classification
-- policy validation
-- policy provenance fields
-- deny-by-default tool behavior
-
-### Exit Criteria
-- policy evaluation is side-effect free
-- deterministic decision tests exist
-- unclassified tools deny by default
-- policy version and hash are captured
-
-## v0.5.0: Security Wrapper Baseline
-
-### Purpose
-Introduce enforceable execution wrappers.
-
-### Required Capabilities
-- task-scoped authorization
-- permission isolation
+- wrapper execution boundary
 - credential injection boundary
-- wrapper failure handling
-- wrapper audit evidence
+- execution lifecycle state machine
+- approval workflow boundary
+- durable execution state
+- replay and recovery behavior
+- mutation-capable execution path
+- governed execution integration tests
 
 ### Exit Criteria
-- wrappers fail closed
-- secrets are not exposed to agents
-- wrapper failures prevent execution
-- wrapper paths are tested
+- allowed actions execute only through wrappers
+- denied actions never execute
+- pending actions persist state and do not block active execution
+- credentials are injected only at execution time and never exposed to agents
+- wrapper failures fail closed
+- terminal execution state is durable
+- replay uses stored intent and does not call the planning layer
+- mutation-capable requests are idempotent or fail closed according to policy
+- execution audit evidence links request, policy, wrapper, approval where applicable, execution outcome, and persisted state
 
-## v0.6.0: Durable State and Replay
+## v0.4.0: Platform Capabilities
 
 ### Purpose
-Support long-running execution and deterministic replay.
+Expose and operate the governed execution engine through platform boundaries after runtime behavior is stable.
 
 ### Required Capabilities
-- execution state model
-- pending approval persistence
-- replay token handling
-- attempt number tracking
-- terminal state recording
-- duplicate execution detection
+- HTTP API boundary
+- service deployment model
+- runtime configuration model
+- operational observability
+- plugin or wrapper extension architecture
+- desktop UI only after runtime behavior is stable
+- orchestrator integration references
 
 ### Exit Criteria
-- pending state survives restart
-- replay does not re-plan
-- duplicate replay is blocked or safely resolved
-- exactly-once execution is preserved
+- service API preserves ToolCallRequest and ToolCallResponse contracts
+- deployment guidance preserves immutable policy and fail-closed behavior
+- configuration is explicit and validated
+- operational telemetry does not replace audit evidence
+- plugins cannot bypass gateway, policy, wrapper, or audit boundaries
+- UI, if present, displays runtime state without owning policy decisions
 
-## v0.7.0: Human Approval Workflows
-
-### Purpose
-Support asynchronous human-in-the-loop governance.
-
-### Required Capabilities
-- approval request creation
-- approver identity capture
-- approval binding to action identity
-- denial handling
-- stale approval rejection
-- approval audit evidence
-
-### Exit Criteria
-- L2 and L3 actions route to pending
-- approvals are action-specific
-- denied approvals do not execute
-- stale approvals cannot be reused
-
-## v0.8.0: Policy Distribution
-
-### Purpose
-Support immutable signed policy bundles.
-
-### Required Capabilities
-- bundle manifest
-- checksum verification
-- signature verification
-- schema compatibility check
-- wrapper compatibility check
-- activation rules
-- rollback guidance
-
-### Exit Criteria
-- invalid bundles are rejected
-- active policy provenance is recorded
-- runtime silent policy mutation is prohibited
-- rollback procedure is documented
-
-## v0.9.0: Observability and Enterprise Evidence
-
-### Purpose
-Make AEGIS operationally investigable.
-
-### Required Capabilities
-- structured audit records
-- operational logs
-- trace or request IDs
-- SIEM-friendly field names
-- audit export guidance
-- secret-safe logging
-
-### Exit Criteria
-- every material decision produces audit evidence
-- audit records include execution and policy provenance
-- logs do not expose secrets
-- investigation flow is documented
-
-## v0.10.0: Deployment Reference
-
-### Purpose
-Provide practical deployment patterns.
-
-### Required Contents
-- local development guide
-- container guidance
-- Kubernetes reference
-- GitOps policy deployment guidance
-- configuration examples
-- operational failure guidance
-
-### Exit Criteria
-- gateway can run locally
-- container deployment is documented
-- policy bundle deployment is documented
-- deployment preserves invariants
-
-## v0.11.0: Orchestrator Integration Reference
-
-### Purpose
-Demonstrate integration with multiple AI orchestration approaches.
-
-### Required Contents
-- generic HTTP integration
-- reference finite state machine
-- pending approval handling
-- deterministic resume example
-- replay without re-planning example
-
-### Exit Criteria
-- integration obeys ToolCallRequest and ToolCallResponse
-- pending state dehydrates execution
-- resumed execution replays stored action
-- no integration bypasses the gateway
-
-## v0.12.0: Production Hardening Candidate
+## v0.5.0: Production Hardening
 
 ### Purpose
 Prepare AEGIS for production-oriented evaluation.
 
 ### Required Capabilities
-- concurrency controls
-- idempotency enforcement
-- backup and restore guidance
-- high availability guidance
-- migration guidance
-- release process
-- compatibility matrix
+- production PKI or trust distribution
+- remote policy distribution
+- high-availability deployment guidance
+- performance and load testing
+- security review
+- fuzz testing
+- compatibility guarantees
+- release engineering
+- operational documentation
 
 ### Exit Criteria
-- race conditions are tested where applicable
-- exactly-once behavior is validated
-- recovery guidance exists
-- release process is documented
+- production trust anchors are documented and verified
+- policy distribution supports explicit activation and rollback
+- HA behavior preserves deterministic execution and durable state
+- security review findings are resolved or tracked
+- fuzz and negative-path tests cover critical parsers and boundaries
+- compatibility guarantees are documented and tested
+- release artifacts and operational procedures are reproducible
 
 ## v1.0.0: Reference Architecture Release
 

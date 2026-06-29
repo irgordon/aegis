@@ -53,6 +53,7 @@ Phase 3 work is grouped by the purpose it serves.
 | --- | --- |
 | Harden execution state log invariants | complete |
 | Harden recovery inspection invariants | complete |
+| Harden recovery plan invariants | complete |
 | Add execution evidence | planned |
 | Add replay evidence | planned |
 | Add governed execution integration tests | planned |
@@ -155,6 +156,7 @@ Completed foundation work:
 | Add execution recovery inspection | complete |
 | Harden recovery inspection invariants | complete |
 | Add recovery plan generation | complete |
+| Harden recovery plan invariants | complete |
 
 ## Phase 4: Platform Capabilities
 

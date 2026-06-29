@@ -4,6 +4,16 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.19] - 2026-06-29
+
+### Added
+
+- Added recovery plan invariant tests for terminal, corrupted, failed-closed, audit-failed, inspection-failed, deterministic, and secret-safe planning evidence.
+
+### Fixed
+
+- Fixed recovery plan handling for unknown recoverability status and inconsistent terminal status so ambiguous internal reports fail closed.
+
 ## [0.2.18] - 2026-06-29
 
 ### Added

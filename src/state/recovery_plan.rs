@@ -125,7 +125,7 @@ struct PlanClassification {
 }
 
 fn classify_execution(execution: &ExecutionRecoveryExecution) -> PlanClassification {
-    if execution.recoverability == ExecutionRecoverability::InspectionFailed {
+    if execution_is_corrupted(execution) {
         return corrupted_classification();
     }
 
@@ -135,6 +135,35 @@ fn classify_execution(execution: &ExecutionRecoveryExecution) -> PlanClassificat
         ExecutionState::AuditFailed => audit_failed_classification(),
         _ => non_terminal_classification(),
     }
+}
+
+fn execution_is_corrupted(execution: &ExecutionRecoveryExecution) -> bool {
+    recovery_status_is_unsafe(&execution.recoverability)
+        || !terminal_status_matches_state(&execution.terminal_status, &execution.last_known_state)
+}
+
+fn recovery_status_is_unsafe(recoverability: &ExecutionRecoverability) -> bool {
+    matches!(
+        recoverability,
+        ExecutionRecoverability::InspectionFailed | ExecutionRecoverability::Unknown
+    )
+}
+
+fn terminal_status_matches_state(
+    terminal_status: &ExecutionTerminalStatus,
+    state: &ExecutionState,
+) -> bool {
+    matches!(
+        (terminal_status, state_is_terminal(state)),
+        (ExecutionTerminalStatus::Terminal, true) | (ExecutionTerminalStatus::NonTerminal, false)
+    )
+}
+
+fn state_is_terminal(state: &ExecutionState) -> bool {
+    matches!(
+        state,
+        ExecutionState::Completed | ExecutionState::FailedClosed | ExecutionState::AuditFailed
+    )
 }
 
 fn terminal_completed_classification() -> PlanClassification {

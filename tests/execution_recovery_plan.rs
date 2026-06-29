@@ -5,8 +5,10 @@ use std::{
 };
 
 use aegis::state::{
-    AllowedFutureRecoveryAction, ExecutionRecoveryInspector, RecoveryPlanGenerator,
-    RecoveryPlanOutcome, RecoveryPlanReport, RecoveryPlanStatus,
+    AllowedFutureRecoveryAction, ExecutionRecoverability, ExecutionRecoveryExecution,
+    ExecutionRecoveryInspector, ExecutionRecoveryReport, ExecutionRecoveryStatus, ExecutionState,
+    ExecutionTerminalStatus, RecoveryPlanGenerator, RecoveryPlanOutcome, RecoveryPlanReport,
+    RecoveryPlanStatus,
 };
 use serde_json::{json, Value};
 
@@ -154,6 +156,116 @@ fn completed_execution_is_never_future_replay_candidate() {
 }
 
 #[test]
+fn terminal_executions_never_produce_recovery_actions() {
+    let mut records = completed_records("exec_completed_no_actions");
+    records.extend(failed_closed_records("exec_failed_no_actions"));
+
+    let plan = plan_records(&records);
+
+    for record in plan.plans {
+        assert_eq!(
+            record.plan_outcome,
+            RecoveryPlanOutcome::NotRecoverableTerminal
+        );
+        assert_eq!(
+            record.allowed_future_action,
+            AllowedFutureRecoveryAction::None
+        );
+        assert_ne!(
+            record.plan_outcome,
+            RecoveryPlanOutcome::CandidateForFutureReplay
+        );
+        assert_ne!(
+            record.plan_outcome,
+            RecoveryPlanOutcome::CandidateForAuditRetry
+        );
+    }
+}
+
+#[test]
+fn audit_failed_execution_is_not_replay_candidate() {
+    let plan = plan_records(&audit_failed_records("exec_audit_not_replay"));
+    let record = only_plan(&plan);
+
+    assert_eq!(
+        record.plan_outcome,
+        RecoveryPlanOutcome::CandidateForAuditRetry
+    );
+    assert_eq!(
+        record.allowed_future_action,
+        AllowedFutureRecoveryAction::AuditRetryOnly
+    );
+    assert_ne!(
+        record.plan_outcome,
+        RecoveryPlanOutcome::CandidateForFutureReplay
+    );
+    assert_ne!(
+        record.allowed_future_action,
+        AllowedFutureRecoveryAction::FutureReplayEvaluationOnly
+    );
+}
+
+#[test]
+fn unknown_recoverability_status_fails_closed() {
+    let report = recovery_report(vec![ExecutionRecoveryExecution {
+        execution_id: "exec_unknown_recoverability".to_string(),
+        last_known_state: ExecutionState::Authorized,
+        terminal_status: ExecutionTerminalStatus::NonTerminal,
+        recoverability: ExecutionRecoverability::Unknown,
+        transition_count: 4,
+        failure_reason: None,
+    }]);
+
+    let plan = RecoveryPlanGenerator::plan(&report);
+    let record = only_plan(&plan);
+
+    assert_eq!(
+        record.plan_outcome,
+        RecoveryPlanOutcome::NotRecoverableCorrupted
+    );
+    assert_eq!(
+        record.allowed_future_action,
+        AllowedFutureRecoveryAction::ManualReviewOnly
+    );
+}
+
+#[test]
+fn inconsistent_terminal_status_fails_closed() {
+    let report = recovery_report(vec![ExecutionRecoveryExecution {
+        execution_id: "exec_inconsistent_terminal".to_string(),
+        last_known_state: ExecutionState::Authorized,
+        terminal_status: ExecutionTerminalStatus::Terminal,
+        recoverability: ExecutionRecoverability::RecoverableCandidate,
+        transition_count: 4,
+        failure_reason: None,
+    }]);
+
+    let plan = RecoveryPlanGenerator::plan(&report);
+    let record = only_plan(&plan);
+
+    assert_eq!(
+        record.plan_outcome,
+        RecoveryPlanOutcome::NotRecoverableCorrupted
+    );
+    assert_eq!(
+        record.allowed_future_action,
+        AllowedFutureRecoveryAction::ManualReviewOnly
+    );
+}
+
+#[test]
+fn unknown_last_known_state_from_log_fails_closed() {
+    let inspection = ExecutionRecoveryInspector::inspect_str(
+        r#"{"execution_id":"exec_unknown_state","previous_state":"created","new_state":"made_up","transition_reason":"unknown","lifecycle_index":0}"#,
+    );
+    let plan = RecoveryPlanGenerator::plan(&inspection);
+
+    assert_eq!(plan.plan_status, RecoveryPlanStatus::InspectionFailed);
+    assert!(plan.plans.is_empty());
+    assert!(!plan.planning_errors.is_empty());
+}
+
+#[test]
 fn plan_output_uses_bounded_enum_values_only() {
     let mut records = completed_records("exec_completed");
     records.extend(failed_closed_records("exec_failed"));
@@ -180,6 +292,40 @@ fn plan_output_uses_bounded_enum_values_only() {
                 | "inspection_failed"
         ));
     }
+}
+
+#[test]
+fn allowed_future_actions_use_bounded_enum_values_only() {
+    let mut records = completed_records("exec_completed");
+    records.extend(failed_closed_records("exec_failed"));
+    records.extend(audit_failed_records("exec_audit_failed"));
+    records.extend(non_terminal_records("exec_non_terminal"));
+    records.extend(corrupted_records("exec_corrupted"));
+
+    let plan = plan_records(&records);
+    let output = serde_json::to_value(plan).expect("plan should serialize");
+    let actions = output["plans"]
+        .as_array()
+        .expect("plans should be an array")
+        .iter()
+        .map(|record| record["allowed_future_action"].as_str().unwrap())
+        .collect::<Vec<_>>();
+
+    for action in actions {
+        assert!(matches!(
+            action,
+            "none" | "audit_retry_only" | "future_replay_evaluation_only" | "manual_review_only"
+        ));
+    }
+}
+
+#[test]
+fn unsupported_plan_enum_values_are_rejected_by_serialization_model() {
+    assert!(serde_json::from_value::<RecoveryPlanOutcome>(json!("replay_now")).is_err());
+    assert!(
+        serde_json::from_value::<AllowedFutureRecoveryAction>(json!("execute_wrapper")).is_err()
+    );
+    assert!(serde_json::from_value::<RecoveryPlanStatus>(json!("planning_failed")).is_err());
 }
 
 #[test]
@@ -222,6 +368,174 @@ fn valid_non_terminal_allowed_future_action_is_future_replay_evaluation_only() {
     assert_eq!(
         only_plan(&plan).allowed_future_action,
         AllowedFutureRecoveryAction::FutureReplayEvaluationOnly
+    );
+}
+
+#[test]
+fn non_terminal_plan_text_remains_evaluative() {
+    let plan = plan_records(&non_terminal_records("exec_evaluative_text"));
+    let record = only_plan(&plan);
+
+    assert!(record.plan_reason.contains("may be eligible"));
+    assert!(record.plan_reason.contains("evaluation"));
+    assert!(!record.plan_reason.contains("authorized"));
+    assert!(!record.plan_reason.contains("approved"));
+    assert!(!record.plan_reason.contains("ready to execute"));
+}
+
+#[test]
+fn plan_text_contains_no_executable_intent() {
+    let mut records = completed_records("exec_completed_text");
+    records.extend(failed_closed_records("exec_failed_text"));
+    records.extend(audit_failed_records("exec_audit_text"));
+    records.extend(non_terminal_records("exec_non_terminal_text"));
+    records.extend(corrupted_records("exec_corrupted_text"));
+
+    let plan = plan_records(&records);
+    let output = serde_json::to_value(plan).expect("plan should serialize");
+
+    assert_no_forbidden_text(
+        &output,
+        &[
+            "rerun command",
+            "resume now",
+            "run wrapper",
+            "call wrapper",
+            "load policy",
+            "inject credential",
+            "write audit",
+            "write state",
+            "approve automatically",
+        ],
+    );
+}
+
+#[test]
+fn plan_output_contains_no_wrapper_parameters() {
+    let plan = plan_records(&records_with_wrapper_parameters("exec_no_wrapper_params"));
+    let output = serde_json::to_string(&plan).expect("plan should serialize");
+
+    assert!(!output.contains("sandbox.note.write"));
+    assert!(!output.contains("example-note"));
+    assert!(!output.contains("hello from aegis"));
+    assert!(!output.contains("/tmp/aegis-sandbox"));
+    assert!(!output.contains("caller_supplied_idempotency_key"));
+}
+
+#[test]
+fn plan_output_contains_no_credential_material_or_handles() {
+    let plan = plan_records(&records_with_execution_details("exec_no_credentials"));
+    let output = serde_json::to_string(&plan).expect("plan should serialize");
+
+    assert!(!output.contains("local_runtime"));
+    assert!(!output.contains("local_development"));
+    assert!(!output.contains("safe_local_handle_ref"));
+    assert!(!output.contains("credential_handle_ref"));
+    assert!(!output.contains("credential_class"));
+}
+
+#[test]
+fn planning_errors_have_normalized_shape() {
+    let path = test_dir("planning_error_shape").join("missing.jsonl");
+    let inspection = ExecutionRecoveryInspector::inspect_path(path);
+    let plan = RecoveryPlanGenerator::plan(&inspection);
+    let error = plan
+        .planning_errors
+        .first()
+        .expect("planning error should exist");
+    let output = serde_json::to_value(error).expect("error should serialize");
+
+    for field in [
+        "code",
+        "severity",
+        "message",
+        "reason",
+        "next_action",
+        "location",
+    ] {
+        assert!(output.get(field).is_some(), "missing field {field}");
+        assert!(
+            !output[field].as_str().unwrap_or_default().is_empty(),
+            "empty field {field}"
+        );
+    }
+}
+
+#[test]
+fn planning_errors_do_not_leak_secret_like_content() {
+    let inspection = ExecutionRecoveryInspector::inspect_str(
+        "{password=abc token=def secret=ghi private_key=jkl authorization=mno credential=pqr}\n",
+    );
+    let plan = RecoveryPlanGenerator::plan(&inspection);
+    let output = serde_json::to_string(&plan).expect("plan should serialize");
+
+    assert_no_forbidden_text(
+        &serde_json::from_str::<Value>(&output).expect("plan output should be json"),
+        &[
+            "abc",
+            "def",
+            "ghi",
+            "jkl",
+            "mno",
+            "pqr",
+            "password=",
+            "token=",
+            "secret=",
+            "private_key=",
+            "authorization=",
+            "credential=",
+        ],
+    );
+}
+
+#[test]
+fn repeated_planning_is_deterministic() {
+    let mut records = completed_records("exec_deterministic_completed");
+    records.extend(audit_failed_records("exec_deterministic_audit"));
+    records.extend(corrupted_records("exec_deterministic_corrupted"));
+
+    let first = serde_json::to_value(plan_records(&records)).expect("plan should serialize");
+    let second = serde_json::to_value(plan_records(&records)).expect("plan should serialize");
+
+    assert_eq!(first, second);
+}
+
+#[test]
+fn plan_ordering_is_deterministic_by_execution_id() {
+    let mut records = completed_records("exec_b");
+    records.extend(completed_records("exec_a"));
+    records.extend(completed_records("exec_c"));
+
+    let plan = plan_records(&records);
+    let execution_ids = plan
+        .plans
+        .iter()
+        .map(|record| record.execution_id.as_str())
+        .collect::<Vec<_>>();
+
+    assert_eq!(execution_ids, vec!["exec_a", "exec_b", "exec_c"]);
+}
+
+#[test]
+fn mixed_valid_and_corrupted_executions_are_both_planned_safely() {
+    let mut records = completed_records("exec_valid");
+    records.extend(corrupted_records("exec_corrupted_mixed"));
+
+    let plan = plan_records(&records);
+    let valid = plan_for(&plan, "exec_valid");
+    let corrupted = plan_for(&plan, "exec_corrupted_mixed");
+
+    assert_eq!(
+        valid.plan_outcome,
+        RecoveryPlanOutcome::NotRecoverableTerminal
+    );
+    assert_eq!(
+        corrupted.plan_outcome,
+        RecoveryPlanOutcome::NotRecoverableCorrupted
+    );
+    assert_eq!(
+        corrupted.allowed_future_action,
+        AllowedFutureRecoveryAction::ManualReviewOnly
     );
 }
 
@@ -322,6 +636,31 @@ fn cli_plan_recovery_does_not_require_bundle() {
     assert!(output.status.success());
 }
 
+#[test]
+fn cli_plan_recovery_does_not_require_sandbox_dir() {
+    let dir = test_dir("cli_no_sandbox_dir");
+    let state_path = write_state_log(&dir, &completed_records("exec_cli_no_sandbox"));
+
+    let output = run_plan(&dir, &state_path);
+
+    assert!(output.status.success());
+}
+
+#[test]
+fn cli_plan_recovery_missing_log_returns_json_without_stderr_noise() {
+    let dir = test_dir("cli_missing_log_json");
+    let state_path = dir.join("missing.jsonl");
+
+    let output = run_plan(&dir, &state_path);
+    let plan: RecoveryPlanReport =
+        serde_json::from_slice(&output.stdout).expect("stdout should be a plan report");
+    let stderr = String::from_utf8(output.stderr).expect("stderr should be utf8");
+
+    assert!(!output.status.success());
+    assert_eq!(plan.plan_status, RecoveryPlanStatus::InspectionFailed);
+    assert!(stderr.is_empty());
+}
+
 fn plan_records(records: &[Value]) -> RecoveryPlanReport {
     let inspection = inspect_records(records);
     RecoveryPlanGenerator::plan(&inspection)
@@ -335,6 +674,25 @@ fn inspect_records(records: &[Value]) -> aegis::state::ExecutionRecoveryReport {
 fn only_plan(report: &RecoveryPlanReport) -> &aegis::state::RecoveryPlanRecord {
     assert_eq!(report.plans.len(), 1);
     &report.plans[0]
+}
+
+fn plan_for<'a>(
+    report: &'a RecoveryPlanReport,
+    execution_id: &str,
+) -> &'a aegis::state::RecoveryPlanRecord {
+    report
+        .plans
+        .iter()
+        .find(|record| record.execution_id == execution_id)
+        .expect("plan record should exist")
+}
+
+fn recovery_report(executions: Vec<ExecutionRecoveryExecution>) -> ExecutionRecoveryReport {
+    ExecutionRecoveryReport {
+        inspection_status: ExecutionRecoveryStatus::Inspected,
+        executions,
+        inspection_errors: Vec::new(),
+    }
 }
 
 fn completed_records(execution_id: &str) -> Vec<Value> {
@@ -385,6 +743,21 @@ fn corrupted_records(execution_id: &str) -> Vec<Value> {
     ]
 }
 
+fn records_with_execution_details(execution_id: &str) -> Vec<Value> {
+    vec![
+        detailed_record(execution_id, "created", "validated", 0),
+        detailed_record(execution_id, "validated", "bundle_verified", 1),
+        detailed_record(execution_id, "bundle_verified", "policy_evaluated", 2),
+    ]
+}
+
+fn records_with_wrapper_parameters(execution_id: &str) -> Vec<Value> {
+    records_with_execution_details(execution_id)
+        .into_iter()
+        .map(add_wrapper_parameters)
+        .collect()
+}
+
 fn record(execution_id: &str, previous_state: &str, new_state: &str, index: usize) -> Value {
     json!({
         "execution_id": execution_id,
@@ -393,6 +766,54 @@ fn record(execution_id: &str, previous_state: &str, new_state: &str, index: usiz
         "transition_reason": reason_for(new_state),
         "lifecycle_index": index
     })
+}
+
+fn detailed_record(
+    execution_id: &str,
+    previous_state: &str,
+    new_state: &str,
+    index: usize,
+) -> Value {
+    let mut record = record(execution_id, previous_state, new_state, index);
+    let object = record
+        .as_object_mut()
+        .expect("record should be a JSON object");
+
+    object.insert("request_id".to_string(), json!("req_detailed"));
+    object.insert("tool_name".to_string(), json!("sandbox.note.write"));
+    object.insert("policy_bundle_id".to_string(), json!("local-dev"));
+    object.insert(
+        "policy_rule_id".to_string(),
+        json!("allow_sandbox_note_write"),
+    );
+    object.insert("wrapper_name".to_string(), json!("sandbox.note.write"));
+    object.insert("wrapper_version".to_string(), json!("1.0.0"));
+    object.insert("authorization_id".to_string(), json!("auth_detailed"));
+    object.insert("credential_boundary_status".to_string(), json!("satisfied"));
+    object.insert("credential_injection_status".to_string(), json!("injected"));
+    object.insert("credential_class".to_string(), json!("local_runtime"));
+    object.insert(
+        "credential_handle_ref".to_string(),
+        json!("safe_local_handle_ref"),
+    );
+    object.insert(
+        "idempotency_key_ref".to_string(),
+        json!("caller_supplied_idempotency_key"),
+    );
+
+    record
+}
+
+fn add_wrapper_parameters(mut record: Value) -> Value {
+    let object = record
+        .as_object_mut()
+        .expect("record should be a JSON object");
+
+    object.insert("note_id".to_string(), json!("example-note"));
+    object.insert("content".to_string(), json!("hello from aegis"));
+    object.insert("sandbox_dir".to_string(), json!("/tmp/aegis-sandbox"));
+
+    record
 }
 
 fn reason_for(state: &str) -> &'static str {
@@ -438,4 +859,15 @@ fn test_dir(name: &str) -> PathBuf {
 
     fs::create_dir_all(&path).expect("test directory should exist");
     path
+}
+
+fn assert_no_forbidden_text(value: &Value, forbidden_terms: &[&str]) {
+    let output = value.to_string().to_lowercase();
+
+    for term in forbidden_terms {
+        assert!(
+            !output.contains(term),
+            "plan output contained forbidden term {term}"
+        );
+    }
 }

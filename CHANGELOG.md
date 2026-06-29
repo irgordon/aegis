@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.21] - 2026-06-28
+
+### Added
+
+- Added durable append-only local audit logging.
+- Added JSONL audit persistence.
+- Added audit persistence tests.
+
+### Changed
+
+- Updated the local runtime to optionally persist audit records.
+- Updated audit documentation for local JSONL persistence.
+- Updated Phase 2 task tracking for local audit logging.
+
 ## [0.1.20] - 2026-06-28
 
 ### Added

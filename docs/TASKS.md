@@ -84,6 +84,7 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Create gateway entrypoint | complete |
 | Add minimal gateway entrypoint boundary | complete |
 | Add local gateway runtime entrypoint | complete |
+| Add durable append-only local audit logging | complete |
 | Add policy bundle loader and verifier | complete |
 | Add real policy bundle checksum verification | complete |
 | Add policy bundle signature verification | complete |

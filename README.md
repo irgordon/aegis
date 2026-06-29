@@ -32,9 +32,10 @@ This repository currently contains:
 - SHA-256 checksum verification for local policy bundle files
 - Ed25519 signature verification for the local checksum manifest
 - local policy and risk matrix evaluation for verified development bundles
+- local append-only JSONL audit logging for development
 - contract tests for request, response, audit, policy bundle, and gateway boundaries
 
-The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, produce a bounded response, and emit structured audit evidence. This is development evidence, not production enforcement.
+The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, produce a bounded response, optionally append a local JSONL audit record, and emit structured audit evidence. This is development evidence, not production enforcement.
 
 ## What Does Not Exist Yet
 
@@ -45,7 +46,7 @@ AEGIS does not yet provide:
 - wrapper execution
 - credential injection
 - approval workflow
-- durable audit persistence
+- production durable audit persistence
 - replay execution
 - HTTP service
 - UI
@@ -73,6 +74,8 @@ That signed checksum manifest then controls the expected fingerprints for:
 This is not production PKI, certificate validation, or remote trust distribution.
 
 The local Rust gateway can now use this verified development bundle to decide whether a matching request is allowed, denied, or pending approval. This is still pre-alpha and is not ready for real protection.
+
+Local audit logging is available for development. Audit logs are local append-only JSONL files. AEGIS remains pre-alpha.
 
 ## Where To Read Next
 

@@ -1,8 +1,10 @@
 mod builder;
 mod record;
+mod writer;
 
 pub use builder::{AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts};
 pub use record::{AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus};
+pub use writer::{AuditLogPath, AuditSink, AuditWriteError, AuditWriteResult, AuditWriter};
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct AuditReference {

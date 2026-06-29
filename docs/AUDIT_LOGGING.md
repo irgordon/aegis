@@ -118,6 +118,94 @@ Operational logs may support debugging and operations, but they do not replace a
 
 Logs must not be the only location for governance evidence.
 
+## Local Development Audit Log
+
+The Phase 2 local gateway can save audit records to a local file.
+
+For a new reader: this means AEGIS can now keep a local record of why the gateway allowed, denied, or paused a request. These records help explain what happened after the process exits.
+
+This is still pre-alpha. It is not production audit infrastructure.
+
+## JSONL Format
+
+The local development audit log uses newline-delimited JSON.
+
+Each completed gateway decision appends one JSON object on one line:
+
+```text
+{"event_type":"policy_decision","status":"allowed",...}
+{"event_type":"policy_decision","status":"denied",...}
+```
+
+The runtime accepts:
+
+```bash
+cargo run --quiet --bin aegis-gateway -- \
+  --bundle examples/policy-bundles/local-dev \
+  --audit-log audit.jsonl \
+  schemas/examples/valid/ToolCallRequest.json
+```
+
+If `--audit-log` is omitted, stdout behavior remains unchanged.
+
+## Append-Only Behavior
+
+The local audit writer:
+
+- creates the file if it is missing
+- opens the file in append mode
+- writes exactly one audit record for each completed gateway decision
+- writes a newline after each JSON object
+- flushes the write before the process exits
+- does not truncate existing audit files
+- does not rewrite previous records
+
+Malformed requests, unsupported tools, denied decisions, pending decisions, and allowed decisions all produce audit records.
+
+For the local runtime, record order follows successful append order in the target file. The current local binary processes one request per invocation.
+
+## Local Audit Failure Behavior
+
+If `--audit-log` is provided and the record cannot be written, the local runtime fails closed.
+
+The runtime returns an error instead of silently continuing without durable evidence.
+
+Expected local failure cases include:
+
+- audit path is a directory
+- parent directory is missing
+- file permissions prevent writing
+- record serialization fails
+- file write or flush fails
+
+## Durability Assumptions
+
+The local writer flushes process buffers before exit.
+
+It does not claim:
+
+- database durability
+- WORM compliance
+- hash chaining
+- audit log signatures
+- encryption at rest
+- compression
+- remote SIEM delivery
+- syslog integration
+
+Those controls belong to later phases.
+
+## Contributor Validation
+
+Audit persistence changes should run:
+
+```bash
+python3 scripts/verify.py
+cargo fmt --check
+cargo clippy --all-targets --all-features -- -D warnings
+cargo test
+```
+
 ## Immutability
 
 Audit storage should be append-only or write-once-read-many where practical.

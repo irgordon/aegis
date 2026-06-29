@@ -174,6 +174,24 @@ Implementation progress belongs in `CHANGELOG.md`, `docs/TASKS.md`, `docs/ROADMA
 
 README should change only for a production release or a major architectural identity change.
 
+## Documentation Stability
+
+Documentation should become progressively more stable as the implementation matures.
+
+Routine implementation progress should not trigger broad documentation churn.
+
+Use `CHANGELOG.md` as the primary record of routine progress.
+
+Stable documents should change only when the work changes what that document governs:
+
+- `README.md` changes rarely, usually only for production release or major architectural identity change.
+- `docs/ARCHITECTURE.md` changes only when architecture changes.
+- `docs/CODING_STYLE.md` changes only when engineering philosophy changes.
+- `docs/OPERATING_DOCTRINE.md` almost never changes, because it defines repository governance.
+- Feature-specific documents change only when a feature genuinely requires updated behavior, contracts, or review guidance.
+
+When a feature changes behavior, update the narrowest relevant document instead of editing multiple high-level documents.
+
 ## If You Are Looking For...
 
 | Goal | Read |

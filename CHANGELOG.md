@@ -4,6 +4,13 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.7] - 2026-06-29
+
+### Changed
+
+- Added repository-wide documentation stability guidance for Phase 3.
+- Clarified that CHANGELOG.md is the primary record of routine implementation progress.
+
 ## [0.2.6] - 2026-06-28
 
 ### Changed

@@ -501,6 +501,12 @@ Repository documentation shall remain synchronized with implementation.
 
 Documentation debt is engineering debt.
 
+As AEGIS matures, high-authority documents should become more stable.
+
+Routine implementation progress belongs in CHANGELOG.md and the narrowest relevant task or feature document.
+
+Operating Doctrine, Architecture, Coding Style, and README changes should be rare and intentional.
+
 ⸻
 
 Coding Doctrine

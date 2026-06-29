@@ -38,6 +38,20 @@ For UI changes, read `docs/UI-DESIGN.md` and complete the UI Integrity Review be
 * Do not log secrets.
 * Do not silently ignore failed validation.
 * Do not update README.md for ordinary implementation progress; README.md changes only for production release or major architectural identity changes.
+* Do not update OPERATING_DOCTRINE.md, ARCHITECTURE.md, or CODING_STYLE.md for routine implementation progress.
+
+## Documentation Stability
+
+Documentation should become progressively more stable as AEGIS matures.
+
+Use `CHANGELOG.md` as the primary record of routine implementation progress.
+
+Update stable governance documents only when the work genuinely changes their scope:
+
+* `OPERATING_DOCTRINE.md`: almost never; only when repository governance changes.
+* `ARCHITECTURE.md`: only when architecture changes.
+* `CODING_STYLE.md`: only when engineering philosophy changes.
+* `README.md`: only for production release or major architectural identity change.
 
 ## Current Phase Rule
 

@@ -137,6 +137,7 @@ Execute real AI actions safely under governance.
 - durable execution state
 - replay and recovery behavior
 - mutation-capable execution path
+- UI-ready structured status, error, lifecycle, audit, state, inspection, and recovery plan evidence
 - governed execution integration tests
 
 ### Exit Criteria
@@ -149,6 +150,7 @@ Execute real AI actions safely under governance.
 - replay uses stored intent and does not call the planning layer
 - mutation-capable requests are idempotent or fail closed according to policy
 - execution audit evidence links request, policy, wrapper, approval where applicable, execution outcome, and persisted state
+- runtime evidence remains structured enough for graphical display
 
 ## v0.4.0: Platform Capabilities
 
@@ -161,7 +163,8 @@ Expose and operate the governed execution engine through platform boundaries aft
 - runtime configuration model
 - operational observability
 - plugin or wrapper extension architecture
-- desktop UI only after runtime behavior is stable
+- Tauri desktop shell
+- graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
 - orchestrator integration references
 
 ### Exit Criteria
@@ -170,7 +173,8 @@ Expose and operate the governed execution engine through platform boundaries aft
 - configuration is explicit and validated
 - operational telemetry does not replace audit evidence
 - plugins cannot bypass gateway, policy, wrapper, or audit boundaries
-- UI, if present, displays runtime state without owning policy decisions
+- UI displays runtime state without owning policy decisions
+- UI consumes backend evidence and cannot bypass gateway execution logic
 
 ## v0.5.0: Production Hardening
 

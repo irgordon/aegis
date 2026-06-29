@@ -28,6 +28,8 @@ The Phase 3 foundation has also begun. The local runtime can dispatch and execut
 
 It does not yet execute real external actions. That is why the remaining Phase 3 work focuses on approval, durable execution state, replay, recovery, and broader governed execution beyond local built-in wrappers.
 
+AEGIS is intended to be a graphical Tauri desktop application for operators. The CLI remains a support surface for validation, inspection, testing, and automation. Phase 3 runtime evidence should remain structured so Phase 4 can render execution feedback graphically without recreating backend decisions.
+
 For contributors, the backlog has been reorganized around the shortest path from decision evidence to safe execution. Completed Phase 2 implementation work is no longer an active task list. Active work now starts with Phase 3 runtime execution boundaries.
 
 For engineers and architects, execution is now the primary architectural concern. Phase-level governance still precedes implementation, but execution-specific documentation must evolve with implementation evidence as wrappers, credentials, lifecycle state, approval, replay, and mutation behavior become concrete. Documentation updates remain part of the same Definition of Done as implementation and validation.
@@ -143,6 +145,7 @@ Phase 2 proved that AEGIS can decide and record. Phase 3 must prove that AEGIS c
 - durable execution state
 - replay and recovery behavior
 - mutation-capable execution path
+- UI-ready structured status, error, lifecycle, audit, state, inspection, and recovery plan evidence
 - integration tests for governed execution
 
 ### Phase 3 Progression
@@ -178,7 +181,8 @@ Remaining Phase 3 priorities:
 - replay uses stored intent and does not call the planning layer
 - mutation-capable requests are idempotent or fail closed according to policy
 - audit evidence links request, policy, wrapper, approval where applicable, execution outcome, and persisted state
-- no HTTP service or UI is required for Phase 3 completion
+- no HTTP service or UI implementation is required for Phase 3 completion
+- runtime status and error output remains structured enough for graphical display
 
 ## Phase 4: Platform Capabilities
 
@@ -191,7 +195,8 @@ Expose and operate the governed execution engine through platform boundaries aft
 - runtime configuration model
 - operational observability
 - plugin or wrapper extension architecture
-- desktop UI only after runtime behavior is stable
+- Tauri desktop shell
+- graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
 - orchestrator integration references
 
 ### Exit Criteria
@@ -200,7 +205,8 @@ Expose and operate the governed execution engine through platform boundaries aft
 - configuration is explicit and validated
 - operational telemetry does not replace audit evidence
 - plugins cannot bypass gateway, policy, wrapper, or audit boundaries
-- UI, if present, displays runtime state without owning policy decisions
+- UI displays runtime state without owning policy decisions
+- UI consumes backend evidence and cannot bypass gateway execution logic
 
 ## Phase 5: Production Hardening
 

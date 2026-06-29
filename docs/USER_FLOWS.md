@@ -288,6 +288,79 @@ Permit narrowly scoped inspection during degraded operation if explicitly config
 ### Expected Result
 AEGIS remains safe during failure.
 
+## Flow 15: Operator Reviews Execution Result
+
+### Goal
+Show a graphical summary of a completed execution.
+
+### Steps
+1. Operator opens the AEGIS desktop UI.
+2. Operator sees recent executions as status cards.
+3. Operator selects an execution.
+4. UI shows an execution timeline.
+5. UI shows request status, policy result, authorization result, credential status, wrapper result, audit status, and state status.
+6. Operator expands evidence only when needed.
+
+### Expected Result
+The operator can understand what happened without reading raw logs first.
+
+### Required Behavior
+The UI consumes backend evidence. It does not recreate policy decisions or execution state.
+
+## Flow 16: Operator Reviews Failed-Closed Execution
+
+### Goal
+Explain why AEGIS blocked or stopped execution.
+
+### Steps
+1. Operator opens the failed execution.
+2. UI shows a failed-closed status badge.
+3. UI shows the stage where execution stopped.
+4. UI shows the structured error message, reason, next action, severity, and location.
+5. Operator expands supporting evidence if needed.
+
+### Expected Result
+The operator can answer what happened, why it happened, what to do next, and where the failure occurred.
+
+### Required Behavior
+The UI must keep errors bounded, plain-language, structured, secret-safe, and actionable.
+
+## Flow 17: Operator Reviews Recovery Inspection
+
+### Goal
+Show what AEGIS found when inspecting local execution state evidence.
+
+### Steps
+1. Operator opens recovery inspection for an execution or state log.
+2. UI shows inspection status.
+3. UI shows last known state, transition count, terminal status, and recoverability status.
+4. UI shows safe inspection errors when evidence is malformed or inconsistent.
+5. Operator expands lifecycle evidence only when needed.
+
+### Expected Result
+The operator can see where execution stopped and whether the evidence is trustworthy.
+
+### Required Behavior
+Inspection is read-only. The UI must not repair state, resume execution, or hide corrupted evidence.
+
+## Flow 18: Operator Reviews Recovery Plan
+
+### Goal
+Show what a future recovery engine may be allowed to consider.
+
+### Steps
+1. Operator opens a recovery plan.
+2. UI shows recovery plan status.
+3. UI shows each execution as a bounded plan outcome.
+4. UI shows allowed future action as a classification, not a command.
+5. UI shows normalized planning errors when evidence cannot be trusted.
+
+### Expected Result
+The operator can distinguish terminal, corrupted, audit-retry candidate, and future-replay-evaluation candidate evidence.
+
+### Required Behavior
+Recovery plans do not authorize replay, resume execution, write audit records, write state records, or execute wrappers.
+
 ## Universal Flow Requirements
 
 Every flow must preserve:

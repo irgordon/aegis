@@ -168,6 +168,88 @@ This section describes current implementation state. The remaining architecture 
 
 ⸻
 
+Operator Surface
+
+AEGIS is intended to include a graphical desktop operator interface delivered through a Tauri window.
+
+The CLI is a support surface for execution, validation, inspection, testing, and automation. It is not the primary operator experience.
+
+AEGIS should not use a terminal UI as its primary interface and should not be treated as a CLI-only tool.
+
+Every runtime status exposed by the CLI must also be representable as structured data suitable for graphical display.
+
+The graphical interface should help operators understand execution state without reading raw logs first. It should favor:
+
+* status cards
+* execution timelines
+* bounded status badges
+* plain-language errors
+* evidence drill-down
+
+The UI is an operator surface, not an authority boundary.
+
+The backend remains authoritative for:
+
+* request validation
+* policy bundle verification
+* policy evaluation
+* execution authorization
+* credential class checks
+* credential injection
+* wrapper dispatch and execution
+* audit evidence
+* execution state
+* recovery inspection
+* recovery planning
+
+The UI must not bypass gateway execution logic, recreate policy decisions, authorize execution, inject credentials, alter audit evidence, or invent lifecycle state.
+
+⸻
+
+Visual Feedback Model
+
+The graphical UI should render backend evidence as plain operator feedback.
+
+Each current runtime stage should be representable visually:
+
+| Runtime stage | Operator-facing feedback |
+| --- | --- |
+| Request | Request received |
+| Validation | Request valid or invalid |
+| Verified Policy Bundle | Policy bundle verified or failed |
+| Policy Evaluation | Policy allowed, denied, or pending |
+| Execution Authorization | Execution authorized or blocked |
+| Credential Class Boundary | Credential boundary satisfied or failed |
+| Local Credential Injection Boundary | Credential handle issued, not required, or failed |
+| Wrapper Dispatch | Wrapper selected, not found, or blocked |
+| Wrapper Execution | Wrapper executed, failed, or not executed |
+| Lifecycle | Execution completed, failed closed, audit failed, or stopped at a known state |
+| Audit | Audit recorded or failed |
+| State Log | State recorded or failed |
+| Recovery Inspection | Recovery inspection available or failed |
+| Recovery Plan | Recovery plan available, not recoverable, audit retry only, or future evaluation only |
+
+UI-facing errors must remain:
+
+* bounded
+* plain-language
+* structured
+* secret-safe
+* actionable
+
+The UI should be able to render:
+
+* error code
+* severity
+* message
+* reason
+* next action
+* location
+
+Raw logs may support investigation, but they should not be the first way operators understand execution state.
+
+⸻
+
 Trust Boundaries
 
 AEGIS defines five trust boundaries.

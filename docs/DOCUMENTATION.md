@@ -62,6 +62,8 @@ This reader wants to help improve the project.
 
 They need to know where things belong, what rules govern changes, and how to avoid breaking the architecture.
 
+This audience includes backend contributors and UI contributors. Backend contributors must document status, error, and evidence models in a way that UI contributors can render graphically without guessing. UI contributors must rely on backend evidence instead of recreating runtime decisions.
+
 For this audience, documentation should answer:
 
 - Which document should I read first?
@@ -208,6 +210,35 @@ Routine implementation progress belongs in:
 - relevant technical documentation
 
 Implementation progress must not alter the README's Why -> What -> How -> What If structure.
+
+## UI-Ready Documentation
+
+AEGIS is intended to provide a Tauri graphical desktop operator interface.
+
+Documentation should not describe runtime behavior as CLI-only when that behavior is meant to appear in the UI later.
+
+Every backend status or error model that can be shown to an operator should be documented as structured data suitable for graphical display.
+
+UI-facing runtime documentation should make these fields clear where applicable:
+
+- status
+- bounded code
+- severity
+- message
+- reason
+- next action
+- location
+- evidence references
+
+The CLI may expose the same data for validation and automation, but the documentation should preserve enough structure for status cards, timelines, badges, plain-language errors, and evidence drill-down.
+
+README is for orientation.
+
+Documentation is for understanding.
+
+Architecture is for implementation.
+
+The UI is for operator feedback and intent capture, not for policy authority.
 
 ## README Stability
 
@@ -488,7 +519,7 @@ Examples:
 
 ### User Interface
 
-User interface documents define review standards for future UI work.
+User interface documents define review standards for the Tauri graphical desktop operator surface and any future visual presentation of AEGIS state.
 
 Examples:
 

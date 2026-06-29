@@ -54,6 +54,7 @@ Phase 3 work is grouped by the purpose it serves.
 | Harden execution state log invariants | complete |
 | Harden recovery inspection invariants | complete |
 | Harden recovery plan invariants | complete |
+| Define UI-renderable evidence contract | planned |
 | Add execution evidence | planned |
 | Add replay evidence | planned |
 | Add governed execution integration tests | planned |
@@ -170,7 +171,9 @@ Objective: expose and operate the governed execution engine through platform bou
 | Add operational observability | planned |
 | Add plugin or wrapper extension architecture | planned |
 | Add orchestrator integration references | planned |
-| Add desktop UI only after runtime behavior is stable | planned |
+| Add Tauri shell scaffold | planned |
+| Render execution timeline from sample runtime output | planned |
+| Render structured errors as operator-facing cards | planned |
 
 ## Phase 5: Production Hardening
 

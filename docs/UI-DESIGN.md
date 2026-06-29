@@ -5,11 +5,13 @@
 
 This document defines the UI design integrity standard for future AEGIS frontend work.
 
-AEGIS may eventually expose governed execution state through a user interface. That interface must make security state, user intent, policy outcomes, and audit evidence clear before it tries to look polished.
+AEGIS is intended to expose governed execution state through a Tauri graphical desktop interface. That interface must make security state, user intent, policy outcomes, and audit evidence clear before it tries to look polished.
 
 ## Scope
 
 This standard applies to any future change that adds or modifies user-facing screens, controls, workflows, frontend routes, frontend components, desktop UI, web UI, or visual presentation of AEGIS state.
+
+The Tauri desktop UI is the intended primary operator surface. The CLI remains a support surface for validation, inspection, testing, and automation.
 
 It applies before implementation begins.
 
@@ -148,7 +150,7 @@ This document does not define:
 - component library
 - CSS architecture
 - routing model
-- desktop shell implementation
+- desktop shell implementation details
 - web deployment model
 - mockups or visual assets
 - runtime policy behavior

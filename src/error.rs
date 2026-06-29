@@ -11,6 +11,7 @@ use crate::{
         PolicyBundleRef, PolicyBundleVerification, PolicyEvaluation, PolicyEvaluationFailure,
         PolicyEvaluationStatus,
     },
+    state::ExecutionStateWriteError,
 };
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -38,6 +39,11 @@ pub enum ErrorCode {
     SandboxUnsafeNoteId,
     SandboxEmptyContent,
     SandboxWriteFailed,
+    StateLogOpenFailed,
+    StateLogAppendFailed,
+    StateLogSerializationFailed,
+    StateLogFlushFailed,
+    StateLogInvalidTransition,
     WrapperDispatchFailed,
     AuditPersistenceFailed,
     RuntimeIoFailed,
@@ -61,6 +67,7 @@ pub enum ErrorLocation {
     ExecutionAuthorization,
     CredentialBoundary,
     SandboxMutation,
+    ExecutionStateLog,
     WrapperDispatch,
     AuditPersistence,
     RuntimeIo,
@@ -211,6 +218,29 @@ impl GatewayErrorReport {
             tool_name: None,
             wrapper_name: None,
             source_error_kind: Some(audit_error_kind(error).to_string()),
+        }
+    }
+
+    pub fn execution_state_log_failed(
+        error: &ExecutionStateWriteError,
+        response: Option<&ToolCallResponse>,
+    ) -> Self {
+        Self {
+            code: state_log_error_code(error),
+            severity: ErrorSeverity::Critical,
+            message: "The execution state log could not be saved.".to_string(),
+            reason: state_log_error_reason(error),
+            next_action: OperatorAction(
+                "Check the state log path and file permissions, then rerun the gateway."
+                    .to_string(),
+            ),
+            location: ErrorLocation::ExecutionStateLog,
+            request_id: response.and_then(|response| response.request_id.clone()),
+            execution_id: response.map(|response| response.execution_id.clone()),
+            policy_bundle_id: None,
+            tool_name: None,
+            wrapper_name: None,
+            source_error_kind: Some(state_log_error_kind(error).to_string()),
         }
     }
 
@@ -521,5 +551,46 @@ fn audit_error_kind(error: &AuditWriteError) -> &'static str {
         AuditWriteError::Serialize { .. } => "serialize",
         AuditWriteError::Write { .. } => "write",
         AuditWriteError::Flush { .. } => "flush",
+    }
+}
+
+fn state_log_error_code(error: &ExecutionStateWriteError) -> ErrorCode {
+    match error {
+        ExecutionStateWriteError::Open { .. } => ErrorCode::StateLogOpenFailed,
+        ExecutionStateWriteError::Serialize { .. } => ErrorCode::StateLogSerializationFailed,
+        ExecutionStateWriteError::Write { .. } => ErrorCode::StateLogAppendFailed,
+        ExecutionStateWriteError::Flush { .. } => ErrorCode::StateLogFlushFailed,
+        ExecutionStateWriteError::InvalidTransition { .. } => ErrorCode::StateLogInvalidTransition,
+    }
+}
+
+fn state_log_error_reason(error: &ExecutionStateWriteError) -> String {
+    match error {
+        ExecutionStateWriteError::Open { .. } => {
+            "The local execution state log path could not be opened.".to_string()
+        }
+        ExecutionStateWriteError::Serialize { .. } => {
+            "A lifecycle transition could not be serialized as JSON.".to_string()
+        }
+        ExecutionStateWriteError::Write { .. } => {
+            "A lifecycle transition could not be appended to the state log.".to_string()
+        }
+        ExecutionStateWriteError::Flush { .. } => {
+            "The execution state log could not be flushed before exit.".to_string()
+        }
+        ExecutionStateWriteError::InvalidTransition { .. } => {
+            "The lifecycle contains a transition that is not allowed by the state model."
+                .to_string()
+        }
+    }
+}
+
+fn state_log_error_kind(error: &ExecutionStateWriteError) -> &'static str {
+    match error {
+        ExecutionStateWriteError::Open { .. } => "open",
+        ExecutionStateWriteError::Serialize { .. } => "serialize",
+        ExecutionStateWriteError::Write { .. } => "write",
+        ExecutionStateWriteError::Flush { .. } => "flush",
+        ExecutionStateWriteError::InvalidTransition { .. } => "invalid_transition",
     }
 }

@@ -9,6 +9,7 @@ use aegis::error::GatewayErrorReport;
 use aegis::runtime::local::{
     process_local_gateway_request_with_context, LocalRuntimeContext, LocalRuntimeOutput,
 };
+use aegis::state::{ExecutionStateLogContext, ExecutionStateSink, ExecutionStateWriter};
 use serde::Serialize;
 
 type RuntimeResult<T> = Result<T, Box<GatewayErrorReport>>;
@@ -31,6 +32,7 @@ fn run() -> i32 {
 fn try_run() -> RuntimeResult<i32> {
     let args = parse_args()?;
     let input = read_input(args.request_path.as_deref())?;
+    validate_state_log_path(args.state_log_path.as_deref())?;
     let mut output = process_local_gateway_request_with_context(
         &input,
         &args.bundle_path,
@@ -42,13 +44,28 @@ fn try_run() -> RuntimeResult<i32> {
 
     match persist_audit_record(args.audit_log_path.as_deref(), &output) {
         Ok(()) => {
-            output.mark_audited_completed();
-            print_structured_json(&output)?;
-            Ok(0)
+            let mut completed_output = output.clone();
+            completed_output.mark_audited_completed();
+            match persist_execution_state_log(args.state_log_path.as_deref(), &completed_output) {
+                Ok(()) => {
+                    print_structured_json(&completed_output)?;
+                    Ok(0)
+                }
+                Err(error_report) => {
+                    output.attach_error_report(*error_report);
+                    print_structured_json(&output)?;
+                    Ok(1)
+                }
+            }
         }
         Err(error_report) => {
             output.mark_audit_failed();
             output.attach_error_report(*error_report);
+            if let Err(state_error_report) =
+                persist_execution_state_log(args.state_log_path.as_deref(), &output)
+            {
+                output.attach_error_report(*state_error_report);
+            }
             print_structured_json(&output)?;
             Ok(1)
         }
@@ -58,6 +75,7 @@ fn try_run() -> RuntimeResult<i32> {
 struct LocalRuntimeArgs {
     bundle_path: PathBuf,
     audit_log_path: Option<PathBuf>,
+    state_log_path: Option<PathBuf>,
     sandbox_dir: Option<PathBuf>,
     request_path: Option<PathBuf>,
 }
@@ -66,6 +84,7 @@ fn parse_args() -> RuntimeResult<LocalRuntimeArgs> {
     let mut args = env::args().skip(1);
     let mut bundle_path = None;
     let mut audit_log_path = None;
+    let mut state_log_path = None;
     let mut sandbox_dir = None;
     let mut request_path = None;
 
@@ -73,6 +92,7 @@ fn parse_args() -> RuntimeResult<LocalRuntimeArgs> {
         match arg.as_str() {
             "--bundle" => bundle_path = next_path_arg(&mut args, "--bundle")?,
             "--audit-log" => audit_log_path = next_path_arg(&mut args, "--audit-log")?,
+            "--state-log" => state_log_path = next_path_arg(&mut args, "--state-log")?,
             "--sandbox-dir" => sandbox_dir = next_path_arg(&mut args, "--sandbox-dir")?,
             _ if request_path.is_none() => request_path = Some(PathBuf::from(arg)),
             _ => return Err(runtime_usage_error()),
@@ -82,9 +102,22 @@ fn parse_args() -> RuntimeResult<LocalRuntimeArgs> {
     Ok(LocalRuntimeArgs {
         bundle_path: bundle_path.ok_or_else(runtime_usage_error)?,
         audit_log_path,
+        state_log_path,
         sandbox_dir,
         request_path,
     })
+}
+
+fn validate_state_log_path(state_log_path: Option<&Path>) -> RuntimeResult<()> {
+    if let Some(path) = state_log_path {
+        ExecutionStateWriter::new(path.to_path_buf())
+            .validate_writable()
+            .map_err(|error| {
+                boxed_report(GatewayErrorReport::execution_state_log_failed(&error, None))
+            })?;
+    }
+
+    Ok(())
 }
 
 fn read_input(request_path: Option<&Path>) -> RuntimeResult<String> {
@@ -128,6 +161,85 @@ fn persist_audit_record(
     Ok(())
 }
 
+fn persist_execution_state_log(
+    state_log_path: Option<&Path>,
+    output: &LocalRuntimeOutput,
+) -> RuntimeResult<()> {
+    if let Some(path) = state_log_path {
+        let context = execution_state_log_context(output);
+        ExecutionStateWriter::new(path.to_path_buf())
+            .append_lifecycle(&output.execution_lifecycle, &context)
+            .map_err(|error| {
+                boxed_report(GatewayErrorReport::execution_state_log_failed(
+                    &error,
+                    Some(&output.response),
+                ))
+            })?;
+    }
+
+    Ok(())
+}
+
+fn execution_state_log_context(output: &LocalRuntimeOutput) -> ExecutionStateLogContext {
+    ExecutionStateLogContext {
+        execution_id: output.response.execution_id.as_str().to_string(),
+        request_id: output
+            .response
+            .request_id
+            .as_ref()
+            .map(|request_id| request_id.as_str().to_string()),
+        tool_name: output
+            .audit_record
+            .tool_name
+            .as_ref()
+            .map(|tool_name| tool_name.as_str().to_string()),
+        policy_bundle_id: output
+            .policy_bundle
+            .bundle
+            .as_ref()
+            .map(|bundle| bundle.0.as_str().to_string()),
+        policy_rule_id: output
+            .policy_evaluation
+            .as_ref()
+            .and_then(|evaluation| evaluation.policy_rule_id.as_ref())
+            .map(|rule_id| rule_id.0.as_str().to_string()),
+        wrapper_name: output
+            .wrapper_execution
+            .as_ref()
+            .map(|wrapper| wrapper.wrapper_name.as_str().to_string())
+            .or_else(|| {
+                output
+                    .execution_authorization
+                    .as_ref()
+                    .map(|authorization| authorization.binding.wrapper_name.as_str().to_string())
+            }),
+        wrapper_version: output
+            .wrapper_execution
+            .as_ref()
+            .map(|wrapper| wrapper.wrapper_version.as_str().to_string())
+            .or_else(|| {
+                output
+                    .execution_authorization
+                    .as_ref()
+                    .map(|authorization| authorization.binding.wrapper_version.as_str().to_string())
+            }),
+        authorization_id: output
+            .execution_authorization
+            .as_ref()
+            .map(|authorization| authorization.authorization_id.as_str().to_string()),
+        credential_boundary_status: output
+            .credential_boundary
+            .as_ref()
+            .map(|boundary| format!("{:?}", boundary.credential_boundary_status).to_lowercase()),
+        idempotency_key_ref: output
+            .audit_record
+            .details
+            .idempotency_context
+            .as_ref()
+            .map(|_| "caller_supplied_idempotency_key".to_string()),
+    }
+}
+
 fn next_path_arg(
     args: &mut impl Iterator<Item = String>,
     flag: &str,
@@ -141,7 +253,7 @@ fn next_path_arg(
 }
 
 fn usage() -> String {
-    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]"
+    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--state-log <state-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]"
         .to_string()
 }
 

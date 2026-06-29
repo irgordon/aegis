@@ -40,6 +40,7 @@ Phase 3 work is grouped by the purpose it serves.
 
 | Task | Status |
 | --- | --- |
+| Add durable local execution state log | complete |
 | Add durable execution state | planned |
 | Add replay and recovery behavior | planned |
 
@@ -143,6 +144,7 @@ Completed foundation work:
 | Add structured error reporting | complete |
 | Add execution authorization boundary | complete |
 | Add credential class boundary | complete |
+| Add durable local execution state log | complete |
 
 ## Phase 4: Platform Capabilities
 

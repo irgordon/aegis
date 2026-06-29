@@ -291,6 +291,38 @@ For contributors: record only bounded local development evidence. Do not record 
 
 For engineers: local sandbox mutation evidence proves allowed-only L1 mutation under policy, authorization, credential, idempotency, and path-containment gates. It is not replay state, durable execution state, database idempotency, production filesystem access, or external action evidence.
 
+## Local Execution State Log
+
+The Phase 3 local runtime can save lifecycle transitions to a separate local JSONL state log.
+
+For a new reader: this means AEGIS can save the step-by-step progress of a request. The audit log explains the decision and evidence. The state log shows the order of lifecycle steps.
+
+The runtime accepts:
+
+```bash
+cargo run --quiet --bin aegis-gateway -- \
+  --bundle examples/policy-bundles/local-dev \
+  --audit-log audit.jsonl \
+  --state-log state.jsonl \
+  schemas/examples/valid/HealthCheckRequest.json
+```
+
+Each lifecycle transition appends one JSON object with fields such as:
+
+- execution ID
+- request ID where available
+- tool name where available
+- previous state
+- new state
+- transition reason
+- lifecycle index
+- policy bundle or rule references where available
+- wrapper and authorization references where available
+
+For contributors: keep the audit log and state log separate. The state log uses newline-delimited JSON, appends records, preserves existing entries, and fails closed if requested state evidence cannot be written. Add tests for ordering, failure paths, JSON validity, append behavior, and secret absence.
+
+For engineers: this is durable local state evidence only. It is not replay, recovery, durable orchestration, event sourcing, a database, locking, hash chaining, signing, WORM storage, or distributed state. Logged states must come from the existing lifecycle model and must not introduce a second state vocabulary.
+
 ## Durability Assumptions
 
 The local writer flushes process buffers before exit.

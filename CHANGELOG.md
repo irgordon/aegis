@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.11] - 2026-06-29
+
+### Added
+
+- Added optional append-only local JSONL execution state logging with `--state-log`.
+- Added lifecycle transition records using the existing execution state model.
+- Added fail-closed structured errors for execution state log write failures.
+- Added execution state log tests for successful, denied, malformed, wrapper failure, audit failure, append, invalid path, JSON validity, and secret-free paths.
+
+### Changed
+
+- Updated audit documentation to distinguish audit logs from execution state logs.
+- Updated Phase 3 task tracking for durable local execution state evidence.
+
 ## [0.2.10] - 2026-06-29
 
 ### Added

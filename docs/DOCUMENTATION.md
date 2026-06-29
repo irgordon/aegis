@@ -162,17 +162,64 @@ ORCHESTRATOR_FSM_CONTRACT.md
 AUDIT_LOGGING.md
 ```
 
+## README Standard
+
+`README.md` is the stable public orientation page for AEGIS.
+
+It follows the repository communication model:
+
+1. Why?
+2. What?
+3. How?
+4. What If?
+
+This mirrors the broader documentation philosophy:
+
+- Problem
+- Solution
+- Conceptual model
+- Engineering detail
+
+README is for orientation.
+
+Documentation is for understanding.
+
+Architecture is for implementation.
+
+The README should help a first-time reader understand why AEGIS exists, what problem it solves, how the execution model works at a high level, and what larger direction the project points toward.
+
+It must remain short.
+
+Do not use README as a roadmap, changelog, installation guide, developer handbook, runtime manual, or architecture document.
+
+Only update README when:
+
+- project identity changes
+- primary purpose changes
+- major architectural direction changes
+- a production release fundamentally changes public understanding
+
+Routine implementation progress belongs in:
+
+- `CHANGELOG.md`
+- `docs/ROADMAP.md`
+- `docs/PHASEMAP.md`
+- `docs/TASKS.md`
+- relevant technical documentation
+
+Implementation progress must not alter the README's Why -> What -> How -> What If structure.
+
 ## README Stability
 
 `README.md` is the stable public entry point for AEGIS.
 
-It should explain the project identity, plain-language purpose, pre-alpha status, and where to read next.
+It should explain the project identity, plain-language purpose, pre-alpha status, high-level execution model, and where to read next.
 
 Do not use `README.md` as an implementation diary, roadmap summary, feature list, installation guide, or local usage walkthrough.
 
 Implementation progress belongs in `CHANGELOG.md`, `docs/TASKS.md`, `docs/ROADMAP.md`, and the relevant architecture or runtime documents.
 
-README should change only for a production release or a major architectural identity change.
+README should change only when project identity, primary purpose, major architectural direction, or production release status changes public understanding.
 
 ## Documentation Stability
 

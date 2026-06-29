@@ -13,14 +13,61 @@
 
 </div>
 
-AEGIS is a governed execution boundary for AI-driven actions.
+## Why?
 
-It is designed to answer one question before an AI system touches outside tools or business systems:
+AI systems are beginning to do more than answer questions. They can ask to send messages, change records, write files, open tickets, deploy software, and call business tools.
 
-```text
-Should this AI action be allowed to execute?
-```
+That kind of execution deserves governance.
+
+Capability without a clear execution boundary creates unnecessary risk. AEGIS exists to place a deterministic governance layer between AI decisions and the actions those systems want to perform.
+
+## What?
+
+AEGIS is a Rust execution governance gateway for AI-driven actions.
+
+It validates requests, verifies policy, authorizes execution, checks credential boundaries, dispatches governed wrappers, records audit evidence, and fails closed when it cannot prove an action is safe to continue.
 
 AEGIS is pre-alpha. Do not install, deploy, or rely on this repository to protect real systems yet.
 
-Read the governed project documentation in [docs/](docs/).
+## How?
+
+AEGIS follows a controlled execution path:
+
+```text
+AI Request
+  |
+  v
+Validation
+  |
+  v
+Verified Policy Bundle
+  |
+  v
+Policy Evaluation
+  |
+  v
+Execution Authorization
+  |
+  v
+Credential Boundary
+  |
+  v
+Wrapper Dispatch
+  |
+  v
+Wrapper Execution
+  |
+  v
+Audit Evidence
+  |
+  v
+Execution Lifecycle
+```
+
+## What If?
+
+What if AI execution became deterministic, auditable, and governed instead of trusted implicitly?
+
+AEGIS is built around that question. It treats execution as something that should be requested, checked, bounded, recorded, and explainable.
+
+For architecture, implementation details, and project documentation, see [docs/](docs/).

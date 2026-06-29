@@ -2,7 +2,7 @@ use std::{fs, path::Path};
 
 use aegis::{
     auth::{
-        AuthorizationError, AuthorizationStatus, CredentialClassRef, ExecutionAuthority,
+        AuthorizationError, AuthorizationStatus, CredentialClass, ExecutionAuthority,
         ExecutionAuthorization, ExecutionScope,
     },
     error::{ErrorCode, ErrorLocation},
@@ -33,8 +33,8 @@ fn allowed_request_produces_execution_authorization() {
         ExecutionAuthority::PolicyAllow
     );
     assert_eq!(
-        authorization.credential_class_ref,
-        CredentialClassRef::NoCredentialRequired
+        authorization.authorized_credential_class,
+        CredentialClass::None
     );
     assert_eq!(
         authorization.execution_scope,

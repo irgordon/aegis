@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use aegis::{
-    auth::ExecutionAuthorization,
+    auth::{CredentialRequirement, ExecutionAuthorization},
     gateway::{
         ToolCallRequest, ToolCallResponse, WrapperDispatchError, WrapperDispatcher,
         WrapperExecutionContext, WrapperExecutionError, WrapperExecutionMode,
@@ -143,6 +143,10 @@ impl WrapperExecutor for TestWrapper {
         self.version
     }
 
+    fn credential_requirement(&self) -> CredentialRequirement {
+        CredentialRequirement::none()
+    }
+
     fn execute(
         &self,
         _request: &ToolCallRequest,
@@ -167,6 +171,10 @@ impl WrapperExecutor for FailingWrapper {
 
     fn wrapper_version(&self) -> &str {
         "1.0.0"
+    }
+
+    fn credential_requirement(&self) -> CredentialRequirement {
+        CredentialRequirement::none()
     }
 
     fn execute(

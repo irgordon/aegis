@@ -3,7 +3,10 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-use crate::auth::{AuthorizationError, ExecutionAuthorization};
+use crate::auth::{
+    AuthorizationError, CredentialBoundary, CredentialBoundaryError, CredentialRequirement,
+    ExecutionAuthorization,
+};
 
 use super::{NonEmptyString, ToolCallRequest};
 
@@ -73,6 +76,7 @@ pub struct WrapperExecutionOutput {
 #[serde(deny_unknown_fields)]
 pub struct WrapperExecutionResult {
     pub context: WrapperExecutionContext,
+    pub credential_boundary: CredentialBoundary,
     pub status: WrapperExecutionStatus,
     pub result: Option<BTreeMap<String, Value>>,
 }
@@ -115,6 +119,7 @@ pub struct WrapperExecutionError {
 pub trait WrapperExecutor {
     fn wrapper_name(&self) -> &str;
     fn wrapper_version(&self) -> &str;
+    fn credential_requirement(&self) -> CredentialRequirement;
 
     fn execute(
         &self,
@@ -134,6 +139,10 @@ pub enum WrapperDispatchError {
         requested_version: String,
     },
     AuthorizationFailed(AuthorizationError),
+    CredentialBoundaryFailed {
+        error: CredentialBoundaryError,
+        boundary: CredentialBoundary,
+    },
     ExecutionFailed(WrapperExecutionError),
 }
 
@@ -143,6 +152,7 @@ impl WrapperDispatchError {
             Self::MissingWrapper { .. } => "wrapper_missing",
             Self::IncompatibleWrapperVersion { .. } => "wrapper_version_incompatible",
             Self::AuthorizationFailed(error) => error.reason_code(),
+            Self::CredentialBoundaryFailed { error, .. } => error.reason_code(),
             Self::ExecutionFailed(error) => error
                 .reason_code
                 .as_deref()
@@ -164,6 +174,7 @@ impl WrapperDispatchError {
                 )
             }
             Self::AuthorizationFailed(error) => error.safe_message(),
+            Self::CredentialBoundaryFailed { error, .. } => error.safe_message(),
             Self::ExecutionFailed(error) => error.safe_message.clone(),
         }
     }
@@ -190,12 +201,14 @@ impl<'a> WrapperDispatcher<'a> {
             .validate_for(request, context)
             .map_err(WrapperDispatchError::AuthorizationFailed)?;
         let executor = self.executor_for(context)?;
+        let credential_boundary = self.credential_boundary_for(executor, authorization)?;
         let output = executor
             .execute(request, context, authorization)
             .map_err(WrapperDispatchError::ExecutionFailed)?;
 
         Ok(WrapperExecutionResult {
             context: context.clone(),
+            credential_boundary,
             status: status_for_mode(&context.execution_mode),
             result: output.result,
         })
@@ -238,6 +251,20 @@ impl<'a> WrapperDispatcher<'a> {
         }
 
         WrapperDispatchError::MissingWrapper { wrapper_name }
+    }
+
+    fn credential_boundary_for(
+        &self,
+        executor: &dyn WrapperExecutor,
+        authorization: &ExecutionAuthorization,
+    ) -> Result<CredentialBoundary, WrapperDispatchError> {
+        let requirement = executor.credential_requirement();
+        let boundary = CredentialBoundary::evaluate(&requirement, authorization);
+
+        boundary
+            .validate()
+            .map(|()| boundary.clone())
+            .map_err(|error| WrapperDispatchError::CredentialBoundaryFailed { error, boundary })
     }
 }
 

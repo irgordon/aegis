@@ -6,7 +6,7 @@ use std::{
 };
 
 use aegis::{
-    auth::ExecutionAuthorization,
+    auth::{CredentialRequirement, ExecutionAuthorization},
     gateway::{
         ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
         WrapperExecutor,
@@ -358,6 +358,10 @@ impl WrapperExecutor for FailingHealthWrapper {
 
     fn wrapper_version(&self) -> &str {
         "1.0.0"
+    }
+
+    fn credential_requirement(&self) -> CredentialRequirement {
+        CredentialRequirement::none()
     }
 
     fn execute(

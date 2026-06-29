@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.9] - 2026-06-29
+
+### Added
+
+- Added credential class boundary validation before wrapper dispatch.
+- Added explicit wrapper credential requirements for governed execution.
+- Added credential boundary evidence to runtime output and audit records.
+- Added fail-closed credential boundary tests.
+
+### Changed
+
+- Updated trust boundary and audit documentation for credential class evidence.
+- Updated Phase 3 task tracking for credential class boundary work.
+
 ## [0.2.8] - 2026-06-29
 
 ### Added

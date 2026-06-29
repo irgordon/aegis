@@ -140,6 +140,7 @@ Completed foundation work:
 | Add execution lifecycle state machine | complete |
 | Add structured error reporting | complete |
 | Add execution authorization boundary | complete |
+| Add credential class boundary | complete |
 
 ## Phase 4: Platform Capabilities
 

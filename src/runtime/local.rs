@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::{
     audit::{AuditRecord, AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts},
-    auth::{AuthorizationError, ExecutionAuthorization},
+    auth::{AuthorizationError, CredentialBoundary, ExecutionAuthorization},
     error::{AuditErrorReport, GatewayErrorReport},
     gateway::{
         Gateway, GatewayStatus, GatewayValidationOutcome, ResponseDecision, ResponseMetadata,
@@ -29,6 +29,8 @@ pub struct LocalRuntimeOutput {
     pub policy_evaluation: Option<PolicyEvaluation>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_authorization: Option<ExecutionAuthorization>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub credential_boundary: Option<CredentialBoundary>,
     pub execution_lifecycle: ExecutionLifecycle,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub wrapper_execution: Option<WrapperExecutionEvidence>,
@@ -115,6 +117,7 @@ impl LocalRuntimeOutput {
             policy_bundle,
             policy_evaluation: None,
             execution_authorization: None,
+            credential_boundary: None,
             execution_lifecycle,
             wrapper_execution: None,
             error_report: Some(error_report),
@@ -127,6 +130,7 @@ struct RuntimeOutputParts {
     policy_bundle: PolicyBundleVerification,
     policy_evaluation: PolicyEvaluation,
     execution_authorization: Option<ExecutionAuthorization>,
+    credential_boundary: Option<CredentialBoundary>,
     execution_lifecycle: ExecutionLifecycle,
     wrapper_context: Option<WrapperExecutionContext>,
     wrapper_execution: Option<WrapperExecutionEvidence>,
@@ -182,6 +186,7 @@ fn process_validated_request(
             policy_bundle,
             policy_evaluation,
             execution_authorization: None,
+            credential_boundary: None,
             execution_lifecycle: lifecycle,
             wrapper_context: None,
             wrapper_execution: None,
@@ -211,6 +216,7 @@ fn process_unverified_bundle_request(
             policy_bundle,
             policy_evaluation,
             execution_authorization: None,
+            credential_boundary: None,
             execution_lifecycle: lifecycle,
             wrapper_context: None,
             wrapper_execution: None,
@@ -293,6 +299,7 @@ fn build_executed_output(
             policy_bundle,
             policy_evaluation,
             execution_authorization: Some(authorization),
+            credential_boundary: Some(wrapper_result.credential_boundary.clone()),
             execution_lifecycle: lifecycle,
             wrapper_context: Some(wrapper_result.context.clone()),
             wrapper_execution: Some(wrapper_execution),
@@ -312,6 +319,7 @@ fn build_wrapper_failure_output(
 ) -> LocalRuntimeOutput {
     let response = wrapper_failure_response(&request, &policy_bundle, &error);
     let error_report = GatewayErrorReport::wrapper_dispatch_failed(&error, &wrapper_context);
+    let credential_boundary = credential_boundary_from_dispatch_error(&error);
     transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
 
     build_runtime_output(
@@ -321,6 +329,7 @@ fn build_wrapper_failure_output(
             policy_bundle,
             policy_evaluation,
             execution_authorization: Some(authorization),
+            credential_boundary,
             execution_lifecycle: lifecycle,
             wrapper_context: Some(wrapper_context),
             wrapper_execution: None,
@@ -350,6 +359,7 @@ fn build_authorization_failure_output(
             policy_bundle,
             policy_evaluation,
             execution_authorization: Some(authorization),
+            credential_boundary: None,
             execution_lifecycle: lifecycle,
             wrapper_context: Some(wrapper_context),
             wrapper_execution: None,
@@ -370,6 +380,7 @@ fn build_runtime_output(
             policy_bundle_verification: Some(parts.policy_bundle.clone()),
             policy_evaluation: Some(parts.policy_evaluation.clone()),
             execution_authorization: parts.execution_authorization.clone(),
+            credential_boundary: parts.credential_boundary.clone(),
             execution_lifecycle: Some(parts.execution_lifecycle.clone()),
             wrapper_context: parts.wrapper_context,
             wrapper_execution_evidence: parts.wrapper_execution.clone(),
@@ -384,6 +395,7 @@ fn build_runtime_output(
         policy_bundle: parts.policy_bundle,
         policy_evaluation: Some(parts.policy_evaluation),
         execution_authorization: parts.execution_authorization,
+        credential_boundary: parts.credential_boundary,
         execution_lifecycle: parts.execution_lifecycle,
         wrapper_execution: parts.wrapper_execution,
         error_report: parts.error_report,
@@ -430,6 +442,17 @@ fn wrapper_failure_response(
         }),
         local_response_metadata(policy_bundle),
     )
+}
+
+fn credential_boundary_from_dispatch_error(
+    error: &crate::gateway::WrapperDispatchError,
+) -> Option<CredentialBoundary> {
+    match error {
+        crate::gateway::WrapperDispatchError::CredentialBoundaryFailed { boundary, .. } => {
+            Some(boundary.clone())
+        }
+        _ => None,
+    }
 }
 
 fn authorization_failure_response(

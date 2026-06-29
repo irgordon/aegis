@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use super::{
     record::AuditRecordDetailContexts, AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus,
 };
-use crate::auth::ExecutionAuthorization;
+use crate::auth::{CredentialBoundary, ExecutionAuthorization};
 use crate::error::AuditErrorReport;
 use crate::gateway::{
     ApprovalContext, ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
@@ -24,6 +24,7 @@ pub struct GatewayAuditContexts {
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
     pub execution_authorization: Option<ExecutionAuthorization>,
+    pub credential_boundary: Option<CredentialBoundary>,
     pub execution_lifecycle: Option<ExecutionLifecycle>,
     pub error_report: Option<AuditErrorReport>,
 }
@@ -87,6 +88,7 @@ impl AuditRecordBuilder {
                     policy_bundle_verification: contexts.policy_bundle_verification,
                     policy_evaluation: contexts.policy_evaluation,
                     execution_authorization: contexts.execution_authorization,
+                    credential_boundary: contexts.credential_boundary,
                     execution_lifecycle: contexts.execution_lifecycle,
                     error_report: contexts.error_report,
                 },

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    auth::ExecutionAuthorization,
+    auth::{CredentialBoundary, ExecutionAuthorization},
     error::AuditErrorReport,
     gateway::{
         ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus,
@@ -90,6 +90,8 @@ pub struct AuditRecordDetails {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub execution_authorization: Option<ExecutionAuthorization>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub credential_boundary: Option<CredentialBoundary>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub execution_lifecycle: Option<ExecutionLifecycle>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub error_report: Option<AuditErrorReport>,
@@ -105,6 +107,7 @@ pub struct AuditRecordDetailContexts {
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
     pub execution_authorization: Option<ExecutionAuthorization>,
+    pub credential_boundary: Option<CredentialBoundary>,
     pub execution_lifecycle: Option<ExecutionLifecycle>,
     pub error_report: Option<AuditErrorReport>,
 }
@@ -146,6 +149,7 @@ impl AuditRecordDetails {
             policy_bundle_verification: contexts.policy_bundle_verification,
             policy_evaluation: contexts.policy_evaluation,
             execution_authorization: contexts.execution_authorization,
+            credential_boundary: contexts.credential_boundary,
             execution_lifecycle: contexts.execution_lifecycle,
             error_report: contexts.error_report,
         }
@@ -164,6 +168,7 @@ impl AuditRecordDetails {
             policy_bundle_verification: None,
             policy_evaluation: None,
             execution_authorization: None,
+            credential_boundary: None,
             execution_lifecycle: None,
             error_report: None,
         }

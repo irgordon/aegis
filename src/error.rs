@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     audit::AuditWriteError,
-    auth::{AuthorizationError, ExecutionAuthorization},
+    auth::{AuthorizationError, CredentialBoundaryError, ExecutionAuthorization},
     gateway::{
         NonEmptyString, ToolCallRequest, ToolCallResponse, WrapperDispatchError,
         WrapperExecutionContext,
@@ -27,6 +27,10 @@ pub enum ErrorCode {
     AuthorizationCapabilityMismatch,
     AuthorizationScopeInvalid,
     AuthorizationDenied,
+    CredentialClassMissing,
+    CredentialClassMismatch,
+    CredentialBoundaryDenied,
+    CredentialsRequiredWithoutAuthorization,
     WrapperDispatchFailed,
     AuditPersistenceFailed,
     RuntimeIoFailed,
@@ -48,6 +52,7 @@ pub enum ErrorLocation {
     PolicyBundleVerification,
     PolicyEvaluation,
     ExecutionAuthorization,
+    CredentialBoundary,
     WrapperDispatch,
     AuditPersistence,
     RuntimeIo,
@@ -144,12 +149,12 @@ impl GatewayErrorReport {
         context: &WrapperExecutionContext,
     ) -> Self {
         Self {
-            code: ErrorCode::WrapperDispatchFailed,
+            code: wrapper_error_code(error),
             severity: ErrorSeverity::Error,
-            message: "The wrapper could not be dispatched.".to_string(),
+            message: wrapper_error_message(error),
             reason: error.safe_message(),
             next_action: wrapper_next_action(error),
-            location: ErrorLocation::WrapperDispatch,
+            location: wrapper_error_location(error),
             request_id: None,
             execution_id: None,
             policy_bundle_id: None,
@@ -390,12 +395,51 @@ fn wrapper_next_action(error: &WrapperDispatchError) -> OperatorAction {
         WrapperDispatchError::AuthorizationFailed(_) => {
             "Fix the execution authorization binding before dispatching the wrapper."
         }
+        WrapperDispatchError::CredentialBoundaryFailed { .. } => {
+            "Fix the wrapper credential requirement or execution authorization before dispatching."
+        }
         WrapperDispatchError::ExecutionFailed(_) => {
             "Inspect the wrapper result and fix the wrapper before retrying."
         }
     };
 
     OperatorAction(action.to_string())
+}
+
+fn wrapper_error_code(error: &WrapperDispatchError) -> ErrorCode {
+    match error {
+        WrapperDispatchError::CredentialBoundaryFailed { error, .. } => {
+            credential_error_code(error)
+        }
+        _ => ErrorCode::WrapperDispatchFailed,
+    }
+}
+
+fn wrapper_error_location(error: &WrapperDispatchError) -> ErrorLocation {
+    match error {
+        WrapperDispatchError::CredentialBoundaryFailed { .. } => ErrorLocation::CredentialBoundary,
+        _ => ErrorLocation::WrapperDispatch,
+    }
+}
+
+fn wrapper_error_message(error: &WrapperDispatchError) -> String {
+    match error {
+        WrapperDispatchError::CredentialBoundaryFailed { .. } => {
+            "The credential boundary blocked wrapper execution.".to_string()
+        }
+        _ => "The wrapper could not be dispatched.".to_string(),
+    }
+}
+
+fn credential_error_code(error: &CredentialBoundaryError) -> ErrorCode {
+    match error {
+        CredentialBoundaryError::CredentialClassMissing => ErrorCode::CredentialClassMissing,
+        CredentialBoundaryError::CredentialClassMismatch => ErrorCode::CredentialClassMismatch,
+        CredentialBoundaryError::CredentialBoundaryDenied => ErrorCode::CredentialBoundaryDenied,
+        CredentialBoundaryError::CredentialsRequiredWithoutAuthorization => {
+            ErrorCode::CredentialsRequiredWithoutAuthorization
+        }
+    }
 }
 
 fn auth_error_code(error: &AuthorizationError) -> ErrorCode {

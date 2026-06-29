@@ -252,6 +252,24 @@ For contributors: authorization evidence belongs in audit details alongside poli
 
 For engineers: authorization evidence binds policy-allowed execution to wrapper dispatch without implementing credential injection, approval workflow, break-glass execution, distributed authorization, or durable execution state. Authorization mismatch failures are fail-closed and should include bounded error evidence.
 
+## Credential Boundary Evidence
+
+The Phase 3 local runtime records credential boundary evidence before wrapper dispatch.
+
+For a new reader: this shows whether a wrapper needed credentials and what credential class was allowed. It does not show any real credential value.
+
+Credential boundary evidence includes:
+
+- whether credentials are required
+- wrapper credential class
+- authorized credential class
+- credential boundary status
+- failure reason where applicable
+
+For contributors: credential evidence belongs in audit details alongside execution authorization. Do not record usernames, passwords, API keys, bearer tokens, certificates, vault references, secret IDs, environment variables, or credential values.
+
+For engineers: credential boundary evidence proves class compatibility only. It prepares the future credential injection boundary without implementing secret retrieval, vault integration, external identity providers, mutation wrappers, or durable execution state.
+
 ## Durability Assumptions
 
 The local writer flushes process buffers before exit.

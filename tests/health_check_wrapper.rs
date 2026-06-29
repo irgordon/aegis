@@ -1,7 +1,7 @@
 use std::{collections::BTreeMap, fs, io::Write, path::Path};
 
 use aegis::{
-    auth::ExecutionAuthorization,
+    auth::{CredentialRequirement, ExecutionAuthorization},
     gateway::{
         ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionMode,
         WrapperExecutionOutput, WrapperExecutor,
@@ -236,6 +236,10 @@ impl WrapperExecutor for PanicWrapper {
         "1.0.0"
     }
 
+    fn credential_requirement(&self) -> CredentialRequirement {
+        CredentialRequirement::none()
+    }
+
     fn execute(
         &self,
         _request: &ToolCallRequest,
@@ -255,6 +259,10 @@ impl WrapperExecutor for FailingHealthWrapper {
 
     fn wrapper_version(&self) -> &str {
         "1.0.0"
+    }
+
+    fn credential_requirement(&self) -> CredentialRequirement {
+        CredentialRequirement::none()
     }
 
     fn execute(

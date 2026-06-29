@@ -91,6 +91,16 @@ For contributors: wrapper execution must receive an explicit authorization conte
 
 For engineers: wrappers verify authorization binding before execution. Wrappers do not evaluate policy, fetch credentials, widen scope, or authorize themselves. Current Phase 3 authorization supports policy-allow execution for the built-in local wrapper only; human approval, break-glass authority, credential injection, vault access, distributed authorization, and production identity providers remain out of scope.
 
+### Credential Class Boundary
+
+Credential class validation sits between execution authorization and wrapper dispatch.
+
+For a new reader: credential classes describe what kind of credentials a wrapper may eventually receive. They do not contain usernames, passwords, tokens, or secret values.
+
+For contributors: every wrapper must explicitly declare whether it requires credentials and which credential class it requires. The current `health.check` wrapper declares no credentials. Credential mismatches fail closed before wrapper execution.
+
+For engineers: the credential boundary validates wrapper requirements against execution authorization. It authorizes categories only. It does not retrieve secrets, inject credentials, load environment variables, call vaults, or create runtime identity provider integrations.
+
 ### Local Built-In Wrapper Execution
 
 Phase 3 begins wrapper execution with one built-in local L0 wrapper: `health.check`.

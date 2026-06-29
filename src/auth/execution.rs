@@ -4,6 +4,8 @@ use crate::gateway::{
     CapabilityClass, NonEmptyString, ToolCallRequest, ToolCallResponse, WrapperExecutionContext,
 };
 
+use super::CredentialClass;
+
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum ExecutionAuthority {
@@ -15,12 +17,6 @@ pub enum ExecutionAuthority {
 #[serde(rename_all = "snake_case")]
 pub enum ExecutionScope {
     LocalGatewayHealth,
-}
-
-#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum CredentialClassRef {
-    NoCredentialRequired,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -59,7 +55,7 @@ pub struct ExecutionAuthorization {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_scope: Option<ExecutionScope>,
     pub authority_source: ExecutionAuthority,
-    pub credential_class_ref: CredentialClassRef,
+    pub authorized_credential_class: CredentialClass,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub expiration_ref: Option<NonEmptyString>,
     pub authorization_status: AuthorizationStatus,
@@ -110,7 +106,7 @@ impl ExecutionAuthorization {
             },
             execution_scope: Some(scope),
             authority_source: ExecutionAuthority::PolicyAllow,
-            credential_class_ref: CredentialClassRef::NoCredentialRequired,
+            authorized_credential_class: CredentialClass::None,
             expiration_ref: None,
             authorization_status: AuthorizationStatus::Authorized,
             failure_reason: None,
@@ -138,7 +134,7 @@ impl ExecutionAuthorization {
             },
             execution_scope: execution_scope_for(context).ok(),
             authority_source: ExecutionAuthority::PolicyAllow,
-            credential_class_ref: CredentialClassRef::NoCredentialRequired,
+            authorized_credential_class: CredentialClass::None,
             expiration_ref: None,
             authorization_status: AuthorizationStatus::Denied,
             failure_reason: Some(error.failure_reason()),

@@ -176,6 +176,7 @@ fn map_policy_decision_result(
             policy_bundle_verification: context.supplied_policy_bundle_verification.clone(),
             policy_evaluation: None,
             execution_authorization: None,
+            credential_boundary: None,
             execution_lifecycle: None,
             error_report: None,
         },

@@ -33,10 +33,12 @@ fn try_run() -> RuntimeResult<i32> {
 
     match persist_audit_record(args.audit_log_path.as_deref(), &output) {
         Ok(()) => {
+            output.mark_audited_completed();
             print_structured_json(&output)?;
             Ok(0)
         }
         Err(error_report) => {
+            output.mark_audit_failed();
             output.attach_error_report(*error_report);
             print_structured_json(&output)?;
             Ok(1)

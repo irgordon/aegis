@@ -101,7 +101,7 @@ Objective: execute real AI actions safely under governance.
 | Add wrapper dispatcher | complete |
 | Add wrapper execution boundary | complete |
 | Execute local L0 health.check wrapper | complete |
-| Add execution lifecycle state machine | planned |
+| Add execution lifecycle state machine | complete |
 | Add mutation-capable execution path | planned |
 
 ### Govern

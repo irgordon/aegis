@@ -1,3 +1,9 @@
+mod execution;
+
+pub use execution::{
+    valid_transition, ExecutionLifecycle, ExecutionState, ExecutionStateError, ExecutionTransition,
+};
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct ExecutionReference {
     id: String,

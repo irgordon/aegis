@@ -344,6 +344,51 @@ Return Response
 
 Every step produces deterministic output.
 
+Current Local Lifecycle State
+
+The local Phase 3 runtime exposes an in-memory execution lifecycle so operators and tests can see where a request is while AEGIS processes it.
+
+For a new reader: the lifecycle is a progress trail. It shows whether a request has been validated, checked against a verified policy bundle, dispatched to a wrapper, executed, audited, completed, or failed closed.
+
+The current bounded states are:
+
+* Created
+* Validated
+* BundleVerified
+* PolicyEvaluated
+* Dispatching
+* Executed
+* Audited
+* Completed
+* FailedClosed
+* AuditFailed
+
+Successful local execution follows this order:
+
+Created
+↓
+Validated
+↓
+BundleVerified
+↓
+PolicyEvaluated
+↓
+Dispatching
+↓
+Executed
+↓
+Audited
+↓
+Completed
+
+Fail-closed paths terminate at FailedClosed from the boundary that detected the problem.
+
+Audit persistence failure after wrapper execution terminates at AuditFailed.
+
+Contributors must add a state only when current runtime behavior exercises it and tests prove the valid transition order.
+
+For engineers: this is not durable execution state, replay, recovery, or a workflow engine. It is a typed transition model that prevents impossible runtime state reports and prepares later durable execution state without adding persistence now.
+
 Execution Identity Binding
 
 Execution identity is assigned after schema validation and before policy evaluation.

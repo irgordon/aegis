@@ -4,6 +4,19 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.5] - 2026-06-28
+
+### Added
+
+- Added deterministic in-memory execution lifecycle state model.
+- Added lifecycle evidence to runtime output and audit records.
+- Added lifecycle transition tests for success, fail-closed, wrapper failure, and audit failure paths.
+
+### Changed
+
+- Updated architecture and audit documentation for execution lifecycle evidence.
+- Updated Phase 3 task tracking for execution lifecycle modeling.
+
 ## [0.2.4] - 2026-06-28
 
 ### Added

@@ -9,6 +9,7 @@ use crate::gateway::{
     ToolCallResponse, WrapperExecutionContext, WrapperExecutionEvidence,
 };
 use crate::policy::{PolicyBundleVerification, PolicyEvaluation};
+use crate::state::ExecutionLifecycle;
 
 pub struct AuditRecordBuilder;
 
@@ -21,6 +22,7 @@ pub struct GatewayAuditContexts {
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    pub execution_lifecycle: Option<ExecutionLifecycle>,
     pub error_report: Option<AuditErrorReport>,
 }
 
@@ -82,6 +84,7 @@ impl AuditRecordBuilder {
                     approval_context: contexts.approval_context,
                     policy_bundle_verification: contexts.policy_bundle_verification,
                     policy_evaluation: contexts.policy_evaluation,
+                    execution_lifecycle: contexts.execution_lifecycle,
                     error_report: contexts.error_report,
                 },
             ),

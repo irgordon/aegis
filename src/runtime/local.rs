@@ -14,6 +14,7 @@ use crate::{
         evaluate_local_policy_bundle, load_policy_bundle, PolicyBundleVerification, PolicyDecision,
         PolicyDenial, PolicyEvaluation,
     },
+    state::{ExecutionLifecycle, ExecutionState},
     wrappers::HealthCheckWrapper,
 };
 
@@ -25,6 +26,7 @@ pub struct LocalRuntimeOutput {
     pub audit_record: AuditRecord,
     pub policy_bundle: PolicyBundleVerification,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    pub execution_lifecycle: ExecutionLifecycle,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub wrapper_execution: Option<WrapperExecutionEvidence>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -71,23 +73,59 @@ impl LocalRuntimeOutput {
         self.error_report = Some(report);
     }
 
+    pub fn mark_audited_completed(&mut self) {
+        if self.execution_lifecycle.execution_state == ExecutionState::Executed
+            && self.execution_lifecycle.audited_completed().is_ok()
+        {
+            self.sync_lifecycle_evidence();
+        }
+    }
+
+    pub fn mark_audit_failed(&mut self) {
+        if self.execution_lifecycle.execution_state == ExecutionState::Executed
+            && self
+                .execution_lifecycle
+                .transition_to(ExecutionState::AuditFailed)
+                .is_ok()
+        {
+            self.sync_lifecycle_evidence();
+        }
+    }
+
+    fn sync_lifecycle_evidence(&mut self) {
+        self.audit_record.details.execution_lifecycle = Some(self.execution_lifecycle.clone());
+    }
+
     fn from_denial(
         evidence: crate::gateway::GatewayDecisionEvidence,
         policy_bundle: PolicyBundleVerification,
     ) -> Self {
         let error_report = GatewayErrorReport::from_validation_denial(&evidence.response);
         let mut audit_record = evidence.audit_record;
+        let execution_lifecycle = validation_denial_lifecycle(&evidence.response);
         audit_record.details.error_report = Some(error_report.audit_fields());
+        audit_record.details.execution_lifecycle = Some(execution_lifecycle.clone());
 
         Self {
             response: evidence.response,
             audit_record,
             policy_bundle,
             policy_evaluation: None,
+            execution_lifecycle,
             wrapper_execution: None,
             error_report: Some(error_report),
         }
     }
+}
+
+struct RuntimeOutputParts {
+    response: ToolCallResponse,
+    policy_bundle: PolicyBundleVerification,
+    policy_evaluation: PolicyEvaluation,
+    execution_lifecycle: ExecutionLifecycle,
+    wrapper_context: Option<WrapperExecutionContext>,
+    wrapper_execution: Option<WrapperExecutionEvidence>,
+    error_report: Option<GatewayErrorReport>,
 }
 
 fn process_validated_request(
@@ -96,8 +134,17 @@ fn process_validated_request(
     wrapper_executors: &[&dyn WrapperExecutor],
     wrapper_context: Option<WrapperExecutionContext>,
 ) -> LocalRuntimeOutput {
+    let mut lifecycle = validated_lifecycle();
+
+    if !policy_bundle.is_verified() {
+        transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
+        return process_unverified_bundle_request(request, policy_bundle, lifecycle);
+    }
+
+    transition_or_panic(&mut lifecycle, ExecutionState::BundleVerified);
     let evaluation_result = evaluate_local_policy_bundle(&request, &policy_bundle);
     let policy_evaluation = evaluation_result.evaluation;
+    transition_or_panic(&mut lifecycle, ExecutionState::PolicyEvaluated);
     let error_report = gateway_error_report(&request, &policy_bundle, &policy_evaluation);
     let wrapper_context =
         wrapper_context.unwrap_or_else(|| local_wrapper_context_for_request(&request));
@@ -108,6 +155,7 @@ fn process_validated_request(
     );
 
     if should_dispatch_wrapper(&response) {
+        transition_or_panic(&mut lifecycle, ExecutionState::Dispatching);
         return dispatch_allowed_request(
             request,
             response,
@@ -115,17 +163,53 @@ fn process_validated_request(
             policy_evaluation,
             wrapper_executors,
             wrapper_context,
+            lifecycle,
         );
+    }
+
+    if response.status == GatewayStatus::Denied {
+        transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
     }
 
     build_runtime_output(
         &request,
-        response,
-        policy_bundle,
-        policy_evaluation,
-        None,
-        None,
-        error_report,
+        RuntimeOutputParts {
+            response,
+            policy_bundle,
+            policy_evaluation,
+            execution_lifecycle: lifecycle,
+            wrapper_context: None,
+            wrapper_execution: None,
+            error_report,
+        },
+    )
+}
+
+fn process_unverified_bundle_request(
+    request: ToolCallRequest,
+    policy_bundle: PolicyBundleVerification,
+    lifecycle: ExecutionLifecycle,
+) -> LocalRuntimeOutput {
+    let evaluation_result = evaluate_local_policy_bundle(&request, &policy_bundle);
+    let policy_evaluation = evaluation_result.evaluation;
+    let error_report = gateway_error_report(&request, &policy_bundle, &policy_evaluation);
+    let response = Gateway::map_policy_decision(
+        &request,
+        evaluation_result.decision,
+        local_response_metadata(&policy_bundle),
+    );
+
+    build_runtime_output(
+        &request,
+        RuntimeOutputParts {
+            response,
+            policy_bundle,
+            policy_evaluation,
+            execution_lifecycle: lifecycle,
+            wrapper_context: None,
+            wrapper_execution: None,
+            error_report,
+        },
     )
 }
 
@@ -136,19 +220,26 @@ fn dispatch_allowed_request(
     policy_evaluation: PolicyEvaluation,
     wrapper_executors: &[&dyn WrapperExecutor],
     wrapper_context: WrapperExecutionContext,
+    lifecycle: ExecutionLifecycle,
 ) -> LocalRuntimeOutput {
     let dispatcher = WrapperDispatcher::new(wrapper_executors.iter().copied());
 
     match dispatcher.dispatch(&request, &wrapper_context) {
-        Ok(result) => {
-            build_executed_output(request, response, policy_bundle, policy_evaluation, result)
-        }
+        Ok(result) => build_executed_output(
+            request,
+            response,
+            policy_bundle,
+            policy_evaluation,
+            result,
+            lifecycle,
+        ),
         Err(error) => build_wrapper_failure_output(
             request,
             policy_bundle,
             policy_evaluation,
             wrapper_context,
             error,
+            lifecycle,
         ),
     }
 }
@@ -159,18 +250,23 @@ fn build_executed_output(
     policy_bundle: PolicyBundleVerification,
     policy_evaluation: PolicyEvaluation,
     wrapper_result: crate::gateway::WrapperExecutionResult,
+    mut lifecycle: ExecutionLifecycle,
 ) -> LocalRuntimeOutput {
     response.result = wrapper_result.result.clone();
     let wrapper_execution = WrapperExecutionEvidence::from(&wrapper_result);
+    transition_or_panic(&mut lifecycle, ExecutionState::Executed);
 
     build_runtime_output(
         &request,
-        response,
-        policy_bundle,
-        policy_evaluation,
-        Some(wrapper_result.context.clone()),
-        Some(wrapper_execution),
-        None,
+        RuntimeOutputParts {
+            response,
+            policy_bundle,
+            policy_evaluation,
+            execution_lifecycle: lifecycle,
+            wrapper_context: Some(wrapper_result.context.clone()),
+            wrapper_execution: Some(wrapper_execution),
+            error_report: None,
+        },
     )
 }
 
@@ -180,52 +276,77 @@ fn build_wrapper_failure_output(
     policy_evaluation: PolicyEvaluation,
     wrapper_context: WrapperExecutionContext,
     error: crate::gateway::WrapperDispatchError,
+    mut lifecycle: ExecutionLifecycle,
 ) -> LocalRuntimeOutput {
     let response = wrapper_failure_response(&request, &policy_bundle, &error);
     let error_report = GatewayErrorReport::wrapper_dispatch_failed(&error, &wrapper_context);
+    transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
 
     build_runtime_output(
         &request,
-        response,
-        policy_bundle,
-        policy_evaluation,
-        Some(wrapper_context),
-        None,
-        Some(error_report),
+        RuntimeOutputParts {
+            response,
+            policy_bundle,
+            policy_evaluation,
+            execution_lifecycle: lifecycle,
+            wrapper_context: Some(wrapper_context),
+            wrapper_execution: None,
+            error_report: Some(error_report),
+        },
     )
 }
 
 fn build_runtime_output(
     request: &ToolCallRequest,
-    response: ToolCallResponse,
-    policy_bundle: PolicyBundleVerification,
-    policy_evaluation: PolicyEvaluation,
-    wrapper_context: Option<WrapperExecutionContext>,
-    wrapper_execution: Option<WrapperExecutionEvidence>,
-    error_report: Option<GatewayErrorReport>,
+    parts: RuntimeOutputParts,
 ) -> LocalRuntimeOutput {
     let audit_record = AuditRecordBuilder::build_gateway_decision_record_with_contexts(
         request,
-        &response,
+        &parts.response,
         local_audit_metadata(),
         GatewayAuditContexts {
-            policy_bundle_verification: Some(policy_bundle.clone()),
-            policy_evaluation: Some(policy_evaluation.clone()),
-            wrapper_context,
-            wrapper_execution_evidence: wrapper_execution.clone(),
-            error_report: audit_error_report(error_report.as_ref()),
+            policy_bundle_verification: Some(parts.policy_bundle.clone()),
+            policy_evaluation: Some(parts.policy_evaluation.clone()),
+            execution_lifecycle: Some(parts.execution_lifecycle.clone()),
+            wrapper_context: parts.wrapper_context,
+            wrapper_execution_evidence: parts.wrapper_execution.clone(),
+            error_report: audit_error_report(parts.error_report.as_ref()),
             ..GatewayAuditContexts::default()
         },
     );
 
     LocalRuntimeOutput {
-        response,
+        response: parts.response,
         audit_record,
-        policy_bundle,
-        policy_evaluation: Some(policy_evaluation),
-        wrapper_execution,
-        error_report,
+        policy_bundle: parts.policy_bundle,
+        policy_evaluation: Some(parts.policy_evaluation),
+        execution_lifecycle: parts.execution_lifecycle,
+        wrapper_execution: parts.wrapper_execution,
+        error_report: parts.error_report,
     }
+}
+
+fn validation_denial_lifecycle(response: &ToolCallResponse) -> ExecutionLifecycle {
+    let mut lifecycle = ExecutionLifecycle::created();
+
+    if response.request_id.is_some() {
+        transition_or_panic(&mut lifecycle, ExecutionState::Validated);
+    }
+
+    transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
+    lifecycle
+}
+
+fn validated_lifecycle() -> ExecutionLifecycle {
+    let mut lifecycle = ExecutionLifecycle::created();
+    transition_or_panic(&mut lifecycle, ExecutionState::Validated);
+    lifecycle
+}
+
+fn transition_or_panic(lifecycle: &mut ExecutionLifecycle, state: ExecutionState) {
+    lifecycle.transition_to(state).unwrap_or_else(|error| {
+        panic!("local runtime lifecycle transition should be valid: {error:?}")
+    });
 }
 
 fn should_dispatch_wrapper(response: &ToolCallResponse) -> bool {

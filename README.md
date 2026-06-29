@@ -37,9 +37,10 @@ This repository currently contains:
 - one safe built-in local L0 wrapper, `health.check`
 - local append-only JSONL audit logging for development
 - structured JSON error reports for local runtime failures
+- in-memory execution lifecycle state in local runtime output and audit evidence
 - contract tests for request, response, audit, policy bundle, and gateway boundaries
 
-The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, execute `health.check` after policy allows it, produce a bounded response, optionally append a local JSONL audit record, and emit structured audit evidence. This is development evidence, not production enforcement.
+The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, execute `health.check` after policy allows it, expose lifecycle state, produce a bounded response, optionally append a local JSONL audit record, and emit structured audit evidence. This is development evidence, not production enforcement.
 
 ## Roadmap Summary
 

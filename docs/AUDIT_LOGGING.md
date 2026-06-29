@@ -213,6 +213,22 @@ For contributors: wrapper evidence belongs in audit details alongside policy eva
 
 For engineers: this is the first governed execution evidence path. It proves the gateway can connect verified policy, allowed-only wrapper dispatch, response result mapping, and durable JSONL audit persistence without adding external systems, credential injection, replay, or durable execution state.
 
+## Execution Lifecycle Evidence
+
+The Phase 3 local runtime includes execution lifecycle evidence in structured output and audit records.
+
+For a new reader: this shows where a request was when AEGIS finished handling it. A successful `health.check` request reaches `completed`. A denied or invalid request reaches `failed_closed`. A request that executed but could not write requested audit evidence reaches `audit_failed`.
+
+Lifecycle audit evidence includes:
+
+- current execution state
+- previous state where available
+- ordered transitions
+
+For contributors: lifecycle states are bounded Rust enums, not free-form strings. Add a new state only when current code reaches it, audit evidence needs it, and tests cover the transition.
+
+For engineers: lifecycle evidence is an in-memory deterministic state trace. It is not durable execution storage, replay state, event sourcing, or recovery metadata. It gives future replay and durable execution work a stable evidence shape without implementing those behaviors in this phase.
+
 ## Durability Assumptions
 
 The local writer flushes process buffers before exit.

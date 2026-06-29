@@ -4,6 +4,7 @@ use serde::Serialize;
 
 use crate::{
     audit::{AuditRecord, AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts},
+    error::{AuditErrorReport, GatewayErrorReport},
     gateway::{
         Gateway, GatewayStatus, GatewayValidationOutcome, ResponseDecision, ResponseMetadata,
         SupportedTools, ToolCallRequest, ToolCallResponse,
@@ -20,6 +21,8 @@ pub struct LocalRuntimeOutput {
     pub audit_record: AuditRecord,
     pub policy_bundle: PolicyBundleVerification,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error_report: Option<GatewayErrorReport>,
 }
 
 pub fn process_local_gateway_request(input: &str, bundle_path: &Path) -> LocalRuntimeOutput {
@@ -43,15 +46,25 @@ pub fn process_local_gateway_request(input: &str, bundle_path: &Path) -> LocalRu
 }
 
 impl LocalRuntimeOutput {
+    pub fn attach_error_report(&mut self, report: GatewayErrorReport) {
+        self.audit_record.details.error_report = Some(report.audit_fields());
+        self.error_report = Some(report);
+    }
+
     fn from_denial(
         evidence: crate::gateway::GatewayDecisionEvidence,
         policy_bundle: PolicyBundleVerification,
     ) -> Self {
+        let error_report = GatewayErrorReport::from_validation_denial(&evidence.response);
+        let mut audit_record = evidence.audit_record;
+        audit_record.details.error_report = Some(error_report.audit_fields());
+
         Self {
             response: evidence.response,
-            audit_record: evidence.audit_record,
+            audit_record,
             policy_bundle,
             policy_evaluation: None,
+            error_report: Some(error_report),
         }
     }
 }
@@ -62,6 +75,7 @@ fn process_validated_request(
 ) -> LocalRuntimeOutput {
     let evaluation_result = evaluate_local_policy_bundle(&request, &policy_bundle);
     let policy_evaluation = evaluation_result.evaluation;
+    let error_report = gateway_error_report(&request, &policy_bundle, &policy_evaluation);
     let response = Gateway::map_policy_decision(
         &request,
         evaluation_result.decision,
@@ -74,6 +88,7 @@ fn process_validated_request(
         GatewayAuditContexts {
             policy_bundle_verification: Some(policy_bundle.clone()),
             policy_evaluation: Some(policy_evaluation.clone()),
+            error_report: audit_error_report(error_report.as_ref()),
             ..GatewayAuditContexts::default()
         },
     );
@@ -83,7 +98,26 @@ fn process_validated_request(
         audit_record,
         policy_bundle,
         policy_evaluation: Some(policy_evaluation),
+        error_report,
     }
+}
+
+fn gateway_error_report(
+    request: &ToolCallRequest,
+    policy_bundle: &PolicyBundleVerification,
+    policy_evaluation: &PolicyEvaluation,
+) -> Option<GatewayErrorReport> {
+    if !policy_bundle.is_verified() {
+        return Some(GatewayErrorReport::policy_bundle_verification_failed(
+            policy_bundle,
+        ));
+    }
+
+    GatewayErrorReport::policy_evaluation_report(request, policy_evaluation)
+}
+
+fn audit_error_report(report: Option<&GatewayErrorReport>) -> Option<AuditErrorReport> {
+    report.map(GatewayErrorReport::audit_fields)
 }
 
 fn verified_or_rejected_bundle(bundle_path: &Path) -> PolicyBundleVerification {

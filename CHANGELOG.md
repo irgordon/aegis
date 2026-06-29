@@ -4,6 +4,19 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.3] - 2026-06-28
+
+### Added
+
+- Added structured gateway error reports with plain-language messages, reasons, and next actions.
+- Added tests for fail-closed error reporting across request, policy, wrapper, audit, and runtime failures.
+
+### Changed
+
+- Updated local runtime output and audit records with bounded safe error evidence.
+- Updated audit, API, and coding-style documentation for structured error reporting.
+- Updated Phase 3 task tracking for structured error reporting.
+
 ## [0.2.2] - 2026-06-28
 
 ### Added

@@ -199,6 +199,17 @@ Do not allow uncertain state to proceed.
 
 AEGIS fails closed.
 
+Externally visible gateway errors should use structured reports rather than ad hoc strings.
+
+Each report should include a bounded code, bounded location, severity, message, reason, and next action. Messages and next actions should be written for a human operator first. Developer details belong in separate safe diagnostic fields.
+
+When adding a new error code:
+
+1. Add it to the shared bounded error type.
+2. Write a plain-language message, reason, and next action.
+3. Add tests for JSON output, audit evidence, and secret absence.
+4. Keep the failure behavior fail-closed.
+
 ## Security-Sensitive Code
 
 Security-sensitive code must be especially plain.

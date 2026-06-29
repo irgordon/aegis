@@ -77,15 +77,35 @@ Unknown statuses are invalid.
 
 Errors must be explicit and deterministic.
 
-An error response should include:
+An externally visible gateway error should include:
 
+- bounded error code
+- severity
+- plain-language message
+- reason
+- next action
+- failure location
 - execution ID where available
-- error code
-- safe error message
-- terminal or retryable indicator
+- request ID where available
 - audit reference where available
 
 Errors must not expose secrets.
+
+For a new reader: an AEGIS error should say what happened, why it happened, and what to do next. The local runtime returns structured JSON errors so future user interfaces can display the same information without guessing from logs.
+
+For contributors: new externally visible error paths should use the shared gateway error report model. Add a bounded code, a bounded location, a human-readable message, a reason, a next action, and tests that prove the output is valid JSON and secret-free.
+
+For engineers: structured errors are part of the fail-closed boundary. They do not make failures recoverable by default, and they do not expose stack traces or raw dependency errors. Safe diagnostic fields may include request ID, execution ID, policy bundle ID, tool name, wrapper name, and source error kind.
+
+Bounded error locations include:
+
+- request_validation
+- policy_bundle_verification
+- policy_evaluation
+- wrapper_dispatch
+- audit_persistence
+- runtime_io
+- unexpected_internal
 
 ## Policy Provenance
 

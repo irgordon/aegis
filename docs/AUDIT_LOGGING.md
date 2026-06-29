@@ -168,7 +168,7 @@ For the local runtime, record order follows successful append order in the targe
 
 If `--audit-log` is provided and the record cannot be written, the local runtime fails closed.
 
-The runtime returns an error instead of silently continuing without durable evidence.
+The runtime returns structured JSON instead of silently continuing without durable evidence.
 
 Expected local failure cases include:
 
@@ -177,6 +177,23 @@ Expected local failure cases include:
 - file permissions prevent writing
 - record serialization fails
 - file write or flush fails
+
+## Structured Error Evidence
+
+AEGIS failures should be understandable. When the local gateway denies or fails because of validation, bundle verification, policy evaluation, wrapper dispatch, audit persistence, runtime I/O, or an unexpected internal condition, the operator-facing output includes a structured error report.
+
+Audit records store a smaller safe subset:
+
+- error code
+- error location
+- error reason
+- next action
+
+For a new reader: this means the audit record can help explain what happened and what someone should check next.
+
+For contributors: do not copy large error objects, stack traces, dependency errors, secrets, or raw credentials into audit records. Add tests for new failure paths that verify audit evidence remains bounded and secret-free.
+
+For engineers: audit error evidence is diagnostic metadata, not a recovery protocol. It preserves fail-closed behavior while making validation, policy, wrapper, and persistence boundaries observable enough for later UI and incident review.
 
 ## Durability Assumptions
 

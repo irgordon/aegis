@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    error::AuditErrorReport,
     gateway::{
         ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus,
         IdempotencyContext, NonEmptyString, PolicyProvenance, ResponseDecision, SchemaVersion,
@@ -81,6 +82,8 @@ pub struct AuditRecordDetails {
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub error_report: Option<AuditErrorReport>,
 }
 
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -91,6 +94,7 @@ pub struct AuditRecordDetailContexts {
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    pub error_report: Option<AuditErrorReport>,
 }
 
 impl AuditRecordDetails {
@@ -128,6 +132,7 @@ impl AuditRecordDetails {
             approval_context: contexts.approval_context,
             policy_bundle_verification: contexts.policy_bundle_verification,
             policy_evaluation: contexts.policy_evaluation,
+            error_report: contexts.error_report,
         }
     }
 
@@ -142,6 +147,7 @@ impl AuditRecordDetails {
             approval_context: None,
             policy_bundle_verification: None,
             policy_evaluation: None,
+            error_report: None,
         }
     }
 }

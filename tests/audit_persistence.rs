@@ -98,10 +98,13 @@ fn invalid_audit_path_fails_closed() {
         .unwrap_or_else(|error| panic!("audit fixture directory should be creatable: {error}"));
 
     let output = run_gateway_expect_failure(&audit_dir, &valid_request());
+    let body: Value = serde_json::from_slice(&output.stdout)
+        .unwrap_or_else(|error| panic!("failure stdout should be valid JSON: {error}"));
 
     assert!(!output.status.success());
-    assert!(output.stdout.is_empty());
-    assert!(String::from_utf8_lossy(&output.stderr).contains("failed to open audit log"));
+    assert_eq!(body["error_report"]["code"], "audit_persistence_failed");
+    assert_eq!(body["error_report"]["location"], "audit_persistence");
+    assert!(body["error_report"]["next_action"].is_string());
 }
 
 #[test]

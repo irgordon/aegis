@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use super::{
     record::AuditRecordDetailContexts, AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus,
 };
+use crate::error::AuditErrorReport;
 use crate::gateway::{
     ApprovalContext, ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
     ToolCallResponse, WrapperExecutionContext,
@@ -19,6 +20,7 @@ pub struct GatewayAuditContexts {
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    pub error_report: Option<AuditErrorReport>,
 }
 
 impl AuditRecordBuilder {
@@ -78,6 +80,7 @@ impl AuditRecordBuilder {
                     approval_context: contexts.approval_context,
                     policy_bundle_verification: contexts.policy_bundle_verification,
                     policy_evaluation: contexts.policy_evaluation,
+                    error_report: contexts.error_report,
                 },
             ),
         }

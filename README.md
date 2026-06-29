@@ -35,6 +35,7 @@ This repository currently contains:
 - Ed25519 signature verification for the local checksum manifest
 - local policy and risk matrix evaluation for verified development bundles
 - local append-only JSONL audit logging for development
+- structured JSON error reports for local runtime failures
 - contract tests for request, response, audit, policy bundle, and gateway boundaries
 
 The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, produce a bounded response, optionally append a local JSONL audit record, and emit structured audit evidence. This is development evidence, not production enforcement.

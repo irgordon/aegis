@@ -121,6 +121,7 @@ Objective: execute real AI actions safely under governance.
 
 | Task | Status |
 | --- | --- |
+| Add structured error reporting | complete |
 | Add execution evidence | planned |
 | Add replay evidence | planned |
 | Add governed execution integration tests | planned |

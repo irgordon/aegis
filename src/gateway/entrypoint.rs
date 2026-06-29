@@ -173,6 +173,7 @@ fn map_policy_decision_result(
             execution_identity_context: context.supplied_execution_identity_context.clone(),
             approval_context: context.supplied_approval_context.clone(),
             policy_bundle_verification: context.supplied_policy_bundle_verification.clone(),
+            policy_evaluation: None,
         },
     );
 

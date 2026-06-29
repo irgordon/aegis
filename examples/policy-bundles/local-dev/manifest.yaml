@@ -1,7 +1,7 @@
 bundle_id: local-dev
 policy_version: 0.1.0-local
 risk_matrix_version: risk-0.1.0-local
-policy_hash: sha256:local-dev-policy
+policy_hash: sha256:local-dev-policy-evaluation
 target_environment: local
 signer_identity: local-policy-admin
 created_at: 2026-06-28T00:00:00Z

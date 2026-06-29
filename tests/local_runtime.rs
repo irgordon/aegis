@@ -47,6 +47,18 @@ fn runtime_output_includes_verified_policy_bundle_identity() {
         output["audit_record"]["details"]["policy_bundle_verification"]["bundle"],
         "local-dev"
     );
+    assert_eq!(
+        output["policy_evaluation"]["evaluation_status"],
+        "evaluated"
+    );
+    assert_eq!(
+        output["policy_evaluation"]["policy_rule_id"],
+        "allow_metrics_read_agent"
+    );
+    assert_eq!(
+        output["audit_record"]["details"]["policy_evaluation"]["risk_matrix_entry_id"],
+        "local_l0_allow"
+    );
 }
 
 #[test]
@@ -64,27 +76,40 @@ fn malformed_json_fails_closed_with_denied_response_and_audit_record() {
 
 #[test]
 fn unsupported_tool_fails_closed_with_denied_response_and_audit_record() {
-    let output = run_gateway_with_stdin(&request_with_tool("email.send"));
+    let output = run_gateway_with_stdin(&request_with_tool("unknown.tool"));
 
     assert_eq!(output["response"]["status"], "denied");
     assert_eq!(output["response"]["decision"], "deny");
     assert_eq!(output["response"]["reason_code"], "unsupported_tool");
     assert_eq!(output["audit_record"]["status"], "denied");
     assert_eq!(output["audit_record"]["event_type"], "policy_decision");
+    assert!(output["policy_evaluation"].is_null());
 }
 
 #[test]
-fn policy_adapter_error_fails_closed_with_denied_response_and_audit_record() {
-    let output = run_gateway_with_stdin(&request_with_tool("policy.error"));
+fn denied_policy_rule_fails_closed_with_denied_response_and_audit_record() {
+    let output = run_gateway_with_stdin(&request_with_tool_and_capability("email.send", "L1"));
 
     assert_eq!(output["response"]["status"], "denied");
     assert_eq!(output["response"]["decision"], "deny");
-    assert_eq!(
-        output["response"]["reason_code"],
-        "local_policy_adapter_error"
-    );
+    assert_eq!(output["response"]["reason_code"], "local_l1_denied");
     assert_eq!(output["audit_record"]["status"], "denied");
     assert_eq!(output["audit_record"]["event_type"], "policy_decision");
+    assert_eq!(output["policy_evaluation"]["decision"], "deny");
+}
+
+#[test]
+fn pending_policy_rule_returns_pending_response_and_audit_record() {
+    let output = run_gateway_with_stdin(&request_with_tool_and_capability("deploy.prod", "L2"));
+
+    assert_eq!(output["response"]["status"], "pending");
+    assert_eq!(output["response"]["decision"], "pending_approval");
+    assert_eq!(
+        output["response"]["pending_reference"]["approval_id"],
+        "local_dev_approval_deploy_prod"
+    );
+    assert_eq!(output["audit_record"]["status"], "pending");
+    assert_eq!(output["policy_evaluation"]["decision"], "pending_approval");
 }
 
 #[test]
@@ -95,7 +120,7 @@ fn bundle_verification_failure_fails_closed_with_denied_response_and_audit_recor
     assert_eq!(output["response"]["status"], "denied");
     assert_eq!(
         output["response"]["reason_code"],
-        "policy_bundle_verification_failed"
+        "policy_bundle_not_verified"
     );
     assert_eq!(output["policy_bundle"]["verification_status"], "rejected");
     assert_eq!(
@@ -107,6 +132,30 @@ fn bundle_verification_failure_fails_closed_with_denied_response_and_audit_recor
         output["audit_record"]["details"]["policy_bundle_verification"]["verification_status"],
         "rejected"
     );
+    assert_eq!(
+        output["policy_evaluation"]["failure_reason"],
+        "bundle_not_verified"
+    );
+}
+
+#[test]
+fn checksum_verification_failure_prevents_policy_evaluation() {
+    let bundle = checksum_mismatch_runtime_bundle();
+    let output = run_gateway_with_bundle_and_stdin(&bundle, &valid_request());
+
+    assert_eq!(output["response"]["status"], "denied");
+    assert_eq!(
+        output["response"]["reason_code"],
+        "policy_bundle_not_verified"
+    );
+    assert_eq!(
+        output["policy_bundle"]["checksum_verification_status"],
+        "mismatch"
+    );
+    assert_eq!(
+        output["policy_evaluation"]["failure_reason"],
+        "bundle_not_verified"
+    );
 }
 
 #[test]
@@ -116,6 +165,7 @@ fn output_is_valid_json() {
     assert!(output.get("response").is_some());
     assert!(output.get("audit_record").is_some());
     assert!(output.get("policy_bundle").is_some());
+    assert!(output.get("policy_evaluation").is_some());
 }
 
 #[test]
@@ -181,6 +231,25 @@ fn invalid_runtime_bundle() -> PathBuf {
     target
 }
 
+fn checksum_mismatch_runtime_bundle() -> PathBuf {
+    let target = Path::new("target")
+        .join("local-runtime-policy-bundles")
+        .join("checksum_mismatch");
+
+    if target.exists() {
+        fs::remove_dir_all(&target)
+            .unwrap_or_else(|error| panic!("old runtime fixture should be removable: {error}"));
+    }
+
+    copy_dir(Path::new(LOCAL_DEV_BUNDLE), &target);
+    fs::write(
+        target.join("gateway_policy.yaml"),
+        "policy_version: 0.1.0-local\nrules:\n",
+    )
+    .unwrap_or_else(|error| panic!("runtime gateway policy fixture should be writable: {error}"));
+    target
+}
+
 fn copy_dir(source: &Path, target: &Path) {
     fs::create_dir_all(target)
         .unwrap_or_else(|error| panic!("target fixture directory should be creatable: {error}"));
@@ -203,10 +272,15 @@ fn copy_dir(source: &Path, target: &Path) {
 }
 
 fn request_with_tool(tool_name: &str) -> String {
+    request_with_tool_and_capability(tool_name, "L0")
+}
+
+fn request_with_tool_and_capability(tool_name: &str, capability_class: &str) -> String {
     let mut request: Value = serde_json::from_str(&valid_request())
         .unwrap_or_else(|error| panic!("valid request fixture should parse: {error}"));
 
     request["tool"]["name"] = Value::String(tool_name.to_string());
+    request["tool"]["capability_class"] = Value::String(capability_class.to_string());
     serde_json::to_string(&request)
         .unwrap_or_else(|error| panic!("modified request should serialize: {error}"))
 }

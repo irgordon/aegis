@@ -140,6 +140,43 @@ This helper regenerates `SHA256SUMS`, creates a fresh local development Ed25519 
 
 Signature verification is not production PKI. It does not implement certificate validation, remote trust registry lookup, production signer authorization, or policy rule evaluation.
 
+## Local Policy Evaluation Boundary
+
+After a local bundle passes structure, version, checksum, and signature verification, the Phase 2 local gateway may evaluate its `gateway_policy.yaml` and `risk_matrix.yaml` files.
+
+The verified local bundle is required before evaluation. If bundle verification fails, policy evaluation fails closed and returns denial evidence.
+
+Local evaluation is deterministic and file-local. It does not use live registry state, remote downloads, external system calls, wrapper execution, credential injection, approval workflow execution, durable audit persistence, HTTP, or UI.
+
+For contributors changing the local development bundle:
+
+1. Update `examples/policy-bundles/local-dev/gateway_policy.yaml` or `examples/policy-bundles/local-dev/risk_matrix.yaml`.
+2. Regenerate checksums and signature fixtures:
+
+```bash
+scripts/regenerate-local-policy-signature.sh
+```
+
+3. Run validation:
+
+```bash
+python3 scripts/verify.py
+cargo fmt --check
+cargo clippy --all-targets --all-features -- -D warnings
+cargo test
+```
+
+Expected fail-closed evaluation cases include:
+
+- no verified bundle
+- malformed policy file
+- malformed risk matrix
+- no matching policy rule
+- ambiguous matching policy rules
+- missing risk matrix entry
+- unsupported capability class
+- unsupported decision value
+
 ## Runtime Rules
 
 A running gateway must not silently replace its active policy because a registry changes.

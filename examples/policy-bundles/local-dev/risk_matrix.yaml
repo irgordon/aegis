@@ -1,2 +1,18 @@
 risk_matrix_version: risk-0.1.0-local
-note: local fixture content is not evaluated by the Phase 2 runtime
+entries:
+  - id: local_l0_allow
+    capability: L0
+    decision: allow
+    reason: local_l0_allowed
+    message: Local L0 read request is allowed by the verified policy bundle.
+  - id: local_l1_deny
+    capability: L1
+    decision: deny
+    reason: local_l1_denied
+    message: Local L1 mutation request is denied by the verified policy bundle.
+  - id: local_l2_pending
+    capability: L2
+    decision: pending_approval
+    reason: local_l2_requires_approval
+    message: Local L2 request requires approval by the verified policy bundle.
+    approval_id: local_dev_approval_deploy_prod

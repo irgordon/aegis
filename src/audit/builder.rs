@@ -1,11 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-use super::{AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus};
+use super::{
+    record::AuditRecordDetailContexts, AuditEventType, AuditRecord, AuditRecordDetails, AuditStatus,
+};
 use crate::gateway::{
     ApprovalContext, ExecutionIdentityContext, IdempotencyContext, NonEmptyString, ToolCallRequest,
     ToolCallResponse, WrapperExecutionContext,
 };
-use crate::policy::PolicyBundleVerification;
+use crate::policy::{PolicyBundleVerification, PolicyEvaluation};
 
 pub struct AuditRecordBuilder;
 
@@ -16,6 +18,7 @@ pub struct GatewayAuditContexts {
     pub execution_identity_context: Option<ExecutionIdentityContext>,
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
+    pub policy_evaluation: Option<PolicyEvaluation>,
 }
 
 impl AuditRecordBuilder {
@@ -68,11 +71,14 @@ impl AuditRecordBuilder {
             details: AuditRecordDetails::from_gateway_decision_with_contexts(
                 request,
                 response,
-                contexts.idempotency_context,
-                contexts.wrapper_context,
-                contexts.execution_identity_context,
-                contexts.approval_context,
-                contexts.policy_bundle_verification,
+                AuditRecordDetailContexts {
+                    idempotency_context: contexts.idempotency_context,
+                    wrapper_context: contexts.wrapper_context,
+                    execution_identity_context: contexts.execution_identity_context,
+                    approval_context: contexts.approval_context,
+                    policy_bundle_verification: contexts.policy_bundle_verification,
+                    policy_evaluation: contexts.policy_evaluation,
+                },
             ),
         }
     }

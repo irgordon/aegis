@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.20] - 2026-06-28
+
+### Added
+
+- Added local policy and risk matrix evaluation for verified policy bundles.
+- Added fail-closed tests for missing, malformed, ambiguous, and unsupported policy state.
+- Added policy evaluation evidence to runtime output and audit records.
+
+### Changed
+
+- Updated local development policy bundle fixture.
+- Updated policy documentation for verified local policy evaluation.
+- Updated Phase 2 task tracking for local policy evaluation.
+
 ## [0.1.19] - 2026-06-28
 
 ### Added

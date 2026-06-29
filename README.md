@@ -31,16 +31,17 @@ This repository currently contains:
 - local policy bundle structure checks
 - SHA-256 checksum verification for local policy bundle files
 - Ed25519 signature verification for the local checksum manifest
+- local policy and risk matrix evaluation for verified development bundles
 - contract tests for request, response, audit, policy bundle, and gateway boundaries
 
-The local gateway can read a fixture request, verify a local policy bundle fixture, produce a bounded response, and emit structured audit evidence. This is development evidence, not production enforcement.
+The local gateway can read a fixture request, verify a local policy bundle fixture, evaluate simple local policy and risk rules, produce a bounded response, and emit structured audit evidence. This is development evidence, not production enforcement.
 
 ## What Does Not Exist Yet
 
 AEGIS does not yet provide:
 
-- production policy evaluation
-- risk matrix evaluation
+- production-grade policy evaluation
+- production-grade risk matrix evaluation
 - wrapper execution
 - credential injection
 - approval workflow
@@ -70,6 +71,8 @@ That signed checksum manifest then controls the expected fingerprints for:
 - `risk_matrix.yaml`
 
 This is not production PKI, certificate validation, or remote trust distribution.
+
+The local Rust gateway can now use this verified development bundle to decide whether a matching request is allowed, denied, or pending approval. This is still pre-alpha and is not ready for real protection.
 
 ## Where To Read Next
 

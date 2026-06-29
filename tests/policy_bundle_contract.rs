@@ -240,13 +240,14 @@ fn manifest_risk_matrix_version_mismatch_fails_closed() {
 }
 
 #[test]
-fn loader_does_not_evaluate_real_policy_decisions_yet() {
+fn loader_verifies_evaluable_local_policy_fixture() {
     let policy = fs::read_to_string(Path::new(LOCAL_DEV_BUNDLE).join("gateway_policy.yaml"))
         .unwrap_or_else(|error| panic!("gateway policy fixture should be readable: {error}"));
     let verification = load_policy_bundle(LOCAL_DEV_BUNDLE)
         .unwrap_or_else(|error| panic!("local development bundle should verify: {error:?}"));
 
-    assert!(policy.contains("default_decision: deny"));
+    assert!(policy.contains("allow_metrics_read_agent"));
+    assert!(policy.contains("pending_deploy_prod_agent"));
     assert!(verification.is_verified());
 }
 

@@ -6,7 +6,7 @@ use crate::{
         IdempotencyContext, NonEmptyString, PolicyProvenance, ResponseDecision, SchemaVersion,
         Timestamp, ToolCallRequest, ToolCallResponse, WrapperExecutionContext,
     },
-    policy::PolicyBundleVerification,
+    policy::{PolicyBundleVerification, PolicyEvaluation},
 };
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -80,6 +80,17 @@ pub struct AuditRecordDetails {
     pub execution_identity_context: Option<ExecutionIdentityContext>,
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
+    pub policy_evaluation: Option<PolicyEvaluation>,
+}
+
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct AuditRecordDetailContexts {
+    pub idempotency_context: Option<IdempotencyContext>,
+    pub wrapper_context: Option<WrapperExecutionContext>,
+    pub execution_identity_context: Option<ExecutionIdentityContext>,
+    pub approval_context: Option<ApprovalContext>,
+    pub policy_bundle_verification: Option<PolicyBundleVerification>,
+    pub policy_evaluation: Option<PolicyEvaluation>,
 }
 
 impl AuditRecordDetails {
@@ -95,32 +106,28 @@ impl AuditRecordDetails {
         Self::from_gateway_decision_with_contexts(
             request,
             response,
-            idempotency_context,
-            None,
-            None,
-            None,
-            None,
+            AuditRecordDetailContexts {
+                idempotency_context,
+                ..AuditRecordDetailContexts::default()
+            },
         )
     }
 
     pub fn from_gateway_decision_with_contexts(
         request: &ToolCallRequest,
         response: &ToolCallResponse,
-        idempotency_context: Option<IdempotencyContext>,
-        wrapper_context: Option<WrapperExecutionContext>,
-        execution_identity_context: Option<ExecutionIdentityContext>,
-        approval_context: Option<ApprovalContext>,
-        policy_bundle_verification: Option<PolicyBundleVerification>,
+        contexts: AuditRecordDetailContexts,
     ) -> Self {
         Self {
             request_id: Some(request.request_id.clone()),
             decision: response.decision.clone(),
             capability_class: request.tool.capability_class.clone(),
-            idempotency_context,
-            wrapper_context,
-            execution_identity_context,
-            approval_context,
-            policy_bundle_verification,
+            idempotency_context: contexts.idempotency_context,
+            wrapper_context: contexts.wrapper_context,
+            execution_identity_context: contexts.execution_identity_context,
+            approval_context: contexts.approval_context,
+            policy_bundle_verification: contexts.policy_bundle_verification,
+            policy_evaluation: contexts.policy_evaluation,
         }
     }
 
@@ -134,6 +141,7 @@ impl AuditRecordDetails {
             execution_identity_context: None,
             approval_context: None,
             policy_bundle_verification: None,
+            policy_evaluation: None,
         }
     }
 }

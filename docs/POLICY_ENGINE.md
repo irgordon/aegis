@@ -82,6 +82,56 @@ Policy classifies tools before execution.
 
 Unknown or unclassified tools deny by default.
 
+## Local Development Evaluation
+
+The Phase 2 local gateway can now read a verified local development policy bundle and use it to make bounded decisions.
+
+This is still pre-alpha. It is not production policy engine maturity.
+
+For the local development bundle:
+
+- `gateway_policy.yaml` contains simple policy rules.
+- `risk_matrix.yaml` maps risk keys to bounded outcomes.
+- the bundle must pass structure, version, checksum, and Ed25519 signature verification before evaluation.
+
+Local policy rules match only:
+
+- tool name
+- capability class
+- actor type, where the rule provides one
+
+The local evaluator does not run scripts, evaluate expressions, call remote registries, execute tools, inject credentials, or start workflows.
+
+Example local rule shape:
+
+```text
+rules:
+  - id: allow_metrics_read_agent
+    tool: metrics.read
+    capability: L0
+    actor_type: agent
+    risk: local_l0_allow
+```
+
+Example local risk matrix shape:
+
+```text
+entries:
+  - id: local_l0_allow
+    capability: L0
+    decision: allow
+    reason: local_l0_allowed
+    message: Local L0 read request is allowed by the verified policy bundle.
+```
+
+Supported local decisions are bounded:
+
+- `allow`
+- `deny`
+- `pending_approval`
+
+Local evaluation fails closed when policy state is missing, malformed, ambiguous, unsupported, or not backed by a verified bundle.
+
 ## Policy Bundle Contract
 
 The policy engine evaluates only against the active policy bundle provided by the gateway.

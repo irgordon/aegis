@@ -31,6 +31,13 @@ pub enum ErrorCode {
     CredentialClassMismatch,
     CredentialBoundaryDenied,
     CredentialsRequiredWithoutAuthorization,
+    SandboxDirectoryMissing,
+    SandboxPathInvalid,
+    SandboxPathTraversal,
+    IdempotencyContextMissing,
+    SandboxUnsafeNoteId,
+    SandboxEmptyContent,
+    SandboxWriteFailed,
     WrapperDispatchFailed,
     AuditPersistenceFailed,
     RuntimeIoFailed,
@@ -53,6 +60,7 @@ pub enum ErrorLocation {
     PolicyEvaluation,
     ExecutionAuthorization,
     CredentialBoundary,
+    SandboxMutation,
     WrapperDispatch,
     AuditPersistence,
     RuntimeIo,
@@ -399,7 +407,7 @@ fn wrapper_next_action(error: &WrapperDispatchError) -> OperatorAction {
             "Fix the wrapper credential requirement or execution authorization before dispatching."
         }
         WrapperDispatchError::ExecutionFailed(_) => {
-            "Inspect the wrapper result and fix the wrapper before retrying."
+            "Fix the wrapper input and local execution context before retrying."
         }
     };
 
@@ -411,6 +419,10 @@ fn wrapper_error_code(error: &WrapperDispatchError) -> ErrorCode {
         WrapperDispatchError::CredentialBoundaryFailed { error, .. } => {
             credential_error_code(error)
         }
+        WrapperDispatchError::ExecutionFailed(error) => {
+            sandbox_error_code(error.reason_code.as_deref())
+                .unwrap_or(ErrorCode::WrapperDispatchFailed)
+        }
         _ => ErrorCode::WrapperDispatchFailed,
     }
 }
@@ -418,6 +430,11 @@ fn wrapper_error_code(error: &WrapperDispatchError) -> ErrorCode {
 fn wrapper_error_location(error: &WrapperDispatchError) -> ErrorLocation {
     match error {
         WrapperDispatchError::CredentialBoundaryFailed { .. } => ErrorLocation::CredentialBoundary,
+        WrapperDispatchError::ExecutionFailed(error)
+            if sandbox_error_code(error.reason_code.as_deref()).is_some() =>
+        {
+            ErrorLocation::SandboxMutation
+        }
         _ => ErrorLocation::WrapperDispatch,
     }
 }
@@ -427,8 +444,26 @@ fn wrapper_error_message(error: &WrapperDispatchError) -> String {
         WrapperDispatchError::CredentialBoundaryFailed { .. } => {
             "The credential boundary blocked wrapper execution.".to_string()
         }
+        WrapperDispatchError::ExecutionFailed(error)
+            if sandbox_error_code(error.reason_code.as_deref()).is_some() =>
+        {
+            "The sandbox mutation could not run.".to_string()
+        }
         _ => "The wrapper could not be dispatched.".to_string(),
     }
+}
+
+fn sandbox_error_code(reason_code: Option<&str>) -> Option<ErrorCode> {
+    Some(match reason_code? {
+        "sandbox_directory_missing" => ErrorCode::SandboxDirectoryMissing,
+        "sandbox_path_invalid" => ErrorCode::SandboxPathInvalid,
+        "sandbox_path_traversal" => ErrorCode::SandboxPathTraversal,
+        "idempotency_context_missing" => ErrorCode::IdempotencyContextMissing,
+        "sandbox_note_id_unsafe" => ErrorCode::SandboxUnsafeNoteId,
+        "sandbox_note_content_empty" => ErrorCode::SandboxEmptyContent,
+        "sandbox_write_failed" => ErrorCode::SandboxWriteFailed,
+        _ => return None,
+    })
 }
 
 fn credential_error_code(error: &CredentialBoundaryError) -> ErrorCode {

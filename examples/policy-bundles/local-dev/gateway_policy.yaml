@@ -10,6 +10,11 @@ rules:
     capability: L0
     actor_type: agent
     risk: local_l0_allow
+  - id: allow_sandbox_note_write_agent
+    tool: sandbox.note.write
+    capability: L1
+    actor_type: agent
+    risk: local_l1_sandbox_allow
   - id: deny_email_send_agent
     tool: email.send
     capability: L1

@@ -17,6 +17,7 @@ pub enum ExecutionAuthority {
 #[serde(rename_all = "snake_case")]
 pub enum ExecutionScope {
     LocalGatewayHealth,
+    LocalSandboxNoteWrite,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -106,7 +107,7 @@ impl ExecutionAuthorization {
             },
             execution_scope: Some(scope),
             authority_source: ExecutionAuthority::PolicyAllow,
-            authorized_credential_class: CredentialClass::None,
+            authorized_credential_class: credential_class_for(context)?,
             expiration_ref: None,
             authorization_status: AuthorizationStatus::Authorized,
             failure_reason: None,
@@ -256,6 +257,19 @@ fn execution_scope_for(
 ) -> Result<ExecutionScope, AuthorizationError> {
     match context.config.wrapper_name.as_str() {
         "health.check" => Ok(ExecutionScope::LocalGatewayHealth),
+        "sandbox.note.write" => Ok(ExecutionScope::LocalSandboxNoteWrite),
+        scope => Err(AuthorizationError::ScopeInvalid {
+            scope: scope.to_string(),
+        }),
+    }
+}
+
+fn credential_class_for(
+    context: &WrapperExecutionContext,
+) -> Result<CredentialClass, AuthorizationError> {
+    match context.config.wrapper_name.as_str() {
+        "health.check" => Ok(CredentialClass::None),
+        "sandbox.note.write" => Ok(CredentialClass::LocalRuntime),
         scope => Err(AuthorizationError::ScopeInvalid {
             scope: scope.to_string(),
         }),
@@ -293,6 +307,7 @@ fn verify_expected_wrapper_version(
 fn expected_version_for(wrapper_name: &str) -> Result<&'static str, AuthorizationError> {
     match wrapper_name {
         "health.check" => Ok("1.0.0"),
+        "sandbox.note.write" => Ok("1.0.0"),
         name => Err(AuthorizationError::ScopeInvalid {
             scope: name.to_string(),
         }),

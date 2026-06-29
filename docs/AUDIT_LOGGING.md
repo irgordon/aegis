@@ -268,7 +268,28 @@ Credential boundary evidence includes:
 
 For contributors: credential evidence belongs in audit details alongside execution authorization. Do not record usernames, passwords, API keys, bearer tokens, certificates, vault references, secret IDs, environment variables, or credential values.
 
-For engineers: credential boundary evidence proves class compatibility only. It prepares the future credential injection boundary without implementing secret retrieval, vault integration, external identity providers, mutation wrappers, or durable execution state.
+For engineers: credential boundary evidence proves class compatibility only. It prepares the future credential injection boundary without implementing secret retrieval, vault integration, external identity providers, production mutation wrappers, or durable execution state.
+
+## Local Sandbox Mutation Evidence
+
+The Phase 3 local runtime records mutation evidence when `sandbox.note.write` runs after all gateway gates pass.
+
+For a new reader: this shows that AEGIS wrote a local sandbox note and why the write was allowed.
+
+Sandbox mutation evidence includes:
+
+- wrapper name and version
+- capability class
+- execution authorization evidence
+- credential boundary evidence
+- idempotency context evidence
+- sandbox root reference
+- sandbox-relative path
+- mutation status
+
+For contributors: record only bounded local development evidence. Do not record secrets, credentials, environment variables, unrestricted host paths when avoidable, or unbounded wrapper output.
+
+For engineers: local sandbox mutation evidence proves allowed-only L1 mutation under policy, authorization, credential, idempotency, and path-containment gates. It is not replay state, durable execution state, database idempotency, production filesystem access, or external action evidence.
 
 ## Durability Assumptions
 

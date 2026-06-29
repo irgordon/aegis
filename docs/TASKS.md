@@ -26,7 +26,8 @@ Phase 3 work is grouped by the purpose it serves.
 
 | Task | Status |
 | --- | --- |
-| Add mutation-capable execution path | planned |
+| Add local sandbox L1 mutation wrapper | complete |
+| Add broader mutation-capable execution path | planned |
 
 ### Govern
 
@@ -137,6 +138,7 @@ Completed foundation work:
 | Add wrapper dispatcher | complete |
 | Add wrapper execution boundary | complete |
 | Execute local L0 health.check wrapper | complete |
+| Execute local sandbox L1 mutation wrapper | complete |
 | Add execution lifecycle state machine | complete |
 | Add structured error reporting | complete |
 | Add execution authorization boundary | complete |

@@ -56,6 +56,8 @@ pub struct WrapperExecutionContext {
     pub redaction_profile: RedactionProfileRef,
     pub execution_mode: WrapperExecutionMode,
     pub credential_injection_required: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sandbox_root: Option<NonEmptyString>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]

@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.10] - 2026-06-29
+
+### Added
+
+- Added built-in local L1 `sandbox.note.write` wrapper execution.
+- Added sandbox path containment, idempotency, authorization, and credential boundary gates for local mutation.
+- Added sandbox mutation evidence to runtime output and audit records.
+- Added fail-closed sandbox wrapper tests for unsafe paths, missing idempotency, missing sandbox directory, policy denial, pending policy, and credential mismatch.
+
+### Changed
+
+- Updated the local development policy bundle to allow `sandbox.note.write`.
+- Updated trust boundary, policy, audit, and task documentation for controlled local L1 mutation.
+
 ## [0.2.9] - 2026-06-29
 
 ### Added

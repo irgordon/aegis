@@ -6,7 +6,9 @@ use std::{
 
 use aegis::audit::{AuditSink, AuditWriter};
 use aegis::error::GatewayErrorReport;
-use aegis::runtime::local::{process_local_gateway_request, LocalRuntimeOutput};
+use aegis::runtime::local::{
+    process_local_gateway_request_with_context, LocalRuntimeContext, LocalRuntimeOutput,
+};
 use serde::Serialize;
 
 type RuntimeResult<T> = Result<T, Box<GatewayErrorReport>>;
@@ -29,7 +31,14 @@ fn run() -> i32 {
 fn try_run() -> RuntimeResult<i32> {
     let args = parse_args()?;
     let input = read_input(args.request_path.as_deref())?;
-    let mut output = process_local_gateway_request(&input, &args.bundle_path);
+    let mut output = process_local_gateway_request_with_context(
+        &input,
+        &args.bundle_path,
+        LocalRuntimeContext {
+            wrapper_context: None,
+            sandbox_dir: args.sandbox_dir,
+        },
+    );
 
     match persist_audit_record(args.audit_log_path.as_deref(), &output) {
         Ok(()) => {
@@ -49,6 +58,7 @@ fn try_run() -> RuntimeResult<i32> {
 struct LocalRuntimeArgs {
     bundle_path: PathBuf,
     audit_log_path: Option<PathBuf>,
+    sandbox_dir: Option<PathBuf>,
     request_path: Option<PathBuf>,
 }
 
@@ -56,12 +66,14 @@ fn parse_args() -> RuntimeResult<LocalRuntimeArgs> {
     let mut args = env::args().skip(1);
     let mut bundle_path = None;
     let mut audit_log_path = None;
+    let mut sandbox_dir = None;
     let mut request_path = None;
 
     while let Some(arg) = args.next() {
         match arg.as_str() {
             "--bundle" => bundle_path = next_path_arg(&mut args, "--bundle")?,
             "--audit-log" => audit_log_path = next_path_arg(&mut args, "--audit-log")?,
+            "--sandbox-dir" => sandbox_dir = next_path_arg(&mut args, "--sandbox-dir")?,
             _ if request_path.is_none() => request_path = Some(PathBuf::from(arg)),
             _ => return Err(runtime_usage_error()),
         }
@@ -70,6 +82,7 @@ fn parse_args() -> RuntimeResult<LocalRuntimeArgs> {
     Ok(LocalRuntimeArgs {
         bundle_path: bundle_path.ok_or_else(runtime_usage_error)?,
         audit_log_path,
+        sandbox_dir,
         request_path,
     })
 }
@@ -128,7 +141,7 @@ fn next_path_arg(
 }
 
 fn usage() -> String {
-    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [request-json-path]"
+    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]"
         .to_string()
 }
 

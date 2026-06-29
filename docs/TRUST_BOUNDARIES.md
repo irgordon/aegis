@@ -97,7 +97,7 @@ Credential class validation sits between execution authorization and wrapper dis
 
 For a new reader: credential classes describe what kind of credentials a wrapper may eventually receive. They do not contain usernames, passwords, tokens, or secret values.
 
-For contributors: every wrapper must explicitly declare whether it requires credentials and which credential class it requires. The current `health.check` wrapper declares no credentials. Credential mismatches fail closed before wrapper execution.
+For contributors: every wrapper must explicitly declare whether it requires credentials and which credential class it requires. The current `health.check` wrapper declares no credentials. The local `sandbox.note.write` wrapper requires the `LocalRuntime` credential class but receives no secret value. Credential mismatches fail closed before wrapper execution.
 
 For engineers: the credential boundary validates wrapper requirements against execution authorization. It authorizes categories only. It does not retrieve secrets, inject credentials, load environment variables, call vaults, or create runtime identity provider integrations.
 
@@ -110,6 +110,16 @@ For a new reader: AEGIS can now run one safe local health check after verified p
 For contributors: `health.check` is registered in the local Rust runtime, allowed by the local development policy bundle, and exercised by the health check wrapper tests. Policy changes to the local bundle require regenerating checksums and signatures with `scripts/regenerate-local-policy-signature.sh`.
 
 For engineers: the allowed-only execution rule is strict. Denied and pending decisions do not dispatch wrappers. Missing wrappers, version mismatches, and wrapper execution errors fail closed with structured error reports and audit evidence. The built-in health check does not use credentials, network access, subprocesses, shell execution, filesystem writes, approval workflow, replay, or durable execution state.
+
+### Local Sandbox Mutation Boundary
+
+Phase 3 includes one local L1 mutation wrapper: `sandbox.note.write`.
+
+For a new reader: AEGIS can now write one local sandbox note after verified policy allows it. The write is limited to a caller-supplied sandbox directory. AEGIS still cannot execute real external actions.
+
+For contributors: `sandbox.note.write` must pass policy allow, execution authorization, credential class validation, idempotency context validation, sandbox directory validation, and path containment checks before it writes. It writes only to `notes/<note_id>.txt` under the sandbox root. Policy fixture changes require regenerating checksums and signatures with `scripts/regenerate-local-policy-signature.sh`.
+
+For engineers: this boundary proves controlled local mutation without broad filesystem authority. The wrapper rejects missing sandbox roots, missing idempotency context, unsafe note identifiers, path traversal, empty content, and credential class mismatch. It does not perform network access, shell execution, subprocess execution, credential injection, approval workflow, replay, durable execution state, or production filesystem behavior.
 
 ## Boundary 4: Gateway and Wrappers to External Systems
 

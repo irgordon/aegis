@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "request_id": "req_sandbox_note_001",
+  "run_id": "run_sandbox_note_001",
+  "task_id": "task_sandbox_note_001",
+  "action_id": "act_sandbox_note_001",
+  "execution_id": "exec_sandbox_note_001",
+  "idempotency_key": "idem_sandbox_note_001",
+  "actor": {
+    "actor_id": "agent_001",
+    "actor_type": "agent",
+    "display_name": "Example Agent"
+  },
+  "tool": {
+    "name": "sandbox.note.write",
+    "capability_class": "L1"
+  },
+  "params": {
+    "note_id": "example-note",
+    "content": "hello from aegis"
+  },
+  "environment": "dev",
+  "requested_at": "2026-06-28T00:00:00Z",
+  "orchestrator": {
+    "name": "example",
+    "run_reference": "orch_run_sandbox_note_001"
+  }
+}

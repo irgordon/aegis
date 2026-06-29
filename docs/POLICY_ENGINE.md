@@ -111,6 +111,11 @@ rules:
     capability: L0
     actor_type: agent
     risk: local_l0_health_allow
+  - id: allow_sandbox_note_write_agent
+    tool: sandbox.note.write
+    capability: L1
+    actor_type: agent
+    risk: local_l1_sandbox_allow
   - id: allow_metrics_read_agent
     tool: metrics.read
     capability: L0
@@ -138,6 +143,8 @@ Supported local decisions are bounded:
 Local evaluation fails closed when policy state is missing, malformed, ambiguous, unsupported, or not backed by a verified bundle.
 
 The local development policy now allows `health.check` as an L0 request so the Phase 3 runtime can prove allowed-only built-in wrapper execution. Policy evaluation still does not execute the wrapper; it only returns the bounded decision that the gateway later enforces through the wrapper boundary.
+
+The local development policy also allows `sandbox.note.write` as an L1 sandbox mutation. The policy decision alone is not enough to write. The runtime still requires execution authorization, credential class compatibility, idempotency context, sandbox directory validation, path containment, and audit evidence before the wrapper executes.
 
 ## Policy Bundle Contract
 

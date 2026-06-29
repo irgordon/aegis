@@ -29,17 +29,19 @@ fn runtime_output_includes_verified_policy_bundle_identity() {
         output["policy_bundle"]["risk_matrix_version"],
         "risk-0.1.0-local"
     );
-    assert_eq!(
-        output["policy_bundle"]["verification_status"],
-        "signature_cryptographic_verification_not_implemented"
-    );
+    assert_eq!(output["policy_bundle"]["verification_status"], "verified");
     assert_eq!(
         output["policy_bundle"]["checksum_verification_status"],
         "verified"
     );
     assert_eq!(
         output["policy_bundle"]["signature_verification_status"],
-        "signature_cryptographic_verification_not_implemented"
+        "signature_verified"
+    );
+    assert_eq!(output["policy_bundle"]["signature_algorithm"], "ed25519");
+    assert_eq!(
+        output["policy_bundle"]["signed_artifact"],
+        "checksums/SHA256SUMS"
     );
     assert_eq!(
         output["audit_record"]["details"]["policy_bundle_verification"]["bundle"],
@@ -97,8 +99,8 @@ fn bundle_verification_failure_fails_closed_with_denied_response_and_audit_recor
     );
     assert_eq!(output["policy_bundle"]["verification_status"], "rejected");
     assert_eq!(
-        output["policy_bundle"]["checksum_verification_status"],
-        "mismatch"
+        output["policy_bundle"]["signature_verification_status"],
+        "signed_content_mismatch"
     );
     assert!(output["policy_bundle"]["failure_reason"].is_string());
     assert_eq!(
@@ -162,7 +164,7 @@ fn run_gateway_with_bundle_and_stdin(bundle_path: &Path, input: &str) -> Value {
 fn invalid_runtime_bundle() -> PathBuf {
     let target = Path::new("target")
         .join("local-runtime-policy-bundles")
-        .join("checksum_mismatch");
+        .join("signature_mismatch");
 
     if target.exists() {
         fs::remove_dir_all(&target)
@@ -170,11 +172,12 @@ fn invalid_runtime_bundle() -> PathBuf {
     }
 
     copy_dir(Path::new(LOCAL_DEV_BUNDLE), &target);
-    fs::write(
-        target.join("gateway_policy.yaml"),
-        "policy_version: 0.1.0-local\ndefault_decision: allow\n",
-    )
-    .unwrap_or_else(|error| panic!("runtime gateway policy fixture should be writable: {error}"));
+    let checksum_path = target.join("checksums").join("SHA256SUMS");
+    let mut checksum_content = fs::read_to_string(&checksum_path)
+        .unwrap_or_else(|error| panic!("runtime checksum manifest should be readable: {error}"));
+    checksum_content.push_str("# unsigned runtime change\n");
+    fs::write(checksum_path, checksum_content)
+        .unwrap_or_else(|error| panic!("runtime checksum manifest should be writable: {error}"));
     target
 }
 

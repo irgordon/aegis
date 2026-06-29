@@ -1,119 +1,103 @@
-<div align="center">
-
 # AEGIS
 
-**AI Execution Governance & Interception System**
+AI Execution Governance & Interception System
 
-[![Rust](https://img.shields.io/badge/RUST-%23E05D44.svg?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![Bash](https://img.shields.io/badge/BASH-%234EAA25.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)](https://www.gnu.org/software/bash/)
-[![TypeScript](https://img.shields.io/badge/TYPESCRIPT-%233178C6.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Python](https://img.shields.io/badge/PYTHON-%233776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![GitHub Actions](https://img.shields.io/badge/CI-GITHUB%20ACTIONS-%232088FF.svg?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
-[![License](https://img.shields.io/badge/LICENSE-MIT-brightgreen.svg?style=for-the-badge)](LICENSE)
+## Status
 
-</div>
+AEGIS is pre-alpha.
 
-AEGIS is a safety and governance platform for artificial intelligence.
+Do not install, deploy, or rely on this repository to protect real systems yet. The project is still proving its governance model, protocol contracts, and early local Rust gateway behavior.
 
-Imagine hiring a new employee. You would not hand them the keys to every building, every bank account, and every computer system on their first day. You would verify who they are, define what they are allowed to do, and require approval for important decisions.
+## What AEGIS Is
 
-AEGIS applies the same idea to AI.
+AEGIS is a governed checkpoint for AI-driven actions.
 
-Before an AI can perform a real-world action, such as sending an email, modifying a database, deploying software, or interacting with business systems, AEGIS acts as an independent checkpoint. It verifies that the action follows organizational policy, requests human approval when appropriate, and records what happened for future review.
+In plain terms, AEGIS is meant to answer this question before an AI system touches email, databases, cloud systems, source control, tickets, or other business tools:
 
-This helps organizations adopt AI with confidence instead of blind trust.
+```text
+Should this AI action be allowed to execute?
+```
 
-## What AEGIS provides
+The intended production system will validate the request, evaluate policy, require approval when needed, execute only through controlled wrappers, and record audit evidence.
 
-- A single security checkpoint for AI actions
-- Policy-based decision making
-- Human approval for sensitive operations
-- Complete audit history
-- Deterministic, repeatable execution
-- Zero-trust security principles
-- Immutable policy governance
-- Durable execution evidence
+## What Currently Exists
 
-## Who it is for
+This repository currently contains:
 
-AEGIS is for organizations building or deploying AI assistants, autonomous agents, and enterprise automation in commercial, government, healthcare, financial, and other regulated environments.
+- governance and architecture documents
+- JSON schemas and examples
+- repository validation tooling
+- an early local Rust Gateway MVP
+- local policy bundle structure checks
+- SHA-256 checksum verification for local policy bundle files
+- Ed25519 signature verification for the local checksum manifest
+- contract tests for request, response, audit, policy bundle, and gateway boundaries
 
-It is written for both technical and nontechnical readers. The core idea is simple: AI should not be able to take important real-world actions without a governed checkpoint.
+The local gateway can read a fixture request, verify a local policy bundle fixture, produce a bounded response, and emit structured audit evidence. This is development evidence, not production enforcement.
 
-## Mission
+## What Does Not Exist Yet
 
-Enable organizations to safely transition from Authority to Operate (ATO) toward Authority to Execute (ATE) through deterministic governance, policy enforcement, and auditable execution.
+AEGIS does not yet provide:
 
-## Repository status
+- production policy evaluation
+- risk matrix evaluation
+- wrapper execution
+- credential injection
+- approval workflow
+- durable audit persistence
+- replay execution
+- HTTP service
+- UI
+- production public key infrastructure
+- remote policy registry trust
 
-AEGIS has completed its governance and protocol-contract foundation. Phase 2 is building the Rust Gateway MVP.
+## Policy Bundle Integrity
 
-## Local Gateway MVP
+The current local policy bundle check proves that the gateway can reject a bundle when required local metadata is missing or changed.
 
-The local Gateway MVP reads one `ToolCallRequest` JSON document, verifies a local policy bundle structure, validates the request, routes supported requests through a deterministic local policy adapter seam, maps the result to a bounded `ToolCallResponse`, builds audit evidence, and prints structured JSON containing:
+A checksum is a fingerprint for a file. If a required policy bundle file changes, its checksum changes.
 
-- `response`
-- `audit_record`
-- `policy_bundle`
-
-The bundle loader verifies required local files and metadata:
-
-- `manifest.yaml`
-- `gateway_policy.yaml`
-- `risk_matrix.yaml`
-- `signatures/`
-- `checksums/`
-- manifest policy identity
-- risk matrix version binding
-- SHA-256 checksum matches for required bundle files
-- signature metadata presence
-
-A checksum is a fingerprint for a file. If a file changes, the fingerprint changes. AEGIS now checks the fingerprints for the local policy bundle files. If `manifest.yaml`, `gateway_policy.yaml`, or `risk_matrix.yaml` does not match its recorded checksum, AEGIS refuses to use the bundle and returns a denied response.
-
-Checksum metadata lives in:
+A signature proves that trusted bundle metadata has not changed since it was signed. In the local fixture, AEGIS verifies an Ed25519 signature over:
 
 ```text
 examples/policy-bundles/local-dev/checksums/SHA256SUMS
 ```
 
-The format is:
+That signed checksum manifest then controls the expected fingerprints for:
 
-```text
-<sha256>  manifest.yaml
-<sha256>  gateway_policy.yaml
-<sha256>  risk_matrix.yaml
-```
+- `manifest.yaml`
+- `gateway_policy.yaml`
+- `risk_matrix.yaml`
 
-Regenerate local fixture checksums after changing a bundle file:
+This is not production PKI, certificate validation, or remote trust distribution.
 
-```bash
-python3 - <<'PY'
-import hashlib
-from pathlib import Path
-root = Path("examples/policy-bundles/local-dev")
-files = ["manifest.yaml", "gateway_policy.yaml", "risk_matrix.yaml"]
-with (root / "checksums" / "SHA256SUMS").open("w", encoding="utf-8") as out:
-    for name in files:
-        digest = hashlib.sha256((root / name).read_bytes()).hexdigest()
-        out.write(f"{digest}  {name}\n")
-PY
-```
+## Where To Read Next
 
-Cryptographic signature verification is not implemented yet, and the runtime says so in structured output. Checksum verification proves the local files match the recorded bundle metadata; it does not prove who signed the bundle. The local runtime is for Phase 2 development only. It does not provide production policy enforcement, risk matrix evaluation, wrapper execution, credential injection, durable audit storage, approval workflow, replay execution, HTTP service, or UI.
+New readers should start with:
 
-Run with stdin:
+- [Documentation Standard](docs/DOCUMENTATION.md)
+- [Product Requirements](docs/PRD.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Invariants](docs/INVARIANTS.md)
 
-```bash
-cargo run --bin aegis-gateway -- --bundle examples/policy-bundles/local-dev < schemas/examples/valid/ToolCallRequest.json
-```
+Contributors should read:
 
-Run with an explicit file path:
+- [Operating Doctrine](docs/OPERATING_DOCTRINE.md)
+- [Coding Style](docs/CODING_STYLE.md)
+- [Tasks](docs/TASKS.md)
+- [Test Strategy](docs/TEST_STRATEGY.md)
 
-```bash
-cargo run --bin aegis-gateway -- --bundle examples/policy-bundles/local-dev schemas/examples/valid/ToolCallRequest.json
-```
+Engineers and architects should read:
 
-Run validation:
+- [Policy Distribution](docs/POLICY_DISTRIBUTION.md)
+- [Policy Engine](docs/POLICY_ENGINE.md)
+- [Trust Boundaries](docs/TRUST_BOUNDARIES.md)
+- [Audit Logging](docs/AUDIT_LOGGING.md)
+- [API Specification](docs/API_SPEC.md)
+
+## Developer Validation
+
+Run the current validation suite before committing changes:
 
 ```bash
 python3 scripts/verify.py
@@ -121,26 +105,3 @@ cargo fmt --check
 cargo clippy --all-targets --all-features -- -D warnings
 cargo test
 ```
-
-## Core documents
-
-- [Operating Doctrine](docs/OPERATING_DOCTRINE.md)
-- [Product Requirements](docs/PRD.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Invariants](docs/INVARIANTS.md)
-- [Coding Style](docs/CODING_STYLE.md)
-- [Acceptance Criteria](docs/ACCEPTANCE_CRITERIA.md)
-- [Security Model](docs/SECURITY_MODEL.md)
-- [Threat Model](docs/THREAT_MODEL.md)
-- [Policy Distribution](docs/POLICY_DISTRIBUTION.md)
-- [API Specification](docs/API_SPEC.md)
-- [Test Strategy](docs/TEST_STRATEGY.md)
-- [Tasks](docs/TASKS.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Phasemap](docs/PHASEMAP.md)
-
-## Core principle
-
-AEGIS does not trust an AI agent just because it can ask to do something.
-
-AEGIS verifies the request, checks policy, applies security controls, records evidence, and only then allows execution when permitted.

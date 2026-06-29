@@ -4,6 +4,8 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use base64::{engine::general_purpose::STANDARD, Engine as _};
+use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 use serde::{Deserialize, Serialize};
 
 use crate::gateway::{NonEmptyString, PolicyProvenance, Timestamp};
@@ -14,7 +16,14 @@ const MANIFEST_FILE: &str = "manifest.yaml";
 const SIGNATURES_DIR: &str = "signatures";
 const CHECKSUMS_DIR: &str = "checksums";
 const CHECKSUM_MANIFEST_FILE: &str = "SHA256SUMS";
+const CHECKSUM_SIGNATURE_FILE: &str = "SHA256SUMS.sig";
+const PUBLIC_KEY_FILE: &str = "public.pem";
 const SHA256_HEX_LENGTH: usize = 64;
+const ED25519_PUBLIC_KEY_DER_PREFIX: &[u8] = &[
+    0x30, 0x2a, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x03, 0x21, 0x00,
+];
+const ED25519_PUBLIC_KEY_LENGTH: usize = 32;
+const ED25519_SIGNATURE_LENGTH: usize = 64;
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(transparent)]
@@ -68,6 +77,26 @@ impl SignatureRef {
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(transparent)]
+pub struct PublicKeyRef(pub NonEmptyString);
+
+impl PublicKeyRef {
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct SignedArtifactRef(pub NonEmptyString);
+
+impl SignedArtifactRef {
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(transparent)]
 pub struct ChecksumRef(pub NonEmptyString);
 
 impl ChecksumRef {
@@ -95,7 +124,7 @@ impl ChecksumDigest {
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PolicyBundleVerificationStatus {
-    SignatureCryptographicVerificationNotImplemented,
+    Verified,
     Rejected,
 }
 
@@ -104,14 +133,46 @@ pub enum PolicyBundleVerificationStatus {
 pub enum SignatureMetadataStatus {
     SignatureMetadataPresent,
     SignatureMetadataMissing,
-    SignatureCryptographicVerificationNotImplemented,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SignatureAlgorithm {
+    Ed25519,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SignatureVerificationStatus {
-    SignatureCryptographicVerificationNotImplemented,
-    SignatureMetadataMissing,
+    SignatureVerified,
+    PublicKeyMissing,
+    PublicKeyMalformed,
+    SignatureMissing,
+    SignatureMalformed,
+    SignedArtifactReadFailed,
+    SignedContentMismatch,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SignatureVerificationFailure {
+    PublicKeyMissing,
+    PublicKeyMalformed,
+    SignatureMissing,
+    SignatureMalformed,
+    SignedArtifactReadFailed,
+    SignedContentMismatch,
+}
+
+#[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PolicyBundleSignatureVerification {
+    pub algorithm: SignatureAlgorithm,
+    pub signed_artifact: SignedArtifactRef,
+    pub public_key_ref: PublicKeyRef,
+    pub signature_path: String,
+    pub verification_status: SignatureVerificationStatus,
+    pub failure_reason: Option<SignatureVerificationFailure>,
 }
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -177,6 +238,11 @@ pub struct PolicyBundleVerification {
     pub risk_matrix_path: String,
     pub signature_metadata_status: SignatureMetadataStatus,
     pub signature_verification_status: SignatureVerificationStatus,
+    pub signature_algorithm: Option<SignatureAlgorithm>,
+    pub signed_artifact: Option<SignedArtifactRef>,
+    pub public_key_ref: Option<PublicKeyRef>,
+    pub signature_path: Option<String>,
+    pub signature_verification: Option<PolicyBundleSignatureVerification>,
     pub checksum_metadata_status: ChecksumMetadataStatus,
     pub checksum_verification_status: ChecksumVerificationStatus,
     pub checksum_entries: Vec<PolicyBundleChecksumEntry>,
@@ -186,8 +252,7 @@ pub struct PolicyBundleVerification {
 
 impl PolicyBundleVerification {
     pub fn is_verified(&self) -> bool {
-        self.verification_status
-            == PolicyBundleVerificationStatus::SignatureCryptographicVerificationNotImplemented
+        self.verification_status == PolicyBundleVerificationStatus::Verified
     }
 
     pub fn policy_provenance(&self) -> PolicyProvenance {
@@ -235,10 +300,11 @@ impl PolicyBundleLoader {
         let manifest = self.read_manifest()?;
         let risk_matrix_version = self.read_risk_matrix_version(&manifest)?;
         self.verify_version_binding(&manifest, &risk_matrix_version)?;
-        let checksum_entries = self.verify_checksums(&manifest)?;
-        self.verify_signature_metadata(&manifest)?;
+        let checksum_manifest = self.read_checksum_manifest(&manifest)?;
+        let checksum_entries = self.verify_checksums(&manifest, &checksum_manifest)?;
+        let signature_verification = self.verify_signature(&manifest, &checksum_manifest)?;
 
-        Ok(self.verified_metadata(manifest, checksum_entries))
+        Ok(self.verified_metadata(manifest, checksum_entries, signature_verification))
     }
 
     fn verify_required_paths(&self) -> PolicyBundleLoadResult<()> {
@@ -323,6 +389,7 @@ impl PolicyBundleLoader {
     fn verify_checksums(
         &self,
         manifest: &PolicyBundleManifest,
+        checksums: &BTreeMap<String, ChecksumDigest>,
     ) -> PolicyBundleLoadResult<Vec<PolicyBundleChecksumEntry>> {
         let checksum_manifest = self.checksum_manifest_path();
         if !checksum_manifest.is_file() {
@@ -334,7 +401,6 @@ impl PolicyBundleLoader {
             ));
         }
 
-        let checksums = self.read_checksum_manifest(manifest)?;
         let mut entries = Vec::new();
 
         for file_name in required_bundle_file_names() {
@@ -377,27 +443,105 @@ impl PolicyBundleLoader {
         Ok(entries)
     }
 
-    fn verify_signature_metadata(
+    fn verify_signature(
         &self,
         manifest: &PolicyBundleManifest,
-    ) -> PolicyBundleLoadResult<()> {
-        for file_name in required_metadata_file_names("sig") {
-            let path = self.signatures_path().join(file_name);
-            if !path.is_file() {
-                return Err(self.rejected_with_manifest(
-                    format!("signature metadata missing: {}", path.display()),
-                    manifest,
-                ));
-            }
+        checksum_manifest: &BTreeMap<String, ChecksumDigest>,
+    ) -> PolicyBundleLoadResult<PolicyBundleSignatureVerification> {
+        let context = signature_context(self);
+
+        if !self.public_key_path().is_file() {
+            return Err(self.rejected_with_manifest_and_signature(
+                format!(
+                    "signature public key missing: {}",
+                    self.public_key_path().display()
+                ),
+                manifest,
+                checksum_manifest,
+                signature_verification_failure(
+                    context,
+                    SignatureVerificationStatus::PublicKeyMissing,
+                    SignatureVerificationFailure::PublicKeyMissing,
+                ),
+            ));
         }
 
-        Ok(())
+        if !self.checksum_signature_path().is_file() {
+            return Err(self.rejected_with_manifest_and_signature(
+                format!(
+                    "checksum manifest signature missing: {}",
+                    self.checksum_signature_path().display()
+                ),
+                manifest,
+                checksum_manifest,
+                signature_verification_failure(
+                    context,
+                    SignatureVerificationStatus::SignatureMissing,
+                    SignatureVerificationFailure::SignatureMissing,
+                ),
+            ));
+        }
+
+        let Ok(public_key) = self.read_public_key() else {
+            return Err(self.rejected_with_manifest_and_signature(
+                "signature public key malformed",
+                manifest,
+                checksum_manifest,
+                signature_verification_failure(
+                    context,
+                    SignatureVerificationStatus::PublicKeyMalformed,
+                    SignatureVerificationFailure::PublicKeyMalformed,
+                ),
+            ));
+        };
+
+        let Ok(signature) = self.read_signature() else {
+            return Err(self.rejected_with_manifest_and_signature(
+                "checksum manifest signature malformed",
+                manifest,
+                checksum_manifest,
+                signature_verification_failure(
+                    context,
+                    SignatureVerificationStatus::SignatureMalformed,
+                    SignatureVerificationFailure::SignatureMalformed,
+                ),
+            ));
+        };
+
+        let Ok(signed_content) = fs::read(self.checksum_manifest_path()) else {
+            return Err(self.rejected_with_manifest_and_signature(
+                "signed checksum manifest could not be read",
+                manifest,
+                checksum_manifest,
+                signature_verification_failure(
+                    context,
+                    SignatureVerificationStatus::SignedArtifactReadFailed,
+                    SignatureVerificationFailure::SignedArtifactReadFailed,
+                ),
+            ));
+        };
+
+        if public_key.verify(&signed_content, &signature).is_err() {
+            return Err(self.rejected_with_manifest_and_signature(
+                "checksum manifest signature verification failed",
+                manifest,
+                checksum_manifest,
+                signature_verification_failure(
+                    context,
+                    SignatureVerificationStatus::SignedContentMismatch,
+                    SignatureVerificationFailure::SignedContentMismatch,
+                ),
+            ));
+        }
+
+        Ok(signature_verification_success(context))
     }
 
     fn verified_metadata(
         &self,
         manifest: PolicyBundleManifest,
         checksum_entries: Vec<PolicyBundleChecksumEntry>,
+        signature_verification: PolicyBundleSignatureVerification,
     ) -> PolicyBundleVerification {
         PolicyBundleVerification {
             bundle: Some(manifest.bundle),
@@ -408,13 +552,16 @@ impl PolicyBundleLoader {
             gateway_policy_path: path_string(self.gateway_policy_path()),
             risk_matrix_path: path_string(self.risk_matrix_path()),
             signature_metadata_status: SignatureMetadataStatus::SignatureMetadataPresent,
-            signature_verification_status:
-                SignatureVerificationStatus::SignatureCryptographicVerificationNotImplemented,
+            signature_verification_status: signature_verification.verification_status.clone(),
+            signature_algorithm: Some(signature_verification.algorithm.clone()),
+            signed_artifact: Some(signature_verification.signed_artifact.clone()),
+            public_key_ref: Some(signature_verification.public_key_ref.clone()),
+            signature_path: Some(signature_verification.signature_path.clone()),
+            signature_verification: Some(signature_verification),
             checksum_metadata_status: ChecksumMetadataStatus::ChecksumMetadataPresent,
             checksum_verification_status: ChecksumVerificationStatus::Verified,
             checksum_entries,
-            verification_status:
-                PolicyBundleVerificationStatus::SignatureCryptographicVerificationNotImplemented,
+            verification_status: PolicyBundleVerificationStatus::Verified,
             failure_reason: None,
         }
     }
@@ -429,8 +576,12 @@ impl PolicyBundleLoader {
             gateway_policy_path: path_string(self.gateway_policy_path()),
             risk_matrix_path: path_string(self.risk_matrix_path()),
             signature_metadata_status: SignatureMetadataStatus::SignatureMetadataMissing,
-            signature_verification_status:
-                SignatureVerificationStatus::SignatureCryptographicVerificationNotImplemented,
+            signature_verification_status: SignatureVerificationStatus::SignatureMissing,
+            signature_algorithm: None,
+            signed_artifact: None,
+            public_key_ref: None,
+            signature_path: None,
+            signature_verification: None,
             checksum_metadata_status: ChecksumMetadataStatus::ChecksumMetadataMissing,
             checksum_verification_status: ChecksumVerificationStatus::MetadataMissing,
             checksum_entries: Vec::new(),
@@ -453,8 +604,12 @@ impl PolicyBundleLoader {
             gateway_policy_path: path_string(self.gateway_policy_path()),
             risk_matrix_path: path_string(self.risk_matrix_path()),
             signature_metadata_status: SignatureMetadataStatus::SignatureMetadataMissing,
-            signature_verification_status:
-                SignatureVerificationStatus::SignatureCryptographicVerificationNotImplemented,
+            signature_verification_status: SignatureVerificationStatus::SignatureMissing,
+            signature_algorithm: None,
+            signed_artifact: None,
+            public_key_ref: None,
+            signature_path: None,
+            signature_verification: None,
             checksum_metadata_status: ChecksumMetadataStatus::ChecksumMetadataMissing,
             checksum_verification_status: ChecksumVerificationStatus::MetadataMissing,
             checksum_entries: Vec::new(),
@@ -479,8 +634,12 @@ impl PolicyBundleLoader {
             gateway_policy_path: path_string(self.gateway_policy_path()),
             risk_matrix_path: path_string(self.risk_matrix_path()),
             signature_metadata_status: SignatureMetadataStatus::SignatureMetadataMissing,
-            signature_verification_status:
-                SignatureVerificationStatus::SignatureCryptographicVerificationNotImplemented,
+            signature_verification_status: SignatureVerificationStatus::SignatureMissing,
+            signature_algorithm: None,
+            signed_artifact: None,
+            public_key_ref: None,
+            signature_path: None,
+            signature_verification: None,
             checksum_metadata_status: match checksum_verification_status {
                 ChecksumVerificationStatus::MetadataMissing
                 | ChecksumVerificationStatus::MalformedMetadata => {
@@ -495,10 +654,58 @@ impl PolicyBundleLoader {
         })
     }
 
+    fn rejected_with_manifest_and_signature(
+        &self,
+        reason: impl Into<String>,
+        manifest: &PolicyBundleManifest,
+        _checksum_manifest: &BTreeMap<String, ChecksumDigest>,
+        signature_verification: PolicyBundleSignatureVerification,
+    ) -> Box<PolicyBundleVerification> {
+        Box::new(PolicyBundleVerification {
+            bundle: Some(manifest.bundle.clone()),
+            policy_version: Some(manifest.policy_version.clone()),
+            risk_matrix_version: Some(manifest.risk_matrix_version.clone()),
+            policy_hash: Some(manifest.policy_hash.clone()),
+            manifest_path: path_string(self.manifest_path()),
+            gateway_policy_path: path_string(self.gateway_policy_path()),
+            risk_matrix_path: path_string(self.risk_matrix_path()),
+            signature_metadata_status: match signature_verification.verification_status {
+                SignatureVerificationStatus::PublicKeyMissing
+                | SignatureVerificationStatus::SignatureMissing => {
+                    SignatureMetadataStatus::SignatureMetadataMissing
+                }
+                _ => SignatureMetadataStatus::SignatureMetadataPresent,
+            },
+            signature_verification_status: signature_verification.verification_status.clone(),
+            signature_algorithm: Some(signature_verification.algorithm.clone()),
+            signed_artifact: Some(signature_verification.signed_artifact.clone()),
+            public_key_ref: Some(signature_verification.public_key_ref.clone()),
+            signature_path: Some(signature_verification.signature_path.clone()),
+            signature_verification: Some(signature_verification),
+            checksum_metadata_status: ChecksumMetadataStatus::ChecksumMetadataPresent,
+            checksum_verification_status: ChecksumVerificationStatus::Verified,
+            checksum_entries: Vec::new(),
+            verification_status: PolicyBundleVerificationStatus::Rejected,
+            failure_reason: Some(reason.into()),
+        })
+    }
+
     fn read_checksum_manifest(
         &self,
         manifest: &PolicyBundleManifest,
     ) -> PolicyBundleLoadResult<BTreeMap<String, ChecksumDigest>> {
+        if !self.checksum_manifest_path().is_file() {
+            return Err(self.rejected_with_manifest_and_checksums(
+                format!(
+                    "checksum manifest missing: {}",
+                    self.checksum_manifest_path().display()
+                ),
+                manifest,
+                ChecksumVerificationStatus::MetadataMissing,
+                Vec::new(),
+            ));
+        }
+
         let content = fs::read_to_string(self.checksum_manifest_path()).map_err(|error| {
             self.rejected_with_manifest_and_checksums(
                 format!("checksum manifest read failed: {error}"),
@@ -516,6 +723,33 @@ impl PolicyBundleLoader {
                 Vec::new(),
             )
         })
+    }
+
+    fn read_public_key(&self) -> Result<VerifyingKey, String> {
+        let public_key_pem = fs::read_to_string(self.public_key_path())
+            .map_err(|error| format!("public key read failed: {error}"))?;
+        let public_key_der = decode_pem(&public_key_pem, "PUBLIC KEY")?;
+        let public_key_bytes = ed25519_public_key_from_der(&public_key_der)?;
+
+        VerifyingKey::from_bytes(&public_key_bytes)
+            .map_err(|error| format!("ed25519 public key parse failed: {error}"))
+    }
+
+    fn read_signature(&self) -> Result<Signature, String> {
+        let signature_text = fs::read_to_string(self.checksum_signature_path())
+            .map_err(|error| format!("signature read failed: {error}"))?;
+        let signature_bytes = decode_base64_text(&signature_text)?;
+
+        if signature_bytes.len() != ED25519_SIGNATURE_LENGTH {
+            return Err(format!(
+                "ed25519 signature length was {}, expected {}",
+                signature_bytes.len(),
+                ED25519_SIGNATURE_LENGTH
+            ));
+        }
+
+        Signature::from_slice(&signature_bytes)
+            .map_err(|error| format!("ed25519 signature parse failed: {error}"))
     }
 
     fn read_metadata_file(&self, path: &Path) -> PolicyBundleLoadResult<BTreeMap<String, String>> {
@@ -551,14 +785,114 @@ impl PolicyBundleLoader {
     fn checksum_manifest_path(&self) -> PathBuf {
         self.checksums_path().join(CHECKSUM_MANIFEST_FILE)
     }
-}
 
-fn required_metadata_file_names(extension: &str) -> [String; 3] {
-    required_bundle_file_names().map(|file_name| format!("{file_name}.{extension}"))
+    fn checksum_signature_path(&self) -> PathBuf {
+        self.signatures_path().join(CHECKSUM_SIGNATURE_FILE)
+    }
+
+    fn public_key_path(&self) -> PathBuf {
+        self.signatures_path().join(PUBLIC_KEY_FILE)
+    }
 }
 
 fn required_bundle_file_names() -> [&'static str; 3] {
     [MANIFEST_FILE, GATEWAY_POLICY_FILE, RISK_MATRIX_FILE]
+}
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+struct SignatureVerificationContext {
+    algorithm: SignatureAlgorithm,
+    signed_artifact: SignedArtifactRef,
+    public_key_ref: PublicKeyRef,
+    signature_path: String,
+}
+
+fn signature_context(loader: &PolicyBundleLoader) -> SignatureVerificationContext {
+    SignatureVerificationContext {
+        algorithm: SignatureAlgorithm::Ed25519,
+        signed_artifact: SignedArtifactRef(
+            non_empty_string(&format!("{CHECKSUMS_DIR}/{CHECKSUM_MANIFEST_FILE}"))
+                .unwrap_or_else(|error| panic!("static signed artifact ref should parse: {error}")),
+        ),
+        public_key_ref: PublicKeyRef(
+            non_empty_string(&format!("{SIGNATURES_DIR}/{PUBLIC_KEY_FILE}"))
+                .unwrap_or_else(|error| panic!("static public key ref should parse: {error}")),
+        ),
+        signature_path: path_string(loader.checksum_signature_path()),
+    }
+}
+
+fn signature_verification_success(
+    context: SignatureVerificationContext,
+) -> PolicyBundleSignatureVerification {
+    signature_verification(
+        context,
+        SignatureVerificationStatus::SignatureVerified,
+        None,
+    )
+}
+
+fn signature_verification_failure(
+    context: SignatureVerificationContext,
+    status: SignatureVerificationStatus,
+    failure: SignatureVerificationFailure,
+) -> PolicyBundleSignatureVerification {
+    signature_verification(context, status, Some(failure))
+}
+
+fn signature_verification(
+    context: SignatureVerificationContext,
+    status: SignatureVerificationStatus,
+    failure: Option<SignatureVerificationFailure>,
+) -> PolicyBundleSignatureVerification {
+    PolicyBundleSignatureVerification {
+        algorithm: context.algorithm,
+        signed_artifact: context.signed_artifact,
+        public_key_ref: context.public_key_ref,
+        signature_path: context.signature_path,
+        verification_status: status,
+        failure_reason: failure,
+    }
+}
+
+fn decode_pem(content: &str, label: &str) -> Result<Vec<u8>, String> {
+    let begin = format!("-----BEGIN {label}-----");
+    let end = format!("-----END {label}-----");
+    if !content.contains(&begin) || !content.contains(&end) {
+        return Err(format!("PEM {label} markers missing"));
+    }
+
+    let body = content
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .filter(|line| *line != begin && *line != end)
+        .collect::<String>();
+
+    decode_base64_text(&body)
+}
+
+fn decode_base64_text(content: &str) -> Result<Vec<u8>, String> {
+    let compact = content
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect::<String>();
+
+    STANDARD
+        .decode(compact)
+        .map_err(|error| format!("base64 decode failed: {error}"))
+}
+
+fn ed25519_public_key_from_der(der: &[u8]) -> Result<[u8; ED25519_PUBLIC_KEY_LENGTH], String> {
+    if !der.starts_with(ED25519_PUBLIC_KEY_DER_PREFIX) {
+        return Err("public key is not an Ed25519 SubjectPublicKeyInfo value".to_string());
+    }
+
+    let key_bytes = &der[ED25519_PUBLIC_KEY_DER_PREFIX.len()..];
+    key_bytes
+        .try_into()
+        .map_err(|_| "ed25519 public key length is invalid".to_string())
 }
 
 fn parse_sha256sums(content: &str) -> Result<BTreeMap<String, ChecksumDigest>, String> {

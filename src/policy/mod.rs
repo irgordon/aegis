@@ -6,8 +6,9 @@ pub use bundle::{
     load_policy_bundle, BundleDigestRef, ChecksumAlgorithm, ChecksumDigest, ChecksumMetadataStatus,
     ChecksumRef, ChecksumVerificationFailure, ChecksumVerificationStatus,
     PolicyBundleChecksumEntry, PolicyBundleLoadResult, PolicyBundleManifest, PolicyBundleRef,
-    PolicyBundleVerification, PolicyBundleVerificationStatus, PolicyVersion, RiskMatrixVersion,
-    SignatureMetadataStatus, SignatureRef, SignatureVerificationStatus,
+    PolicyBundleSignatureVerification, PolicyBundleVerification, PolicyBundleVerificationStatus,
+    PolicyVersion, PublicKeyRef, RiskMatrixVersion, SignatureAlgorithm, SignatureMetadataStatus,
+    SignatureRef, SignatureVerificationFailure, SignatureVerificationStatus, SignedArtifactRef,
 };
 
 pub trait PolicyDecisionAdapter {

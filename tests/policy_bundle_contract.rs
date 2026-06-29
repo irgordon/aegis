@@ -5,7 +5,8 @@ use std::{
 
 use aegis::policy::{
     load_policy_bundle, ChecksumMetadataStatus, ChecksumVerificationStatus,
-    PolicyBundleVerificationStatus, SignatureMetadataStatus, SignatureVerificationStatus,
+    PolicyBundleVerificationStatus, SignatureAlgorithm, SignatureMetadataStatus,
+    SignatureVerificationStatus,
 };
 
 const LOCAL_DEV_BUNDLE: &str = "examples/policy-bundles/local-dev";
@@ -36,7 +37,7 @@ fn complete_local_development_bundle_loads_successfully() {
     );
     assert_eq!(
         verification.verification_status,
-        PolicyBundleVerificationStatus::SignatureCryptographicVerificationNotImplemented
+        PolicyBundleVerificationStatus::Verified
     );
     assert_eq!(
         verification.signature_metadata_status,
@@ -44,8 +45,20 @@ fn complete_local_development_bundle_loads_successfully() {
     );
     assert_eq!(
         verification.signature_verification_status,
-        SignatureVerificationStatus::SignatureCryptographicVerificationNotImplemented
+        SignatureVerificationStatus::SignatureVerified
     );
+    assert_eq!(
+        verification.signature_algorithm,
+        Some(SignatureAlgorithm::Ed25519)
+    );
+    assert_eq!(
+        verification
+            .signed_artifact
+            .as_ref()
+            .map(|artifact| artifact.as_str()),
+        Some("checksums/SHA256SUMS")
+    );
+    assert!(verification.signature_verification.is_some());
     assert_eq!(
         verification.checksum_metadata_status,
         ChecksumMetadataStatus::ChecksumMetadataPresent
@@ -95,6 +108,49 @@ fn missing_signatures_metadata_fails_closed() {
         .unwrap_or_else(|error| panic!("signature metadata fixture should be removable: {error}"));
 
     assert_rejected(bundle);
+}
+
+#[test]
+fn missing_public_key_fails_closed() {
+    let bundle = mutable_bundle("missing_public_key");
+    fs::remove_file(bundle.join("signatures").join("public.pem"))
+        .unwrap_or_else(|error| panic!("public key fixture should be removable: {error}"));
+
+    assert_signature_rejected(bundle, SignatureVerificationStatus::PublicKeyMissing);
+}
+
+#[test]
+fn missing_signature_file_fails_closed() {
+    let bundle = mutable_bundle("missing_signature_file");
+    fs::remove_file(bundle.join("signatures").join("SHA256SUMS.sig"))
+        .unwrap_or_else(|error| panic!("signature fixture should be removable: {error}"));
+
+    assert_signature_rejected(bundle, SignatureVerificationStatus::SignatureMissing);
+}
+
+#[test]
+fn malformed_signature_file_fails_closed() {
+    let bundle = mutable_bundle("malformed_signature_file");
+    fs::write(
+        bundle.join("signatures").join("SHA256SUMS.sig"),
+        "not-base64\n",
+    )
+    .unwrap_or_else(|error| panic!("signature fixture should be writable: {error}"));
+
+    assert_signature_rejected(bundle, SignatureVerificationStatus::SignatureMalformed);
+}
+
+#[test]
+fn modified_checksum_manifest_fails_signature_verification() {
+    let bundle = mutable_bundle("modified_checksum_manifest");
+    let checksum_path = bundle.join("checksums").join("SHA256SUMS");
+    let mut content = fs::read_to_string(&checksum_path)
+        .unwrap_or_else(|error| panic!("checksum manifest should be readable: {error}"));
+    content.push_str("# unsigned local change\n");
+    fs::write(checksum_path, content)
+        .unwrap_or_else(|error| panic!("checksum manifest should be writable: {error}"));
+
+    assert_signature_rejected(bundle, SignatureVerificationStatus::SignedContentMismatch);
 }
 
 #[test]
@@ -194,6 +250,17 @@ fn loader_does_not_evaluate_real_policy_decisions_yet() {
     assert!(verification.is_verified());
 }
 
+#[test]
+fn runtime_signature_verification_requires_no_private_key_fixture() {
+    let signatures = Path::new(LOCAL_DEV_BUNDLE).join("signatures");
+    let verification = load_policy_bundle(LOCAL_DEV_BUNDLE)
+        .unwrap_or_else(|error| panic!("local development bundle should verify: {error:?}"));
+
+    assert!(verification.is_verified());
+    assert!(!signatures.join("private.pem").exists());
+    assert!(!signatures.join("local-dev-private.pem").exists());
+}
+
 fn assert_rejected(bundle: PathBuf) {
     let verification = rejected_verification(bundle);
 
@@ -208,6 +275,17 @@ fn assert_checksum_rejected(bundle: PathBuf, status: ChecksumVerificationStatus)
     let verification = rejected_verification(bundle);
 
     assert_eq!(verification.checksum_verification_status, status);
+    assert_eq!(
+        verification.verification_status,
+        PolicyBundleVerificationStatus::Rejected
+    );
+    assert!(verification.failure_reason.is_some());
+}
+
+fn assert_signature_rejected(bundle: PathBuf, status: SignatureVerificationStatus) {
+    let verification = rejected_verification(bundle);
+
+    assert_eq!(verification.signature_verification_status, status);
     assert_eq!(
         verification.verification_status,
         PolicyBundleVerificationStatus::Rejected

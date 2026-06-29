@@ -4,6 +4,20 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.1.19] - 2026-06-28
+
+### Added
+
+- Added cryptographic signature verification for local policy bundle checksum metadata.
+- Added fail-closed tests for missing, malformed, and invalid policy bundle signatures.
+
+### Changed
+
+- Updated local policy bundle fixture signature metadata.
+- Simplified README.md to clearly state pre-alpha status and current repository scope.
+- Updated POLICY_DISTRIBUTION.md with checksum and signature verification behavior.
+- Updated Phase 2 task tracking for policy bundle authenticity verification.
+
 ## [0.1.18] - 2026-06-28
 
 ### Added

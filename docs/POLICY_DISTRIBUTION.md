@@ -78,7 +78,67 @@ A checksum is a file fingerprint. If `manifest.yaml`, `gateway_policy.yaml`, or 
 
 Checksum verification protects local bundle integrity. It does not prove who authored or approved the bundle.
 
-Signature verification is a separate control. Until cryptographic signature verification is implemented and tested, runtimes must say that signature cryptographic verification is not implemented rather than imply that signatures were fully verified.
+Checksum metadata for the local development bundle lives in:
+
+```text
+examples/policy-bundles/local-dev/checksums/SHA256SUMS
+```
+
+The local format is:
+
+```text
+<sha256>  manifest.yaml
+<sha256>  gateway_policy.yaml
+<sha256>  risk_matrix.yaml
+```
+
+## Signature Verification
+
+Signature verification confirms that trusted bundle metadata has not changed since it was signed.
+
+The local development bundle signs the checksum manifest, not request input, runtime output, or arbitrary policy evaluation results.
+
+Signed artifact:
+
+```text
+examples/policy-bundles/local-dev/checksums/SHA256SUMS
+```
+
+Signature fixture:
+
+```text
+examples/policy-bundles/local-dev/signatures/SHA256SUMS.sig
+```
+
+Local development public key fixture:
+
+```text
+examples/policy-bundles/local-dev/signatures/public.pem
+```
+
+The Phase 2 local loader verifies:
+
+- required bundle files are present
+- manifest and risk matrix versions align
+- required file checksums match `SHA256SUMS`
+- `SHA256SUMS.sig` is a valid Ed25519 signature over `SHA256SUMS`
+
+The loader fails closed when:
+
+- the public key is missing or malformed
+- the signature is missing or malformed
+- the checksum manifest changes after signing
+- a required policy bundle file no longer matches the signed checksum manifest
+
+Regenerate the local development fixture after changing policy bundle files:
+
+```bash
+scripts/regenerate-local-policy-signature.sh
+```
+
+This helper regenerates `SHA256SUMS`, creates a fresh local development Ed25519 key pair, writes `public.pem`, signs `SHA256SUMS`, writes `SHA256SUMS.sig`, and discards the private key. It is for local development fixtures only.
+
+Signature verification is not production PKI. It does not implement certificate validation, remote trust registry lookup, production signer authorization, or policy rule evaluation.
 
 ## Runtime Rules
 

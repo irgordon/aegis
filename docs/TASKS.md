@@ -86,6 +86,7 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Add local gateway runtime entrypoint | complete |
 | Add policy bundle loader and verifier | complete |
 | Add real policy bundle checksum verification | complete |
+| Add policy bundle signature verification | complete |
 | Add idempotency contract model | complete |
 | Add wrapper configuration contract models | complete |
 | Add execution identity contract models | complete |

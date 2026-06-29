@@ -14,6 +14,8 @@ name = "aegis-gateway"
 path = "src/main.rs"
 
 [dependencies]
+base64 = "0.22"
+ed25519-dalek = { version = "2", default-features = false, features = ["std"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 time = { version = "0.3", features = ["parsing"] }

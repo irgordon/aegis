@@ -11,6 +11,7 @@ use aegis::runtime::local::{
 };
 use aegis::state::{
     ExecutionRecoveryInspector, ExecutionStateLogContext, ExecutionStateSink, ExecutionStateWriter,
+    RecoveryPlanGenerator,
 };
 use serde::Serialize;
 
@@ -34,6 +35,7 @@ fn run() -> i32 {
 fn try_run() -> RuntimeResult<i32> {
     match parse_cli_mode()? {
         LocalCliMode::InspectState(path) => inspect_state_log(&path),
+        LocalCliMode::PlanRecovery(path) => plan_recovery(&path),
         LocalCliMode::Run(args) => run_gateway(args),
     }
 }
@@ -87,9 +89,18 @@ fn inspect_state_log(path: &Path) -> RuntimeResult<i32> {
     Ok(if has_errors { 1 } else { 0 })
 }
 
+fn plan_recovery(path: &Path) -> RuntimeResult<i32> {
+    let inspection = ExecutionRecoveryInspector::inspect_path(path);
+    let plan = RecoveryPlanGenerator::plan(&inspection);
+    let has_errors = !plan.planning_errors.is_empty();
+    print_structured_json(&plan)?;
+    Ok(if has_errors { 1 } else { 0 })
+}
+
 enum LocalCliMode {
     Run(LocalRuntimeArgs),
     InspectState(PathBuf),
+    PlanRecovery(PathBuf),
 }
 
 struct LocalRuntimeArgs {
@@ -107,6 +118,10 @@ fn parse_cli_mode() -> RuntimeResult<LocalCliMode> {
         return parse_inspection_args(args);
     }
 
+    if matches!(args.peek().map(String::as_str), Some("--plan-recovery")) {
+        return parse_recovery_plan_args(args);
+    }
+
     parse_runtime_args(args).map(LocalCliMode::Run)
 }
 
@@ -119,6 +134,17 @@ fn parse_inspection_args(mut args: impl Iterator<Item = String>) -> RuntimeResul
     }
 
     Ok(LocalCliMode::InspectState(PathBuf::from(path)))
+}
+
+fn parse_recovery_plan_args(mut args: impl Iterator<Item = String>) -> RuntimeResult<LocalCliMode> {
+    let _flag = args.next();
+    let path = args.next().ok_or_else(runtime_usage_error)?;
+
+    if args.next().is_some() {
+        return Err(runtime_usage_error());
+    }
+
+    Ok(LocalCliMode::PlanRecovery(PathBuf::from(path)))
 }
 
 fn parse_runtime_args(mut args: impl Iterator<Item = String>) -> RuntimeResult<LocalRuntimeArgs> {
@@ -313,7 +339,7 @@ fn next_path_arg(
 }
 
 fn usage() -> String {
-    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--state-log <state-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]\n       aegis-gateway --inspect-state <state-jsonl-path>"
+    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--state-log <state-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]\n       aegis-gateway --inspect-state <state-jsonl-path>\n       aegis-gateway --plan-recovery <state-jsonl-path>"
         .to_string()
 }
 

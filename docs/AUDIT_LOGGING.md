@@ -368,6 +368,46 @@ For contributors: inspection uses the same lifecycle states as the state writer.
 
 For engineers: inspection is a read-only evidence review boundary. `completed`, `failed_closed`, and `audit_failed` are terminal states. `completed` and `failed_closed` are not recoverable in this phase. `audit_failed` and non-terminal states may be future recoverable candidates only as evidence classifications. Malformed, reordered, duplicated, or internally inconsistent state logs are inspection failures, not recoverable executions.
 
+## Local Recovery Plan Generation
+
+The Phase 3 local runtime can generate a read-only recovery plan from inspected state evidence.
+
+For a new reader: this means AEGIS can say what a future recovery engine may be allowed to consider. It does not replay, resume, repair, rerun, or change any request.
+
+The runtime accepts:
+
+```bash
+cargo run --quiet --bin aegis-gateway -- --plan-recovery state.jsonl
+```
+
+Plan output includes:
+
+- recovery plan status
+- one plan record per inspected execution when evidence is trustworthy enough to classify
+- bounded plan outcome
+- plain-language plan reason
+- bounded future action
+- safe planning errors when inspection evidence is not trustworthy
+
+Plan outcomes are bounded to:
+
+- `not_recoverable_terminal`
+- `not_recoverable_corrupted`
+- `candidate_for_audit_retry`
+- `candidate_for_future_replay`
+- `inspection_failed`
+
+Allowed future actions are bounded to:
+
+- `none`
+- `audit_retry_only`
+- `future_replay_evaluation_only`
+- `manual_review_only`
+
+For contributors: recovery planning must consume an `ExecutionRecoveryReport`; it must not read policy bundles, execute wrappers, write audit logs, write state logs, or create new recovery state. Tests should cover terminal, corrupted, audit-failed, non-terminal, inspection-failed, and read-only CLI behavior.
+
+For engineers: recovery planning is classification only. `completed` and `failed_closed` executions are terminal. `audit_failed` can only become an audit-retry candidate. Valid non-terminal evidence can only become a future replay-evaluation candidate. Corrupted or inconsistent state evidence requires manual review and must not become a replay candidate.
+
 ## Durability Assumptions
 
 The local writer flushes process buffers before exit.

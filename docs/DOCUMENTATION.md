@@ -286,6 +286,7 @@ When a feature changes behavior, update the narrowest relevant document instead 
 | Understand API behavior | `docs/API_SPEC.md` |
 | Understand audit evidence | `docs/AUDIT_LOGGING.md` |
 | Understand test expectations | `docs/TEST_STRATEGY.md` |
+| Understand AEGIS step by step | `docs/wiki/README.md` |
 | Write or review code | `docs/CODING_STYLE.md` |
 | Find current work | `docs/TASKS.md` |
 | Understand release rules | `docs/RELEASE_PROCESS.md` |
@@ -464,6 +465,7 @@ AEGIS documentation is grouped by purpose.
 Top-level documentation-related directories support different parts of repository governance:
 
 - `docs/` contains governed project documents.
+- `docs/wiki/` contains explanatory knowledge base pages that help readers move from plain-language concepts to technical details.
 - `schemas/` contains machine-readable protocol contracts.
 - `examples/` contains reference examples that support documentation and validation.
 - `prompts/` contains governed prompt artifacts where prompts are part of project behavior.
@@ -524,6 +526,18 @@ User interface documents define review standards for the Tauri graphical desktop
 Examples:
 
 - `UI-DESIGN.md`
+
+### Knowledge Base
+
+Knowledge base pages explain current AEGIS behavior in reader-friendly order.
+
+Examples:
+
+- `wiki/README.md`
+- `wiki/02-execution-flow.md`
+- `wiki/07-errors-and-fail-closed.md`
+
+Knowledge base pages are not higher-authority documents. They should link to governed documents instead of redefining architecture, invariants, or task scope.
 
 ### Verification
 

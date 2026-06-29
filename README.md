@@ -65,10 +65,41 @@ The bundle loader verifies required local files and metadata:
 - `checksums/`
 - manifest policy identity
 - risk matrix version binding
-- checksum metadata presence
+- SHA-256 checksum matches for required bundle files
 - signature metadata presence
 
-Cryptographic signature verification is not implemented yet, and the runtime says so in structured output. The local runtime is for Phase 2 development only. It does not provide production policy enforcement, risk matrix evaluation, wrapper execution, credential injection, durable audit storage, approval workflow, replay execution, HTTP service, or UI.
+A checksum is a fingerprint for a file. If a file changes, the fingerprint changes. AEGIS now checks the fingerprints for the local policy bundle files. If `manifest.yaml`, `gateway_policy.yaml`, or `risk_matrix.yaml` does not match its recorded checksum, AEGIS refuses to use the bundle and returns a denied response.
+
+Checksum metadata lives in:
+
+```text
+examples/policy-bundles/local-dev/checksums/SHA256SUMS
+```
+
+The format is:
+
+```text
+<sha256>  manifest.yaml
+<sha256>  gateway_policy.yaml
+<sha256>  risk_matrix.yaml
+```
+
+Regenerate local fixture checksums after changing a bundle file:
+
+```bash
+python3 - <<'PY'
+import hashlib
+from pathlib import Path
+root = Path("examples/policy-bundles/local-dev")
+files = ["manifest.yaml", "gateway_policy.yaml", "risk_matrix.yaml"]
+with (root / "checksums" / "SHA256SUMS").open("w", encoding="utf-8") as out:
+    for name in files:
+        digest = hashlib.sha256((root / name).read_bytes()).hexdigest()
+        out.write(f"{digest}  {name}\n")
+PY
+```
+
+Cryptographic signature verification is not implemented yet, and the runtime says so in structured output. Checksum verification proves the local files match the recorded bundle metadata; it does not prove who signed the bundle. The local runtime is for Phase 2 development only. It does not provide production policy enforcement, risk matrix evaluation, wrapper execution, credential injection, durable audit storage, approval workflow, replay execution, HTTP service, or UI.
 
 Run with stdin:
 

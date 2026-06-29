@@ -34,6 +34,14 @@ fn runtime_output_includes_verified_policy_bundle_identity() {
         "signature_cryptographic_verification_not_implemented"
     );
     assert_eq!(
+        output["policy_bundle"]["checksum_verification_status"],
+        "verified"
+    );
+    assert_eq!(
+        output["policy_bundle"]["signature_verification_status"],
+        "signature_cryptographic_verification_not_implemented"
+    );
+    assert_eq!(
         output["audit_record"]["details"]["policy_bundle_verification"]["bundle"],
         "local-dev"
     );
@@ -88,6 +96,10 @@ fn bundle_verification_failure_fails_closed_with_denied_response_and_audit_recor
         "policy_bundle_verification_failed"
     );
     assert_eq!(output["policy_bundle"]["verification_status"], "rejected");
+    assert_eq!(
+        output["policy_bundle"]["checksum_verification_status"],
+        "mismatch"
+    );
     assert!(output["policy_bundle"]["failure_reason"].is_string());
     assert_eq!(
         output["audit_record"]["details"]["policy_bundle_verification"]["verification_status"],
@@ -150,7 +162,7 @@ fn run_gateway_with_bundle_and_stdin(bundle_path: &Path, input: &str) -> Value {
 fn invalid_runtime_bundle() -> PathBuf {
     let target = Path::new("target")
         .join("local-runtime-policy-bundles")
-        .join("missing_manifest");
+        .join("checksum_mismatch");
 
     if target.exists() {
         fs::remove_dir_all(&target)
@@ -158,8 +170,11 @@ fn invalid_runtime_bundle() -> PathBuf {
     }
 
     copy_dir(Path::new(LOCAL_DEV_BUNDLE), &target);
-    fs::remove_file(target.join("manifest.yaml"))
-        .unwrap_or_else(|error| panic!("runtime manifest fixture should be removable: {error}"));
+    fs::write(
+        target.join("gateway_policy.yaml"),
+        "policy_version: 0.1.0-local\ndefault_decision: allow\n",
+    )
+    .unwrap_or_else(|error| panic!("runtime gateway policy fixture should be writable: {error}"));
     target
 }
 

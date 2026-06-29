@@ -70,6 +70,16 @@ Activation must verify:
 
 Invalid bundles must not activate.
 
+## Checksum Verification
+
+Checksum verification confirms that required local bundle files match the recorded bundle metadata.
+
+A checksum is a file fingerprint. If `manifest.yaml`, `gateway_policy.yaml`, or `risk_matrix.yaml` changes unexpectedly, its SHA-256 checksum changes. The gateway must reject a local bundle when a required checksum is missing or does not match the file content.
+
+Checksum verification protects local bundle integrity. It does not prove who authored or approved the bundle.
+
+Signature verification is a separate control. Until cryptographic signature verification is implemented and tested, runtimes must say that signature cryptographic verification is not implemented rather than imply that signatures were fully verified.
+
 ## Runtime Rules
 
 A running gateway must not silently replace its active policy because a registry changes.

@@ -3,10 +3,11 @@ mod bundle;
 use crate::gateway::{PendingReference, ToolCallRequest};
 
 pub use bundle::{
-    load_policy_bundle, BundleDigestRef, ChecksumMetadataStatus, ChecksumRef,
-    PolicyBundleLoadResult, PolicyBundleManifest, PolicyBundleRef, PolicyBundleVerification,
-    PolicyBundleVerificationStatus, PolicyVersion, RiskMatrixVersion, SignatureMetadataStatus,
-    SignatureRef,
+    load_policy_bundle, BundleDigestRef, ChecksumAlgorithm, ChecksumDigest, ChecksumMetadataStatus,
+    ChecksumRef, ChecksumVerificationFailure, ChecksumVerificationStatus,
+    PolicyBundleChecksumEntry, PolicyBundleLoadResult, PolicyBundleManifest, PolicyBundleRef,
+    PolicyBundleVerification, PolicyBundleVerificationStatus, PolicyVersion, RiskMatrixVersion,
+    SignatureMetadataStatus, SignatureRef, SignatureVerificationStatus,
 };
 
 pub trait PolicyDecisionAdapter {

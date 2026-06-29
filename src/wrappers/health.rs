@@ -2,9 +2,12 @@ use std::collections::BTreeMap;
 
 use serde_json::Value;
 
-use crate::gateway::{
-    ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
-    WrapperExecutor,
+use crate::{
+    auth::ExecutionAuthorization,
+    gateway::{
+        ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
+        WrapperExecutor,
+    },
 };
 
 pub struct HealthCheckWrapper;
@@ -22,6 +25,7 @@ impl WrapperExecutor for HealthCheckWrapper {
         &self,
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
+        _authorization: &ExecutionAuthorization,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Ok(WrapperExecutionOutput {
             result: Some(health_check_result()),

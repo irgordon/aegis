@@ -4,6 +4,19 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.8] - 2026-06-29
+
+### Added
+
+- Added execution authorization boundary between policy evaluation and wrapper dispatch.
+- Added authorization evidence to runtime output and audit records.
+- Added fail-closed authorization tests for wrapper, version, capability, scope, denied, and pending paths.
+
+### Changed
+
+- Updated trust boundary and audit documentation for execution authorization evidence.
+- Updated Phase 3 task tracking for execution authorization boundary work.
+
 ## [0.2.7] - 2026-06-29
 
 ### Changed

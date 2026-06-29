@@ -1,6 +1,7 @@
 use std::{collections::BTreeMap, fs, io::Write, path::Path};
 
 use aegis::{
+    auth::ExecutionAuthorization,
     gateway::{
         ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionMode,
         WrapperExecutionOutput, WrapperExecutor,
@@ -126,7 +127,7 @@ fn wrapper_version_mismatch_fails_closed_with_structured_error() {
         Some(wrapper_context("health.check", "2.0.0")),
     );
 
-    assert_wrapper_failure(output, "wrapper_version_incompatible");
+    assert_wrapper_failure(output, "authorization_version_mismatch");
 }
 
 #[test]
@@ -172,9 +173,14 @@ fn assert_wrapper_failure(output: aegis::runtime::local::LocalRuntimeOutput, rea
         aegis::gateway::GatewayStatus::Denied
     );
     assert_eq!(output.response.reason_code.as_deref(), Some(reason_code));
+    let expected_location = if reason_code.starts_with("authorization_") {
+        aegis::error::ErrorLocation::ExecutionAuthorization
+    } else {
+        aegis::error::ErrorLocation::WrapperDispatch
+    };
     assert_eq!(
         output.error_report.as_ref().map(|report| &report.location),
-        Some(&aegis::error::ErrorLocation::WrapperDispatch)
+        Some(&expected_location)
     );
     assert_eq!(
         output
@@ -183,7 +189,7 @@ fn assert_wrapper_failure(output: aegis::runtime::local::LocalRuntimeOutput, rea
             .error_report
             .as_ref()
             .map(|report| &report.error_location),
-        Some(&aegis::error::ErrorLocation::WrapperDispatch)
+        Some(&expected_location)
     );
     assert!(output.wrapper_execution.is_none());
 }
@@ -234,6 +240,7 @@ impl WrapperExecutor for PanicWrapper {
         &self,
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
+        _authorization: &ExecutionAuthorization,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         panic!("wrapper should not execute for denied or pending decisions")
     }
@@ -254,6 +261,7 @@ impl WrapperExecutor for FailingHealthWrapper {
         &self,
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
+        _authorization: &ExecutionAuthorization,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Err(WrapperExecutionError {
             reason_code: Some("health_check_failed".to_string()),

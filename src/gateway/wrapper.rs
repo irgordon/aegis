@@ -3,6 +3,8 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+use crate::auth::{AuthorizationError, ExecutionAuthorization};
+
 use super::{NonEmptyString, ToolCallRequest};
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
@@ -118,6 +120,7 @@ pub trait WrapperExecutor {
         &self,
         request: &ToolCallRequest,
         context: &WrapperExecutionContext,
+        authorization: &ExecutionAuthorization,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError>;
 }
 
@@ -130,6 +133,7 @@ pub enum WrapperDispatchError {
         wrapper_name: String,
         requested_version: String,
     },
+    AuthorizationFailed(AuthorizationError),
     ExecutionFailed(WrapperExecutionError),
 }
 
@@ -138,6 +142,7 @@ impl WrapperDispatchError {
         match self {
             Self::MissingWrapper { .. } => "wrapper_missing",
             Self::IncompatibleWrapperVersion { .. } => "wrapper_version_incompatible",
+            Self::AuthorizationFailed(error) => error.reason_code(),
             Self::ExecutionFailed(error) => error
                 .reason_code
                 .as_deref()
@@ -158,6 +163,7 @@ impl WrapperDispatchError {
                     "Required wrapper version is not registered: {wrapper_name}@{requested_version}."
                 )
             }
+            Self::AuthorizationFailed(error) => error.safe_message(),
             Self::ExecutionFailed(error) => error.safe_message.clone(),
         }
     }
@@ -178,10 +184,14 @@ impl<'a> WrapperDispatcher<'a> {
         &self,
         request: &ToolCallRequest,
         context: &WrapperExecutionContext,
+        authorization: &ExecutionAuthorization,
     ) -> Result<WrapperExecutionResult, WrapperDispatchError> {
+        authorization
+            .validate_for(request, context)
+            .map_err(WrapperDispatchError::AuthorizationFailed)?;
         let executor = self.executor_for(context)?;
         let output = executor
-            .execute(request, context)
+            .execute(request, context, authorization)
             .map_err(WrapperDispatchError::ExecutionFailed)?;
 
         Ok(WrapperExecutionResult {

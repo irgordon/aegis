@@ -26,6 +26,14 @@ impl<'de> Deserialize<'de> for SchemaVersion {
 pub struct NonEmptyString(String);
 
 impl NonEmptyString {
+    pub fn new(value: impl Into<String>) -> Option<Self> {
+        let value = value.into();
+        if value.is_empty() {
+            return None;
+        }
+        Some(Self(value))
+    }
+
     pub fn as_str(&self) -> &str {
         &self.0
     }

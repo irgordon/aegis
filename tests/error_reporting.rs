@@ -6,8 +6,12 @@ use std::{
 };
 
 use aegis::{
+    auth::ExecutionAuthorization,
     error::{ErrorCode, ErrorLocation, GatewayErrorReport},
-    gateway::{ToolCallRequest, WrapperDispatcher, WrapperExecutionContext, WrapperExecutionMode},
+    gateway::{
+        ToolCallRequest, ToolCallResponse, WrapperDispatcher, WrapperExecutionContext,
+        WrapperExecutionMode,
+    },
     runtime::local::process_local_gateway_request,
 };
 use serde_json::Value;
@@ -105,12 +109,16 @@ fn policy_evaluation_failure_returns_structured_error_report() {
 fn wrapper_dispatch_failure_returns_structured_error_report() {
     let dispatcher = WrapperDispatcher::new([]);
     let context = wrapper_context();
-    let error = dispatcher.dispatch(&request(), &context).unwrap_err();
+    let request = request();
+    let authorization = authorization(&request, &context);
+    let error = dispatcher
+        .dispatch(&request, &context, &authorization)
+        .unwrap_err();
     let report = GatewayErrorReport::wrapper_dispatch_failed(&error, &context);
     let value = json_value(&Some(report));
 
     assert_error_report(&value, "wrapper_dispatch_failed", "wrapper_dispatch");
-    assert_eq!(value["wrapper_name"], "credential_scope");
+    assert_eq!(value["wrapper_name"], "health.check");
 }
 
 #[test]
@@ -334,18 +342,52 @@ fn wrapper_context() -> WrapperExecutionContext {
 
     serde_json::from_value(serde_json::json!({
         "config": {
-            "wrapper_name": "credential_scope",
+            "wrapper_name": "health.check",
             "wrapper_version": "1.0.0",
-            "target_system": "metrics",
-            "config_reference": "wrappers/credential_scope",
-            "config_digest": "sha256:wrapper-config"
+            "target_system": "local",
+            "config_reference": "builtins/health.check",
+            "config_digest": "builtin:health.check@1.0.0"
         },
-        "external_system_schema_version": "metrics-api-v1",
-        "redaction_profile": "standard-redaction",
+        "external_system_schema_version": "aegis-local-v1",
+        "redaction_profile": "no-secrets",
         "execution_mode": mode,
-        "credential_injection_required": true
+        "credential_injection_required": false
     }))
     .unwrap_or_else(|error| panic!("wrapper context should parse: {error}"))
+}
+
+fn authorization(
+    request: &ToolCallRequest,
+    context: &WrapperExecutionContext,
+) -> ExecutionAuthorization {
+    ExecutionAuthorization::policy_allow(request, &response(), context)
+        .unwrap_or_else(|error| panic!("authorization should be valid: {error:?}"))
+}
+
+fn response() -> ToolCallResponse {
+    serde_json::from_value(serde_json::json!({
+        "schema_version": "1.0",
+        "execution_id": "local_exec_001",
+        "request_id": "req_health_001",
+        "status": "allowed",
+        "decision": "allow",
+        "result": null,
+        "reason_code": null,
+        "safe_message": null,
+        "pending_reference": null,
+        "replay_reference": null,
+        "policy_provenance": {
+            "bundle_id": "local-dev",
+            "version": "0.1.0-local",
+            "policy_hash": "sha256:local",
+            "environment": "local",
+            "signer_identity": "local",
+            "activated_at": "2026-06-28T00:00:00Z"
+        },
+        "audit_record_id": "local_audit_001",
+        "completed_at": "2026-06-28T00:00:00Z"
+    }))
+    .unwrap_or_else(|error| panic!("response should parse: {error}"))
 }
 
 fn request_with_tool(tool_name: &str) -> String {
@@ -357,7 +399,7 @@ fn request_with_tool(tool_name: &str) -> String {
 }
 
 fn valid_request() -> String {
-    read_fixture("schemas/examples/valid/ToolCallRequest.json")
+    read_fixture("schemas/examples/valid/HealthCheckRequest.json")
 }
 
 fn read_fixture(path: &str) -> String {

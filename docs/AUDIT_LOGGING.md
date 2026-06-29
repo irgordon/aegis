@@ -229,6 +229,29 @@ For contributors: lifecycle states are bounded Rust enums, not free-form strings
 
 For engineers: lifecycle evidence is an in-memory deterministic state trace. It is not durable execution storage, replay state, event sourcing, or recovery metadata. It gives future replay and durable execution work a stable evidence shape without implementing those behaviors in this phase.
 
+## Execution Authorization Evidence
+
+The Phase 3 local runtime records execution authorization evidence before wrapper dispatch.
+
+For a new reader: this shows who or what allowed wrapper execution, which wrapper was allowed, and what scope was permitted.
+
+Authorization audit evidence includes:
+
+- authorization ID
+- authority source
+- authorized wrapper and version
+- tool name
+- capability class
+- execution scope
+- credential class reference
+- authorization status
+
+Denied and pending policy decisions do not authorize wrapper execution.
+
+For contributors: authorization evidence belongs in audit details alongside policy evaluation and wrapper evidence. Do not record secrets, tokens, credentials, vault references, or raw approval token material.
+
+For engineers: authorization evidence binds policy-allowed execution to wrapper dispatch without implementing credential injection, approval workflow, break-glass execution, distributed authorization, or durable execution state. Authorization mismatch failures are fail-closed and should include bounded error evidence.
+
 ## Durability Assumptions
 
 The local writer flushes process buffers before exit.

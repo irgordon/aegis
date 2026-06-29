@@ -139,6 +139,7 @@ Completed foundation work:
 | Execute local L0 health.check wrapper | complete |
 | Add execution lifecycle state machine | complete |
 | Add structured error reporting | complete |
+| Add execution authorization boundary | complete |
 
 ## Phase 4: Platform Capabilities
 

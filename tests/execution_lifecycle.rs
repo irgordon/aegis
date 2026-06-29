@@ -6,6 +6,7 @@ use std::{
 };
 
 use aegis::{
+    auth::ExecutionAuthorization,
     gateway::{
         ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
         WrapperExecutor,
@@ -33,7 +34,8 @@ fn successful_runtime_reports_complete_lifecycle() {
             ("created", "validated"),
             ("validated", "bundle_verified"),
             ("bundle_verified", "policy_evaluated"),
-            ("policy_evaluated", "dispatching"),
+            ("policy_evaluated", "authorized"),
+            ("authorized", "dispatching"),
             ("dispatching", "executed"),
             ("executed", "audited"),
             ("audited", "completed"),
@@ -164,6 +166,7 @@ fn wrapper_dispatch_failure_fails_closed_from_dispatching() {
             ExecutionState::Validated,
             ExecutionState::BundleVerified,
             ExecutionState::PolicyEvaluated,
+            ExecutionState::Authorized,
             ExecutionState::Dispatching,
             ExecutionState::FailedClosed,
         ],
@@ -189,6 +192,7 @@ fn wrapper_execution_failure_fails_closed_from_dispatching() {
             ExecutionState::Validated,
             ExecutionState::BundleVerified,
             ExecutionState::PolicyEvaluated,
+            ExecutionState::Authorized,
             ExecutionState::Dispatching,
             ExecutionState::FailedClosed,
         ],
@@ -220,7 +224,8 @@ fn audit_persistence_failure_reports_audit_failed() {
             ("created", "validated"),
             ("validated", "bundle_verified"),
             ("bundle_verified", "policy_evaluated"),
-            ("policy_evaluated", "dispatching"),
+            ("policy_evaluated", "authorized"),
+            ("authorized", "dispatching"),
             ("dispatching", "executed"),
             ("executed", "audit_failed"),
         ],
@@ -249,6 +254,7 @@ fn transition_order_is_deterministic() {
         ExecutionState::Validated,
         ExecutionState::BundleVerified,
         ExecutionState::PolicyEvaluated,
+        ExecutionState::Authorized,
         ExecutionState::Dispatching,
         ExecutionState::Executed,
         ExecutionState::Audited,
@@ -271,6 +277,7 @@ fn transition_order_is_deterministic() {
             ExecutionState::Validated,
             ExecutionState::BundleVerified,
             ExecutionState::PolicyEvaluated,
+            ExecutionState::Authorized,
             ExecutionState::Dispatching,
             ExecutionState::Executed,
             ExecutionState::Audited,
@@ -357,6 +364,7 @@ impl WrapperExecutor for FailingHealthWrapper {
         &self,
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
+        _authorization: &ExecutionAuthorization,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Err(WrapperExecutionError {
             reason_code: Some("health_check_failed".to_string()),

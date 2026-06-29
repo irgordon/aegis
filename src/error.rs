@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     audit::AuditWriteError,
+    auth::{AuthorizationError, ExecutionAuthorization},
     gateway::{
         NonEmptyString, ToolCallRequest, ToolCallResponse, WrapperDispatchError,
         WrapperExecutionContext,
@@ -20,6 +21,12 @@ pub enum ErrorCode {
     PolicyDenied,
     PolicyBundleVerificationFailed,
     PolicyEvaluationFailed,
+    AuthorizationMissing,
+    AuthorizationWrapperMismatch,
+    AuthorizationVersionMismatch,
+    AuthorizationCapabilityMismatch,
+    AuthorizationScopeInvalid,
+    AuthorizationDenied,
     WrapperDispatchFailed,
     AuditPersistenceFailed,
     RuntimeIoFailed,
@@ -40,6 +47,7 @@ pub enum ErrorLocation {
     RequestValidation,
     PolicyBundleVerification,
     PolicyEvaluation,
+    ExecutionAuthorization,
     WrapperDispatch,
     AuditPersistence,
     RuntimeIo,
@@ -147,6 +155,27 @@ impl GatewayErrorReport {
             policy_bundle_id: None,
             tool_name: None,
             wrapper_name: Some(context.config.wrapper_name.clone()),
+            source_error_kind: Some(error.reason_code().to_string()),
+        }
+    }
+
+    pub fn execution_authorization_failed(
+        error: &AuthorizationError,
+        authorization: &ExecutionAuthorization,
+        request: &ToolCallRequest,
+    ) -> Self {
+        Self {
+            code: auth_error_code(error),
+            severity: ErrorSeverity::Error,
+            message: "Wrapper execution was not authorized.".to_string(),
+            reason: error.safe_message(),
+            next_action: auth_next_action(error),
+            location: ErrorLocation::ExecutionAuthorization,
+            request_id: Some(request.request_id.clone()),
+            execution_id: Some(authorization.binding.execution_id.clone()),
+            policy_bundle_id: None,
+            tool_name: Some(request.tool.name.clone()),
+            wrapper_name: Some(authorization.binding.wrapper_name.clone()),
             source_error_kind: Some(error.reason_code().to_string()),
         }
     }
@@ -358,8 +387,49 @@ fn wrapper_next_action(error: &WrapperDispatchError) -> OperatorAction {
         WrapperDispatchError::IncompatibleWrapperVersion { .. } => {
             "Register the requested wrapper version or update the wrapper context."
         }
+        WrapperDispatchError::AuthorizationFailed(_) => {
+            "Fix the execution authorization binding before dispatching the wrapper."
+        }
         WrapperDispatchError::ExecutionFailed(_) => {
             "Inspect the wrapper result and fix the wrapper before retrying."
+        }
+    };
+
+    OperatorAction(action.to_string())
+}
+
+fn auth_error_code(error: &AuthorizationError) -> ErrorCode {
+    match error {
+        AuthorizationError::AuthorizationMissing => ErrorCode::AuthorizationMissing,
+        AuthorizationError::WrapperMismatch { .. } => ErrorCode::AuthorizationWrapperMismatch,
+        AuthorizationError::WrapperVersionMismatch { .. } => {
+            ErrorCode::AuthorizationVersionMismatch
+        }
+        AuthorizationError::CapabilityMismatch { .. } => ErrorCode::AuthorizationCapabilityMismatch,
+        AuthorizationError::ScopeInvalid { .. } => ErrorCode::AuthorizationScopeInvalid,
+        AuthorizationError::AuthorizationDenied => ErrorCode::AuthorizationDenied,
+    }
+}
+
+fn auth_next_action(error: &AuthorizationError) -> OperatorAction {
+    let action = match error {
+        AuthorizationError::AuthorizationMissing => {
+            "Create explicit execution authorization before dispatching a wrapper."
+        }
+        AuthorizationError::WrapperMismatch { .. } => {
+            "Use the wrapper named in the authorization or create a matching authorization."
+        }
+        AuthorizationError::WrapperVersionMismatch { .. } => {
+            "Use the authorized wrapper version or update the wrapper registration."
+        }
+        AuthorizationError::CapabilityMismatch { .. } => {
+            "Re-evaluate the request and create authorization for the same capability class."
+        }
+        AuthorizationError::ScopeInvalid { .. } => {
+            "Use a narrow supported execution scope for the requested wrapper."
+        }
+        AuthorizationError::AuthorizationDenied => {
+            "Do not dispatch the wrapper until authorization is granted."
         }
     };
 

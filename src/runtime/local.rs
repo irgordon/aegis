@@ -4,6 +4,7 @@ use serde::Serialize;
 
 use crate::{
     audit::{AuditRecord, AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts},
+    auth::{AuthorizationError, ExecutionAuthorization},
     error::{AuditErrorReport, GatewayErrorReport},
     gateway::{
         Gateway, GatewayStatus, GatewayValidationOutcome, ResponseDecision, ResponseMetadata,
@@ -26,6 +27,8 @@ pub struct LocalRuntimeOutput {
     pub audit_record: AuditRecord,
     pub policy_bundle: PolicyBundleVerification,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_authorization: Option<ExecutionAuthorization>,
     pub execution_lifecycle: ExecutionLifecycle,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub wrapper_execution: Option<WrapperExecutionEvidence>,
@@ -111,6 +114,7 @@ impl LocalRuntimeOutput {
             audit_record,
             policy_bundle,
             policy_evaluation: None,
+            execution_authorization: None,
             execution_lifecycle,
             wrapper_execution: None,
             error_report: Some(error_report),
@@ -122,6 +126,7 @@ struct RuntimeOutputParts {
     response: ToolCallResponse,
     policy_bundle: PolicyBundleVerification,
     policy_evaluation: PolicyEvaluation,
+    execution_authorization: Option<ExecutionAuthorization>,
     execution_lifecycle: ExecutionLifecycle,
     wrapper_context: Option<WrapperExecutionContext>,
     wrapper_execution: Option<WrapperExecutionEvidence>,
@@ -155,7 +160,6 @@ fn process_validated_request(
     );
 
     if should_dispatch_wrapper(&response) {
-        transition_or_panic(&mut lifecycle, ExecutionState::Dispatching);
         return dispatch_allowed_request(
             request,
             response,
@@ -177,6 +181,7 @@ fn process_validated_request(
             response,
             policy_bundle,
             policy_evaluation,
+            execution_authorization: None,
             execution_lifecycle: lifecycle,
             wrapper_context: None,
             wrapper_execution: None,
@@ -205,6 +210,7 @@ fn process_unverified_bundle_request(
             response,
             policy_bundle,
             policy_evaluation,
+            execution_authorization: None,
             execution_lifecycle: lifecycle,
             wrapper_context: None,
             wrapper_execution: None,
@@ -222,14 +228,36 @@ fn dispatch_allowed_request(
     wrapper_context: WrapperExecutionContext,
     lifecycle: ExecutionLifecycle,
 ) -> LocalRuntimeOutput {
+    let authorization =
+        match ExecutionAuthorization::policy_allow(&request, &response, &wrapper_context) {
+            Ok(authorization) => authorization,
+            Err(error) => {
+                let denied_authorization =
+                    ExecutionAuthorization::denied(&request, &response, &wrapper_context, &error);
+                return build_authorization_failure_output(
+                    request,
+                    policy_bundle,
+                    policy_evaluation,
+                    wrapper_context,
+                    denied_authorization,
+                    error,
+                    lifecycle,
+                );
+            }
+        };
+
+    let mut lifecycle = lifecycle;
+    transition_or_panic(&mut lifecycle, ExecutionState::Authorized);
+    transition_or_panic(&mut lifecycle, ExecutionState::Dispatching);
     let dispatcher = WrapperDispatcher::new(wrapper_executors.iter().copied());
 
-    match dispatcher.dispatch(&request, &wrapper_context) {
+    match dispatcher.dispatch(&request, &wrapper_context, &authorization) {
         Ok(result) => build_executed_output(
             request,
             response,
             policy_bundle,
             policy_evaluation,
+            authorization,
             result,
             lifecycle,
         ),
@@ -238,6 +266,7 @@ fn dispatch_allowed_request(
             policy_bundle,
             policy_evaluation,
             wrapper_context,
+            authorization,
             error,
             lifecycle,
         ),
@@ -249,6 +278,7 @@ fn build_executed_output(
     mut response: ToolCallResponse,
     policy_bundle: PolicyBundleVerification,
     policy_evaluation: PolicyEvaluation,
+    authorization: ExecutionAuthorization,
     wrapper_result: crate::gateway::WrapperExecutionResult,
     mut lifecycle: ExecutionLifecycle,
 ) -> LocalRuntimeOutput {
@@ -262,6 +292,7 @@ fn build_executed_output(
             response,
             policy_bundle,
             policy_evaluation,
+            execution_authorization: Some(authorization),
             execution_lifecycle: lifecycle,
             wrapper_context: Some(wrapper_result.context.clone()),
             wrapper_execution: Some(wrapper_execution),
@@ -275,6 +306,7 @@ fn build_wrapper_failure_output(
     policy_bundle: PolicyBundleVerification,
     policy_evaluation: PolicyEvaluation,
     wrapper_context: WrapperExecutionContext,
+    authorization: ExecutionAuthorization,
     error: crate::gateway::WrapperDispatchError,
     mut lifecycle: ExecutionLifecycle,
 ) -> LocalRuntimeOutput {
@@ -288,6 +320,36 @@ fn build_wrapper_failure_output(
             response,
             policy_bundle,
             policy_evaluation,
+            execution_authorization: Some(authorization),
+            execution_lifecycle: lifecycle,
+            wrapper_context: Some(wrapper_context),
+            wrapper_execution: None,
+            error_report: Some(error_report),
+        },
+    )
+}
+
+fn build_authorization_failure_output(
+    request: ToolCallRequest,
+    policy_bundle: PolicyBundleVerification,
+    policy_evaluation: PolicyEvaluation,
+    wrapper_context: WrapperExecutionContext,
+    authorization: ExecutionAuthorization,
+    error: AuthorizationError,
+    mut lifecycle: ExecutionLifecycle,
+) -> LocalRuntimeOutput {
+    let response = authorization_failure_response(&request, &policy_bundle, &error);
+    let error_report =
+        GatewayErrorReport::execution_authorization_failed(&error, &authorization, &request);
+    transition_or_panic(&mut lifecycle, ExecutionState::FailedClosed);
+
+    build_runtime_output(
+        &request,
+        RuntimeOutputParts {
+            response,
+            policy_bundle,
+            policy_evaluation,
+            execution_authorization: Some(authorization),
             execution_lifecycle: lifecycle,
             wrapper_context: Some(wrapper_context),
             wrapper_execution: None,
@@ -307,6 +369,7 @@ fn build_runtime_output(
         GatewayAuditContexts {
             policy_bundle_verification: Some(parts.policy_bundle.clone()),
             policy_evaluation: Some(parts.policy_evaluation.clone()),
+            execution_authorization: parts.execution_authorization.clone(),
             execution_lifecycle: Some(parts.execution_lifecycle.clone()),
             wrapper_context: parts.wrapper_context,
             wrapper_execution_evidence: parts.wrapper_execution.clone(),
@@ -320,6 +383,7 @@ fn build_runtime_output(
         audit_record,
         policy_bundle: parts.policy_bundle,
         policy_evaluation: Some(parts.policy_evaluation),
+        execution_authorization: parts.execution_authorization,
         execution_lifecycle: parts.execution_lifecycle,
         wrapper_execution: parts.wrapper_execution,
         error_report: parts.error_report,
@@ -357,6 +421,21 @@ fn wrapper_failure_response(
     request: &ToolCallRequest,
     policy_bundle: &PolicyBundleVerification,
     error: &crate::gateway::WrapperDispatchError,
+) -> ToolCallResponse {
+    Gateway::map_policy_decision(
+        request,
+        PolicyDecision::Deny(PolicyDenial {
+            reason_code: Some(error.reason_code().to_string()),
+            safe_message: error.safe_message(),
+        }),
+        local_response_metadata(policy_bundle),
+    )
+}
+
+fn authorization_failure_response(
+    request: &ToolCallRequest,
+    policy_bundle: &PolicyBundleVerification,
+    error: &AuthorizationError,
 ) -> ToolCallResponse {
     Gateway::map_policy_decision(
         request,

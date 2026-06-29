@@ -7,6 +7,7 @@ pub enum ExecutionState {
     Validated,
     BundleVerified,
     PolicyEvaluated,
+    Authorized,
     Dispatching,
     Executed,
     Audited,
@@ -77,11 +78,13 @@ pub fn valid_transition(previous: &ExecutionState, next: &ExecutionState) -> boo
                 ExecutionState::BundleVerified,
                 ExecutionState::PolicyEvaluated
             )
-            | (ExecutionState::PolicyEvaluated, ExecutionState::Dispatching)
+            | (ExecutionState::PolicyEvaluated, ExecutionState::Authorized)
             | (
                 ExecutionState::PolicyEvaluated,
                 ExecutionState::FailedClosed
             )
+            | (ExecutionState::Authorized, ExecutionState::Dispatching)
+            | (ExecutionState::Authorized, ExecutionState::FailedClosed)
             | (ExecutionState::Dispatching, ExecutionState::Executed)
             | (ExecutionState::Dispatching, ExecutionState::FailedClosed)
             | (ExecutionState::Executed, ExecutionState::Audited)

@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    auth::ExecutionAuthorization,
     error::AuditErrorReport,
     gateway::{
         ApprovalContext, CapabilityClass, ExecutionIdentityContext, GatewayStatus,
@@ -87,6 +88,8 @@ pub struct AuditRecordDetails {
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_authorization: Option<ExecutionAuthorization>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub execution_lifecycle: Option<ExecutionLifecycle>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub error_report: Option<AuditErrorReport>,
@@ -101,6 +104,7 @@ pub struct AuditRecordDetailContexts {
     pub approval_context: Option<ApprovalContext>,
     pub policy_bundle_verification: Option<PolicyBundleVerification>,
     pub policy_evaluation: Option<PolicyEvaluation>,
+    pub execution_authorization: Option<ExecutionAuthorization>,
     pub execution_lifecycle: Option<ExecutionLifecycle>,
     pub error_report: Option<AuditErrorReport>,
 }
@@ -141,6 +145,7 @@ impl AuditRecordDetails {
             approval_context: contexts.approval_context,
             policy_bundle_verification: contexts.policy_bundle_verification,
             policy_evaluation: contexts.policy_evaluation,
+            execution_authorization: contexts.execution_authorization,
             execution_lifecycle: contexts.execution_lifecycle,
             error_report: contexts.error_report,
         }
@@ -158,6 +163,7 @@ impl AuditRecordDetails {
             approval_context: None,
             policy_bundle_verification: None,
             policy_evaluation: None,
+            execution_authorization: None,
             execution_lifecycle: None,
             error_report: None,
         }

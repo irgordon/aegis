@@ -81,6 +81,16 @@ Required controls:
 - no secret exposure to agents
 - wrapper result auditability
 
+### Execution Authorization Boundary
+
+Execution authorization sits between policy evaluation and wrapper dispatch.
+
+For a new reader: policy answers whether AEGIS may proceed. Execution authorization records the exact wrapper, version, capability, and scope that may run.
+
+For contributors: wrapper execution must receive an explicit authorization context. Denied and pending decisions do not create authorization and must not dispatch wrappers. Authorization mismatches fail closed with structured error reports.
+
+For engineers: wrappers verify authorization binding before execution. Wrappers do not evaluate policy, fetch credentials, widen scope, or authorize themselves. Current Phase 3 authorization supports policy-allow execution for the built-in local wrapper only; human approval, break-glass authority, credential injection, vault access, distributed authorization, and production identity providers remain out of scope.
+
 ### Local Built-In Wrapper Execution
 
 Phase 3 begins wrapper execution with one built-in local L0 wrapper: `health.check`.

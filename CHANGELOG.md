@@ -4,6 +4,14 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.6] - 2026-06-28
+
+### Changed
+
+- Normalized README.md as the stable public project entry point.
+- Clarified documentation ownership rules for README.md and implementation progress.
+- Updated architecture, roadmap, coding style, and task tracking to reflect the current Phase 3 baseline.
+
 ## [0.2.5] - 2026-06-28
 
 ### Added

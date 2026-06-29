@@ -24,7 +24,9 @@ AEGIS now has a working local Gateway MVP.
 
 For a new reader, this means the repository can prove the gateway decision path locally: it reads a structured request, verifies a local policy bundle, evaluates simple policy, returns allowed, denied, or pending, records audit evidence, and can append a local audit record.
 
-It does not yet execute real external actions. That is why Phase 3 focuses on governed execution.
+The Phase 3 foundation has also begun. The local runtime can dispatch and execute the built-in read-only `health.check` wrapper after policy allows it, return structured error reports, and expose an in-memory execution lifecycle.
+
+It does not yet execute real external actions. That is why the remaining Phase 3 work focuses on governed execution beyond the local health check.
 
 For contributors, the backlog has been reorganized around the shortest path from decision evidence to safe execution. Completed Phase 2 implementation work is no longer an active task list. Active work now starts with Phase 3 runtime execution boundaries.
 
@@ -143,15 +145,23 @@ Phase 2 proved that AEGIS can decide and record. Phase 3 must prove that AEGIS c
 - mutation-capable execution path
 - integration tests for governed execution
 
-### Priority Order
-1. Wrapper execution boundary
-2. Credential injection
-3. Execution lifecycle
-4. Approval workflow
-5. Durable execution state
-6. Replay and recovery
-7. Mutation execution
-8. Integration testing
+### Phase 3 Progression
+Completed Phase 3 foundation:
+
+- wrapper dispatcher and execution boundary
+- structured gateway error reports
+- built-in local L0 `health.check` execution
+- in-memory execution lifecycle state model
+
+Remaining Phase 3 priorities:
+
+1. Mutation-capable execution path
+2. Credential injection boundary
+3. Approval workflow boundary
+4. Durable execution state
+5. Replay and recovery
+6. Execution and replay evidence
+7. Governed execution integration testing
 
 ### Exit Criteria
 - allowed actions execute only through wrappers

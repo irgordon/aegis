@@ -48,7 +48,7 @@ into independent components.
 
 Design Philosophy
 
-AEGIS follows six fundamental architectural principles.
+AEGIS follows a small set of core architectural principles.
 
 Deterministic by Design
 
@@ -100,6 +100,12 @@ Execution state is always explicit.
 
 The system should never depend on hidden in-memory assumptions.
 
+Runtime Ownership Rule
+
+Execution state is the single source of truth for request progression.
+
+No subsystem may invent an independent lifecycle.
+
 ⸻
 
 Fail Closed
@@ -135,6 +141,27 @@ High-Level Architecture
       External Enterprise Systems
 
 No component bypasses the gateway.
+
+⸻
+
+Current Local Runtime
+
+The current repository contains a local Rust gateway runtime.
+
+It can:
+
+* read request JSON
+* validate the request
+* verify a local policy bundle
+* evaluate local policy and risk matrix files
+* dispatch the built-in `health.check` wrapper after policy allows it
+* return structured JSON
+* optionally append a local JSONL audit record
+* expose in-memory lifecycle state
+
+It does not yet provide external wrapper execution, credential injection, approval workflow, durable execution state, replay, HTTP, UI, or production deployment.
+
+This section describes current implementation state. The remaining architecture describes the target system boundaries that current and future implementations must preserve.
 
 ⸻
 
@@ -320,7 +347,7 @@ State survives:
 
 Execution Lifecycle
 
-The gateway processes requests in the following order.
+The target gateway processes requests in the following order.
 
 Receive Request
 ↓

@@ -18,6 +18,40 @@ Task status values are bounded:
 
 No other status values should be used unless this document is updated.
 
+## Active Phase 3 Work
+
+Phase 3 work is grouped by the purpose it serves.
+
+### Execute
+
+| Task | Status |
+| --- | --- |
+| Add mutation-capable execution path | planned |
+
+### Govern
+
+| Task | Status |
+| --- | --- |
+| Add credential injection boundary | planned |
+| Add approval workflow boundary | planned |
+
+### Recover
+
+| Task | Status |
+| --- | --- |
+| Add durable execution state | planned |
+| Add replay and recovery behavior | planned |
+
+### Prove
+
+| Task | Status |
+| --- | --- |
+| Add execution evidence | planned |
+| Add replay evidence | planned |
+| Add governed execution integration tests | planned |
+
+Completed phase history remains below for traceability and repository verification.
+
 ## Phase 0: Governance Baseline
 
 Objective: establish the documentation-driven governance foundation before implementation begins.
@@ -94,7 +128,9 @@ Status: complete.
 
 Objective: execute real AI actions safely under governance.
 
-### Execute
+Status: in progress.
+
+Completed foundation work:
 
 | Task | Status |
 | --- | --- |
@@ -102,30 +138,7 @@ Objective: execute real AI actions safely under governance.
 | Add wrapper execution boundary | complete |
 | Execute local L0 health.check wrapper | complete |
 | Add execution lifecycle state machine | complete |
-| Add mutation-capable execution path | planned |
-
-### Govern
-
-| Task | Status |
-| --- | --- |
-| Add credential injection boundary | planned |
-| Add approval workflow boundary | planned |
-
-### Recover
-
-| Task | Status |
-| --- | --- |
-| Add durable execution state | planned |
-| Add replay and recovery behavior | planned |
-
-### Prove
-
-| Task | Status |
-| --- | --- |
 | Add structured error reporting | complete |
-| Add execution evidence | planned |
-| Add replay evidence | planned |
-| Add governed execution integration tests | planned |
 
 ## Phase 4: Platform Capabilities
 

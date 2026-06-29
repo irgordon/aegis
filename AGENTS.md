@@ -37,6 +37,7 @@ For UI changes, read `docs/UI-DESIGN.md` and complete the UI Integrity Review be
 * Do not add runtime behavior not described in the docs.
 * Do not log secrets.
 * Do not silently ignore failed validation.
+* Do not update README.md for ordinary implementation progress; README.md changes only for production release or major architectural identity changes.
 
 ## Current Phase Rule
 

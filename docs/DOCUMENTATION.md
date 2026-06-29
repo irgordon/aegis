@@ -162,6 +162,18 @@ ORCHESTRATOR_FSM_CONTRACT.md
 AUDIT_LOGGING.md
 ```
 
+## README Stability
+
+`README.md` is the stable public entry point for AEGIS.
+
+It should explain the project identity, plain-language purpose, pre-alpha status, and where to read next.
+
+Do not use `README.md` as an implementation diary, roadmap summary, feature list, installation guide, or local usage walkthrough.
+
+Implementation progress belongs in `CHANGELOG.md`, `docs/TASKS.md`, `docs/ROADMAP.md`, and the relevant architecture or runtime documents.
+
+README should change only for a production release or a major architectural identity change.
+
 ## If You Are Looking For...
 
 | Goal | Read |

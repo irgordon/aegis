@@ -32,6 +32,12 @@ Prefer simpler designs over clever designs.
 
 Avoid speculative abstractions.
 
+Reduce cognitive load.
+
+Every abstraction must earn its existence.
+
+Implementation follows the roadmap, not speculation.
+
 Remove unused code rather than preserving it for later.
 
 Keep implementation proportional to the current roadmap phase.

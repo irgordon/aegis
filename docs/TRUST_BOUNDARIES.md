@@ -97,9 +97,29 @@ Credential class validation sits between execution authorization and wrapper dis
 
 For a new reader: credential classes describe what kind of credentials a wrapper may eventually receive. They do not contain usernames, passwords, tokens, or secret values.
 
-For contributors: every wrapper must explicitly declare whether it requires credentials and which credential class it requires. The current `health.check` wrapper declares no credentials. The local `sandbox.note.write` wrapper requires the `LocalRuntime` credential class but receives no secret value. Credential mismatches fail closed before wrapper execution.
+For contributors: every wrapper must explicitly declare whether it requires credentials and which credential class it requires. The current `health.check` wrapper declares no credentials. The local `sandbox.note.write` wrapper requires the `LocalRuntime` credential class. Credential mismatches fail closed before wrapper execution.
 
-For engineers: the credential boundary validates wrapper requirements against execution authorization. It authorizes categories only. It does not retrieve secrets, inject credentials, load environment variables, call vaults, or create runtime identity provider integrations.
+For engineers: the credential boundary validates wrapper requirements against execution authorization. It authorizes categories only. It does not retrieve secrets, load environment variables, call vaults, or create runtime identity provider integrations.
+
+### Local Credential Injection Boundary
+
+The local credential injection boundary sits between credential class validation and wrapper dispatch.
+
+For a new reader: AEGIS can now pass a safe local credential handle to a wrapper that requires local execution authority. This is not a real secret or production credential.
+
+For contributors: the local handle is modeled in `src/auth/credential.rs` and passed through wrapper execution only after authorization and credential class validation succeed. `sandbox.note.write` receives a `LocalRuntime` handle. `health.check` receives no handle. Missing or mismatched handles fail closed.
+
+For engineers: credential handles are bounded references, not credential values. The current source is `LocalDevelopment` only. The boundary records handle reference, class, source, wrapper binding, and authorization binding without adding vaults, environment secrets, provider traits, cloud identity, or token generation.
+
+### Local Credential Injection Boundary
+
+Credential injection sits after credential class validation and before wrapper dispatch.
+
+For a new reader: AEGIS can now pass a safe local credential handle to a wrapper that requires local runtime authority. This handle is not a password, token, API key, or production credential.
+
+For contributors: local credential handles are modeled in `src/auth/credential.rs` and passed through wrapper dispatch. The current local source is `LocalDevelopment` only. Tests must cover missing handles, wrapper binding mismatch, authorization binding mismatch, and secret-free output.
+
+For engineers: credential handles are bounded references, not secret values. The handle is bound to the wrapper name, wrapper version, credential class, and execution authorization. This prepares future vault or identity integration without adding secret retrieval, environment loading, cloud identity, production providers, or external calls.
 
 ### Local Built-In Wrapper Execution
 

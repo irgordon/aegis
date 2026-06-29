@@ -208,6 +208,7 @@ impl WrapperExecutor for LocalRuntimeCredentialWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Ok(WrapperExecutionOutput {
             result: Some(BTreeMap::from([(
@@ -241,6 +242,7 @@ impl WrapperExecutor for InvalidCredentialClassWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         panic!("wrapper should not execute when credential class is incompatible")
     }
@@ -269,6 +271,7 @@ impl WrapperExecutor for MissingCredentialClassWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         panic!("wrapper should not execute when credential class is missing")
     }

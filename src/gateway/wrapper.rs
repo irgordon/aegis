@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 use crate::auth::{
-    AuthorizationError, CredentialBoundary, CredentialBoundaryError, CredentialRequirement,
-    ExecutionAuthorization,
+    AuthorizationError, CredentialBoundary, CredentialBoundaryError, CredentialInjectionError,
+    CredentialInjectionResult, CredentialRequirement, ExecutionAuthorization,
 };
 
 use super::{NonEmptyString, ToolCallRequest};
@@ -79,6 +79,7 @@ pub struct WrapperExecutionOutput {
 pub struct WrapperExecutionResult {
     pub context: WrapperExecutionContext,
     pub credential_boundary: CredentialBoundary,
+    pub credential_injection: Option<CredentialInjectionResult>,
     pub status: WrapperExecutionStatus,
     pub result: Option<BTreeMap<String, Value>>,
 }
@@ -128,6 +129,7 @@ pub trait WrapperExecutor {
         request: &ToolCallRequest,
         context: &WrapperExecutionContext,
         authorization: &ExecutionAuthorization,
+        credential_injection: Option<&CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError>;
 }
 
@@ -145,6 +147,10 @@ pub enum WrapperDispatchError {
         error: CredentialBoundaryError,
         boundary: CredentialBoundary,
     },
+    CredentialInjectionFailed {
+        error: CredentialInjectionError,
+        injection: Option<CredentialInjectionResult>,
+    },
     ExecutionFailed(WrapperExecutionError),
 }
 
@@ -155,6 +161,7 @@ impl WrapperDispatchError {
             Self::IncompatibleWrapperVersion { .. } => "wrapper_version_incompatible",
             Self::AuthorizationFailed(error) => error.reason_code(),
             Self::CredentialBoundaryFailed { error, .. } => error.reason_code(),
+            Self::CredentialInjectionFailed { error, .. } => error.reason_code(),
             Self::ExecutionFailed(error) => error
                 .reason_code
                 .as_deref()
@@ -177,6 +184,7 @@ impl WrapperDispatchError {
             }
             Self::AuthorizationFailed(error) => error.safe_message(),
             Self::CredentialBoundaryFailed { error, .. } => error.safe_message(),
+            Self::CredentialInjectionFailed { error, .. } => error.safe_message(),
             Self::ExecutionFailed(error) => error.safe_message.clone(),
         }
     }
@@ -204,13 +212,21 @@ impl<'a> WrapperDispatcher<'a> {
             .map_err(WrapperDispatchError::AuthorizationFailed)?;
         let executor = self.executor_for(context)?;
         let credential_boundary = self.credential_boundary_for(executor, authorization)?;
+        let credential_injection =
+            self.credential_injection_for(&credential_boundary, authorization)?;
         let output = executor
-            .execute(request, context, authorization)
+            .execute(
+                request,
+                context,
+                authorization,
+                credential_injection.as_ref(),
+            )
             .map_err(WrapperDispatchError::ExecutionFailed)?;
 
         Ok(WrapperExecutionResult {
             context: context.clone(),
             credential_boundary,
+            credential_injection,
             status: status_for_mode(&context.execution_mode),
             result: output.result,
         })
@@ -267,6 +283,19 @@ impl<'a> WrapperDispatcher<'a> {
             .validate()
             .map(|()| boundary.clone())
             .map_err(|error| WrapperDispatchError::CredentialBoundaryFailed { error, boundary })
+    }
+
+    fn credential_injection_for(
+        &self,
+        boundary: &CredentialBoundary,
+        authorization: &ExecutionAuthorization,
+    ) -> Result<Option<CredentialInjectionResult>, WrapperDispatchError> {
+        CredentialInjectionResult::inject_local_development(boundary, authorization).map_err(
+            |error| WrapperDispatchError::CredentialInjectionFailed {
+                error,
+                injection: None,
+            },
+        )
     }
 }
 

@@ -270,6 +270,46 @@ For contributors: credential evidence belongs in audit details alongside executi
 
 For engineers: credential boundary evidence proves class compatibility only. It prepares the future credential injection boundary without implementing secret retrieval, vault integration, external identity providers, production mutation wrappers, or durable execution state.
 
+## Local Credential Injection Evidence
+
+The Phase 3 local runtime records credential injection evidence when a wrapper receives a safe local development credential handle.
+
+For a new reader: this shows that AEGIS passed a local handle to a wrapper that needed local execution authority. The handle is not a password, token, API key, or production credential.
+
+Credential injection evidence includes:
+
+- whether credentials were required
+- credential class
+- credential source
+- credential handle reference
+- wrapper name and version
+- execution authorization reference
+- injection status
+
+For contributors: record only bounded handle references. Do not record real credentials, tokens, passwords, environment variables, secret file paths, vault references, certificate contents, or private key material.
+
+For engineers: local credential injection evidence proves the handoff from credential class authorization to wrapper execution. It currently supports only `LocalDevelopment` handles for local execution. It is not vault integration, cloud identity, OAuth, OIDC, token generation, or production credential delivery.
+
+## Local Credential Injection Evidence
+
+The Phase 3 local runtime records safe credential injection evidence when a wrapper receives a local development credential handle.
+
+For a new reader: this means AEGIS can show that a wrapper received permission to use local runtime authority without showing any real secret.
+
+Credential injection evidence may include:
+
+- credential required
+- credential class
+- credential source
+- credential handle reference
+- wrapper name and version
+- authorization ID
+- injection status
+
+For contributors: credential handle references are safe identifiers. Do not record raw credentials, tokens, passwords, API keys, private keys, certificate contents, environment variables, secret file paths, or credential values.
+
+For engineers: local credential injection evidence proves that the gateway supplied a bounded handle after authorization and credential class validation. It is not a vault integration, production identity provider, secret retrieval path, or durable recovery mechanism.
+
 ## Local Sandbox Mutation Evidence
 
 The Phase 3 local runtime records mutation evidence when `sandbox.note.write` runs after all gateway gates pass.
@@ -318,6 +358,7 @@ Each lifecycle transition appends one JSON object with fields such as:
 - lifecycle index
 - policy bundle or rule references where available
 - wrapper and authorization references where available
+- credential boundary and local credential handle references where available
 
 For contributors: keep the audit log and state log separate. The state log uses newline-delimited JSON, appends records, preserves existing entries, and fails closed if requested state evidence cannot be written. Add tests for ordering, failure paths, JSON validity, append behavior, and secret absence.
 

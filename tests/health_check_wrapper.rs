@@ -245,6 +245,7 @@ impl WrapperExecutor for PanicWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         panic!("wrapper should not execute for denied or pending decisions")
     }
@@ -270,6 +271,7 @@ impl WrapperExecutor for FailingHealthWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Err(WrapperExecutionError {
             reason_code: Some("health_check_failed".to_string()),

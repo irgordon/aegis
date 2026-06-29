@@ -155,11 +155,12 @@ It can:
 * verify a local policy bundle
 * evaluate local policy and risk matrix files
 * dispatch the built-in `health.check` wrapper after policy allows it
+* pass a safe local development credential handle to `sandbox.note.write`
 * return structured JSON
 * optionally append a local JSONL audit record
 * expose in-memory lifecycle state
 
-It does not yet provide external wrapper execution, credential injection, approval workflow, durable execution state, replay, HTTP, UI, or production deployment.
+It does not yet provide external wrapper execution, real credential injection, vault integration, approval workflow, durable execution state, replay, HTTP, UI, or production deployment.
 
 This section describes current implementation state. The remaining architecture describes the target system boundaries that current and future implementations must preserve.
 

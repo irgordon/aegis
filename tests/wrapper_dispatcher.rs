@@ -94,7 +94,7 @@ fn dispatcher_maps_execution_mode_to_bounded_status() {
 }
 
 #[test]
-fn dispatcher_does_not_decide_policy_or_inject_credentials() {
+fn dispatcher_does_not_decide_policy_or_expose_credentials() {
     let request = request();
     let context = wrapper_context(WrapperExecutionMode::Enforce);
     let authorization = authorization(&request, &context);
@@ -152,6 +152,7 @@ impl WrapperExecutor for TestWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Ok(WrapperExecutionOutput {
             result: Some(BTreeMap::from([(
@@ -182,6 +183,7 @@ impl WrapperExecutor for FailingWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&aegis::auth::CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Err(WrapperExecutionError {
             reason_code: Some("wrapper_failed".to_string()),

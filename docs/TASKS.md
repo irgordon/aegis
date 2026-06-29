@@ -33,8 +33,9 @@ Phase 3 work is grouped by the purpose it serves.
 
 | Task | Status |
 | --- | --- |
-| Add credential injection boundary | planned |
+| Add local credential injection boundary | complete |
 | Add approval workflow boundary | planned |
+| Add production credential provider boundary | planned |
 
 ### Recover
 
@@ -145,6 +146,7 @@ Completed foundation work:
 | Add structured error reporting | complete |
 | Add execution authorization boundary | complete |
 | Add credential class boundary | complete |
+| Add local credential injection boundary | complete |
 | Add durable local execution state log | complete |
 | Harden execution state log invariants | complete |
 

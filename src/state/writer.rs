@@ -29,6 +29,9 @@ pub struct ExecutionStateLogContext {
     pub wrapper_version: Option<String>,
     pub authorization_id: Option<String>,
     pub credential_boundary_status: Option<String>,
+    pub credential_injection_status: Option<String>,
+    pub credential_class: Option<String>,
+    pub credential_handle_ref: Option<String>,
     pub idempotency_key_ref: Option<String>,
 }
 
@@ -56,6 +59,12 @@ pub struct ExecutionStateLogRecord {
     pub authorization_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub credential_boundary_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub credential_injection_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub credential_class: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub credential_handle_ref: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub idempotency_key_ref: Option<String>,
 }
@@ -233,6 +242,9 @@ fn records_for_lifecycle(
                 wrapper_version: context.wrapper_version.clone(),
                 authorization_id: context.authorization_id.clone(),
                 credential_boundary_status: context.credential_boundary_status.clone(),
+                credential_injection_status: context.credential_injection_status.clone(),
+                credential_class: context.credential_class.clone(),
+                credential_handle_ref: context.credential_handle_ref.clone(),
                 idempotency_key_ref: context.idempotency_key_ref.clone(),
             })
         })

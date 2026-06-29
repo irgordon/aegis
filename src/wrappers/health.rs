@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use serde_json::Value;
 
 use crate::{
-    auth::{CredentialRequirement, ExecutionAuthorization},
+    auth::{CredentialInjectionResult, CredentialRequirement, ExecutionAuthorization},
     gateway::{
         ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
         WrapperExecutor,
@@ -30,6 +30,7 @@ impl WrapperExecutor for HealthCheckWrapper {
         _request: &ToolCallRequest,
         _context: &WrapperExecutionContext,
         _authorization: &ExecutionAuthorization,
+        _credential_injection: Option<&CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
         Ok(WrapperExecutionOutput {
             result: Some(health_check_result()),

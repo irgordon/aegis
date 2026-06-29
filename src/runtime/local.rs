@@ -4,7 +4,9 @@ use serde::Serialize;
 
 use crate::{
     audit::{AuditRecord, AuditRecordBuilder, AuditRecordMetadata, GatewayAuditContexts},
-    auth::{AuthorizationError, CredentialBoundary, ExecutionAuthorization},
+    auth::{
+        AuthorizationError, CredentialBoundary, CredentialInjectionResult, ExecutionAuthorization,
+    },
     error::{AuditErrorReport, GatewayErrorReport},
     gateway::{
         Gateway, GatewayStatus, GatewayValidationOutcome, IdempotencyContext, IdempotencyKey,
@@ -33,6 +35,8 @@ pub struct LocalRuntimeOutput {
     pub execution_authorization: Option<ExecutionAuthorization>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub credential_boundary: Option<CredentialBoundary>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub credential_injection: Option<CredentialInjectionResult>,
     pub execution_lifecycle: ExecutionLifecycle,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub wrapper_execution: Option<WrapperExecutionEvidence>,
@@ -151,6 +155,7 @@ impl LocalRuntimeOutput {
             policy_evaluation: None,
             execution_authorization: None,
             credential_boundary: None,
+            credential_injection: None,
             execution_lifecycle,
             wrapper_execution: None,
             error_report: Some(error_report),
@@ -165,6 +170,7 @@ struct RuntimeOutputParts {
     idempotency_context: Option<IdempotencyContext>,
     execution_authorization: Option<ExecutionAuthorization>,
     credential_boundary: Option<CredentialBoundary>,
+    credential_injection: Option<CredentialInjectionResult>,
     execution_lifecycle: ExecutionLifecycle,
     wrapper_context: Option<WrapperExecutionContext>,
     wrapper_execution: Option<WrapperExecutionEvidence>,
@@ -236,6 +242,7 @@ fn process_validated_request(
             idempotency_context,
             execution_authorization: None,
             credential_boundary: None,
+            credential_injection: None,
             execution_lifecycle: lifecycle,
             wrapper_context: None,
             wrapper_execution: None,
@@ -267,6 +274,7 @@ fn process_unverified_bundle_request(
             idempotency_context: None,
             execution_authorization: None,
             credential_boundary: None,
+            credential_injection: None,
             execution_lifecycle: lifecycle,
             wrapper_context: None,
             wrapper_execution: None,
@@ -331,6 +339,7 @@ fn build_executed_output(
             idempotency_context: parts.idempotency_context,
             execution_authorization: Some(authorization),
             credential_boundary: Some(wrapper_result.credential_boundary.clone()),
+            credential_injection: wrapper_result.credential_injection.clone(),
             execution_lifecycle: parts.lifecycle,
             wrapper_context: Some(wrapper_result.context.clone()),
             wrapper_execution: Some(wrapper_execution),
@@ -348,6 +357,7 @@ fn build_wrapper_failure_output(
     let response = wrapper_failure_response(&parts.request, &parts.policy_bundle, &error);
     let error_report = GatewayErrorReport::wrapper_dispatch_failed(&error, &wrapper_context);
     let credential_boundary = credential_boundary_from_dispatch_error(&error);
+    let credential_injection = credential_injection_from_dispatch_error(&error);
     transition_or_panic(&mut parts.lifecycle, ExecutionState::FailedClosed);
     let request = parts.request;
 
@@ -360,6 +370,7 @@ fn build_wrapper_failure_output(
             idempotency_context: parts.idempotency_context,
             execution_authorization: Some(authorization),
             credential_boundary,
+            credential_injection,
             execution_lifecycle: parts.lifecycle,
             wrapper_context: Some(wrapper_context),
             wrapper_execution: None,
@@ -389,6 +400,7 @@ fn build_authorization_failure_output(
             idempotency_context: parts.idempotency_context,
             execution_authorization: Some(authorization),
             credential_boundary: None,
+            credential_injection: None,
             execution_lifecycle: parts.lifecycle,
             wrapper_context: Some(wrapper_context),
             wrapper_execution: None,
@@ -411,6 +423,7 @@ fn build_runtime_output(
             idempotency_context: parts.idempotency_context,
             execution_authorization: parts.execution_authorization.clone(),
             credential_boundary: parts.credential_boundary.clone(),
+            credential_injection: parts.credential_injection.clone(),
             execution_lifecycle: Some(parts.execution_lifecycle.clone()),
             wrapper_context: parts.wrapper_context,
             wrapper_execution_evidence: parts.wrapper_execution.clone(),
@@ -426,6 +439,7 @@ fn build_runtime_output(
         policy_evaluation: Some(parts.policy_evaluation),
         execution_authorization: parts.execution_authorization,
         credential_boundary: parts.credential_boundary,
+        credential_injection: parts.credential_injection,
         execution_lifecycle: parts.execution_lifecycle,
         wrapper_execution: parts.wrapper_execution,
         error_report: parts.error_report,
@@ -485,6 +499,17 @@ fn credential_boundary_from_dispatch_error(
     }
 }
 
+fn credential_injection_from_dispatch_error(
+    error: &crate::gateway::WrapperDispatchError,
+) -> Option<CredentialInjectionResult> {
+    match error {
+        crate::gateway::WrapperDispatchError::CredentialInjectionFailed { injection, .. } => {
+            injection.clone()
+        }
+        _ => None,
+    }
+}
+
 fn authorization_failure_response(
     request: &ToolCallRequest,
     policy_bundle: &PolicyBundleVerification,
@@ -536,7 +561,7 @@ fn local_supported_tools() -> SupportedTools {
     ])
 }
 
-fn local_wrapper_executors() -> [&'static dyn WrapperExecutor; 2] {
+pub fn local_wrapper_executors() -> [&'static dyn WrapperExecutor; 2] {
     [&HEALTH_CHECK_WRAPPER, &SANDBOX_NOTE_WRITE_WRAPPER]
 }
 

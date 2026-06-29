@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.14] - 2026-06-29
+
+### Added
+
+- Added a local development credential injection boundary with safe credential handle references.
+- Added runtime, audit, and state evidence for local credential injection.
+- Added credential injection tests for sandbox mutation, handle mismatch failures, secret absence, and wrapper boundary enforcement.
+
+### Changed
+
+- Updated architecture, trust boundary, audit, and task documentation for local credential handle injection.
+
 ## [0.2.13] - 2026-06-29
 
 ### Changed

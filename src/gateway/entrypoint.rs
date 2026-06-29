@@ -177,6 +177,7 @@ fn map_policy_decision_result(
             policy_evaluation: None,
             execution_authorization: None,
             credential_boundary: None,
+            credential_injection: None,
             execution_lifecycle: None,
             error_report: None,
         },

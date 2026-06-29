@@ -7,7 +7,10 @@ use std::{
 use serde_json::Value;
 
 use crate::{
-    auth::{CredentialRequirement, ExecutionAuthorization},
+    auth::{
+        CredentialClass, CredentialInjectionError, CredentialInjectionResult,
+        CredentialRequirement, ExecutionAuthorization,
+    },
     gateway::{
         ToolCallRequest, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionOutput,
         WrapperExecutor,
@@ -33,9 +36,15 @@ impl WrapperExecutor for SandboxNoteWriteWrapper {
         &self,
         request: &ToolCallRequest,
         context: &WrapperExecutionContext,
-        _authorization: &ExecutionAuthorization,
+        authorization: &ExecutionAuthorization,
+        credential_injection: Option<&CredentialInjectionResult>,
     ) -> Result<WrapperExecutionOutput, WrapperExecutionError> {
-        let command = SandboxNoteCommand::from_request(request, context)?;
+        let command = SandboxNoteCommand::from_request(
+            request,
+            context,
+            authorization,
+            credential_injection,
+        )?;
         let result = command.write()?;
 
         Ok(WrapperExecutionOutput {
@@ -65,7 +74,10 @@ impl SandboxNoteCommand {
     fn from_request(
         request: &ToolCallRequest,
         context: &WrapperExecutionContext,
+        authorization: &ExecutionAuthorization,
+        credential_injection: Option<&CredentialInjectionResult>,
     ) -> Result<Self, WrapperExecutionError> {
+        ensure_local_runtime_credential_handle(context, authorization, credential_injection)?;
         ensure_idempotency_key(request)?;
 
         Ok(Self {
@@ -89,6 +101,20 @@ impl SandboxNoteCommand {
             wrapper: "sandbox.note.write",
         })
     }
+}
+
+fn ensure_local_runtime_credential_handle(
+    context: &WrapperExecutionContext,
+    authorization: &ExecutionAuthorization,
+    credential_injection: Option<&CredentialInjectionResult>,
+) -> Result<(), WrapperExecutionError> {
+    CredentialInjectionResult::validate_for(
+        credential_injection,
+        &CredentialClass::LocalRuntime,
+        context,
+        authorization,
+    )
+    .map_err(credential_injection_error)
 }
 
 impl SandboxNoteId {
@@ -283,5 +309,12 @@ fn write_note_file(note_path: &Path, content: &str) -> Result<(), WrapperExecuti
             fs::write(note_path, content).map_err(|_| SandboxPathError::WriteFailed.into_error())
         }
         Err(_) => Err(SandboxPathError::WriteFailed.into_error()),
+    }
+}
+
+fn credential_injection_error(error: CredentialInjectionError) -> WrapperExecutionError {
+    WrapperExecutionError {
+        reason_code: Some(error.reason_code().to_string()),
+        safe_message: error.safe_message(),
     }
 }

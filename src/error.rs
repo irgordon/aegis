@@ -2,7 +2,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     audit::AuditWriteError,
-    auth::{AuthorizationError, CredentialBoundaryError, ExecutionAuthorization},
+    auth::{
+        AuthorizationError, CredentialBoundaryError, CredentialInjectionError,
+        ExecutionAuthorization,
+    },
     gateway::{
         NonEmptyString, ToolCallRequest, ToolCallResponse, WrapperDispatchError,
         WrapperExecutionContext,
@@ -32,6 +35,12 @@ pub enum ErrorCode {
     CredentialClassMismatch,
     CredentialBoundaryDenied,
     CredentialsRequiredWithoutAuthorization,
+    CredentialHandleMissing,
+    CredentialClassUnsupported,
+    CredentialHandleWrapperMismatch,
+    CredentialHandleAuthorizationMismatch,
+    CredentialInjectionDenied,
+    CredentialInjectionUnavailable,
     SandboxDirectoryMissing,
     SandboxPathInvalid,
     SandboxPathTraversal,
@@ -66,6 +75,7 @@ pub enum ErrorLocation {
     PolicyEvaluation,
     ExecutionAuthorization,
     CredentialBoundary,
+    CredentialInjection,
     SandboxMutation,
     ExecutionStateLog,
     WrapperDispatch,
@@ -436,6 +446,15 @@ fn wrapper_next_action(error: &WrapperDispatchError) -> OperatorAction {
         WrapperDispatchError::CredentialBoundaryFailed { .. } => {
             "Fix the wrapper credential requirement or execution authorization before dispatching."
         }
+        WrapperDispatchError::CredentialInjectionFailed { .. } => {
+            "Check the local credential handle binding before dispatching the wrapper."
+        }
+        WrapperDispatchError::ExecutionFailed(error)
+            if credential_injection_error_code_for_reason(error.reason_code.as_deref())
+                .is_some() =>
+        {
+            "Check the local credential handle binding before dispatching the wrapper."
+        }
         WrapperDispatchError::ExecutionFailed(_) => {
             "Fix the wrapper input and local execution context before retrying."
         }
@@ -449,8 +468,12 @@ fn wrapper_error_code(error: &WrapperDispatchError) -> ErrorCode {
         WrapperDispatchError::CredentialBoundaryFailed { error, .. } => {
             credential_error_code(error)
         }
+        WrapperDispatchError::CredentialInjectionFailed { error, .. } => {
+            credential_injection_error_code(error)
+        }
         WrapperDispatchError::ExecutionFailed(error) => {
-            sandbox_error_code(error.reason_code.as_deref())
+            credential_injection_error_code_for_reason(error.reason_code.as_deref())
+                .or_else(|| sandbox_error_code(error.reason_code.as_deref()))
                 .unwrap_or(ErrorCode::WrapperDispatchFailed)
         }
         _ => ErrorCode::WrapperDispatchFailed,
@@ -460,6 +483,15 @@ fn wrapper_error_code(error: &WrapperDispatchError) -> ErrorCode {
 fn wrapper_error_location(error: &WrapperDispatchError) -> ErrorLocation {
     match error {
         WrapperDispatchError::CredentialBoundaryFailed { .. } => ErrorLocation::CredentialBoundary,
+        WrapperDispatchError::CredentialInjectionFailed { .. } => {
+            ErrorLocation::CredentialInjection
+        }
+        WrapperDispatchError::ExecutionFailed(error)
+            if credential_injection_error_code_for_reason(error.reason_code.as_deref())
+                .is_some() =>
+        {
+            ErrorLocation::CredentialInjection
+        }
         WrapperDispatchError::ExecutionFailed(error)
             if sandbox_error_code(error.reason_code.as_deref()).is_some() =>
         {
@@ -473,6 +505,15 @@ fn wrapper_error_message(error: &WrapperDispatchError) -> String {
     match error {
         WrapperDispatchError::CredentialBoundaryFailed { .. } => {
             "The credential boundary blocked wrapper execution.".to_string()
+        }
+        WrapperDispatchError::CredentialInjectionFailed { .. } => {
+            "The credential handle could not be supplied.".to_string()
+        }
+        WrapperDispatchError::ExecutionFailed(error)
+            if credential_injection_error_code_for_reason(error.reason_code.as_deref())
+                .is_some() =>
+        {
+            "The credential handle could not be used.".to_string()
         }
         WrapperDispatchError::ExecutionFailed(error)
             if sandbox_error_code(error.reason_code.as_deref()).is_some() =>
@@ -492,6 +533,39 @@ fn sandbox_error_code(reason_code: Option<&str>) -> Option<ErrorCode> {
         "sandbox_note_id_unsafe" => ErrorCode::SandboxUnsafeNoteId,
         "sandbox_note_content_empty" => ErrorCode::SandboxEmptyContent,
         "sandbox_write_failed" => ErrorCode::SandboxWriteFailed,
+        _ => return None,
+    })
+}
+
+fn credential_injection_error_code(error: &CredentialInjectionError) -> ErrorCode {
+    match error {
+        CredentialInjectionError::CredentialHandleMissing => ErrorCode::CredentialHandleMissing,
+        CredentialInjectionError::CredentialClassUnsupported => {
+            ErrorCode::CredentialClassUnsupported
+        }
+        CredentialInjectionError::CredentialHandleWrapperMismatch => {
+            ErrorCode::CredentialHandleWrapperMismatch
+        }
+        CredentialInjectionError::CredentialHandleAuthorizationMismatch => {
+            ErrorCode::CredentialHandleAuthorizationMismatch
+        }
+        CredentialInjectionError::CredentialInjectionDenied => ErrorCode::CredentialInjectionDenied,
+        CredentialInjectionError::CredentialInjectionUnavailable => {
+            ErrorCode::CredentialInjectionUnavailable
+        }
+    }
+}
+
+fn credential_injection_error_code_for_reason(reason_code: Option<&str>) -> Option<ErrorCode> {
+    Some(match reason_code? {
+        "credential_handle_missing" => ErrorCode::CredentialHandleMissing,
+        "credential_class_unsupported" => ErrorCode::CredentialClassUnsupported,
+        "credential_handle_wrapper_mismatch" => ErrorCode::CredentialHandleWrapperMismatch,
+        "credential_handle_authorization_mismatch" => {
+            ErrorCode::CredentialHandleAuthorizationMismatch
+        }
+        "credential_injection_denied" => ErrorCode::CredentialInjectionDenied,
+        "credential_injection_unavailable" => ErrorCode::CredentialInjectionUnavailable,
         _ => return None,
     })
 }

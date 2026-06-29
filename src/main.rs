@@ -231,12 +231,32 @@ fn execution_state_log_context(output: &LocalRuntimeOutput) -> ExecutionStateLog
             .credential_boundary
             .as_ref()
             .map(|boundary| format!("{:?}", boundary.credential_boundary_status).to_lowercase()),
+        credential_injection_status: output
+            .credential_injection
+            .as_ref()
+            .map(|injection| format!("{:?}", injection.credential_injection_status).to_lowercase()),
+        credential_class: output
+            .credential_injection
+            .as_ref()
+            .map(|injection| credential_class_name(&injection.credential_class).to_string()),
+        credential_handle_ref: output
+            .credential_injection
+            .as_ref()
+            .and_then(|injection| injection.credential_handle_ref.as_ref())
+            .map(|handle_ref| handle_ref.as_str().to_string()),
         idempotency_key_ref: output
             .audit_record
             .details
             .idempotency_context
             .as_ref()
             .map(|_| "caller_supplied_idempotency_key".to_string()),
+    }
+}
+
+fn credential_class_name(class: &aegis::auth::CredentialClass) -> &'static str {
+    match class {
+        aegis::auth::CredentialClass::None => "none",
+        aegis::auth::CredentialClass::LocalRuntime => "local_runtime",
     }
 }
 

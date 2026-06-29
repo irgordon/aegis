@@ -94,15 +94,35 @@ Status: complete.
 
 Objective: execute real AI actions safely under governance.
 
+### Execute
+
 | Task | Status |
 | --- | --- |
+| Add wrapper dispatcher | planned |
 | Add wrapper execution boundary | planned |
-| Add credential injection boundary | planned |
 | Add execution lifecycle state machine | planned |
+| Add mutation-capable execution path | planned |
+
+### Govern
+
+| Task | Status |
+| --- | --- |
+| Add credential injection boundary | planned |
 | Add approval workflow boundary | planned |
+
+### Recover
+
+| Task | Status |
+| --- | --- |
 | Add durable execution state | planned |
 | Add replay and recovery behavior | planned |
-| Add mutation-capable execution path | planned |
+
+### Prove
+
+| Task | Status |
+| --- | --- |
+| Add execution evidence | planned |
+| Add replay evidence | planned |
 | Add governed execution integration tests | planned |
 
 ## Phase 4: Platform Capabilities

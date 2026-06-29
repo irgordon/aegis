@@ -195,6 +195,19 @@ Every document should answer four questions near the beginning:
 
 If a document does not answer these questions, it is not ready.
 
+## Major Document Progression
+
+Every major document should follow this progression:
+
+1. What is this?
+2. Why does it exist?
+3. How does it work?
+4. Engineering details
+
+Maintain approximately an 11th-grade reading level until engineering sections begin.
+
+Engineering sections may be more technical, but they should still define specialized terms before relying on them.
+
 ## Documentation Quality Rules
 
 AEGIS documentation should be:

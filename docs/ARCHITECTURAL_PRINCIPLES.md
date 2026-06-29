@@ -140,7 +140,34 @@ Prefer clear control flow, explicit types, and boring code.
 
 Avoid clever abstractions in authorization, approval, credential, replay, or audit paths.
 
-## Principle 13: Orchestrator Agnostic
+## Principle 13: Reduce Cognitive Load
+
+Every feature must reduce operational risk more than it increases cognitive load.
+
+Security that operators cannot understand is operationally weak.
+
+Documentation, implementation, and workflows should remain intentionally simple.
+
+## Principle 14: Every Abstraction Must Earn Its Existence
+
+Traits, modules, services, documents, and architectural layers must exist because they solve today's problem or directly enable the next planned milestone.
+
+Do not add speculative architecture.
+
+## Principle 15: Useful Execution
+
+The purpose of AEGIS is to safely govern AI execution.
+
+Every implementation task should satisfy at least one of:
+
+- Execute
+- Govern
+- Recover
+- Prove
+
+If it satisfies none of these, it likely belongs in a later phase or should not exist.
+
+## Principle 16: Orchestrator Agnostic
 
 AEGIS should not depend on one AI framework.
 
@@ -148,7 +175,7 @@ The architecture should work with different orchestrators as long as they can su
 
 Framework-specific integrations should be adapters, not architectural dependencies.
 
-## Principle 14: Cloud Agnostic
+## Principle 17: Cloud Agnostic
 
 AEGIS should not require one cloud provider.
 
@@ -156,7 +183,7 @@ It should be deployable in cloud, hybrid, and on-premises environments.
 
 Provider-specific implementations should live behind clear interfaces.
 
-## Principle 15: Human Authority for High-Risk Actions
+## Principle 18: Human Authority for High-Risk Actions
 
 High-risk or irreversible actions require human governance.
 
@@ -164,7 +191,7 @@ Human approval should be explicit, attributable, auditable, and bound to a speci
 
 Approval should not become a generic permission token.
 
-## Principle 16: Replay is Mechanical
+## Principle 19: Replay is Mechanical
 
 Replay should execute stored intent.
 
@@ -172,13 +199,13 @@ Replay should not re-enter the planning layer.
 
 An approved action should be replayed exactly as approved, against the policy and state that governed the approval.
 
-## Principle 17: Compatibility is a Safety Boundary
+## Principle 20: Compatibility is a Safety Boundary
 
 Policy bundles, schemas, wrappers, and runtime versions must be compatible before activation.
 
 The system should reject unknown or unsupported combinations rather than attempting best-effort execution.
 
-## Principle 18: Documentation Governs Implementation
+## Principle 21: Documentation Governs Implementation
 
 Documentation should define what the system must do before code is written.
 
@@ -186,7 +213,7 @@ Code that contradicts documentation is suspect.
 
 Documentation should be updated deliberately when the architecture changes.
 
-## Principle 19: Test the Negative Path
+## Principle 22: Test the Negative Path
 
 The most important behavior in AEGIS is often what does not happen.
 
@@ -194,7 +221,7 @@ Tests must prove that unauthorized, malformed, stale, duplicate, or unsafe actio
 
 Successful execution tests are not enough.
 
-## Principle 20: Build for Investigation
+## Principle 23: Build for Investigation
 
 AEGIS should assume that future reviewers will need to reconstruct events.
 
@@ -213,6 +240,8 @@ When evaluating a design, ask:
 - Does it preserve durable state?
 - Does it work across orchestrators?
 - Does it avoid unnecessary complexity?
+- Does the abstraction solve today's problem or the next planned milestone?
+- Does the task execute, govern, recover, or prove?
 - Can it be tested through negative paths?
 
 ## Final Rule

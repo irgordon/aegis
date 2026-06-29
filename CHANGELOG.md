@@ -4,6 +4,14 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.1] - 2026-06-28
+
+### Changed
+
+- Established Phase 3 engineering principles.
+- Updated architecture guidance to prioritize useful execution and reduced cognitive load.
+- Reorganized Phase 3 planning around Execute, Govern, Recover, and Prove.
+
 ## [0.2.0] - 2026-06-28
 
 ### Changed

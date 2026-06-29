@@ -28,6 +28,14 @@ The next maintainer may be:
 - an AI coding agent
 - the original author six months later
 
+Prefer simpler designs over clever designs.
+
+Avoid speculative abstractions.
+
+Remove unused code rather than preserving it for later.
+
+Keep implementation proportional to the current roadmap phase.
+
 ## Reading Order
 
 Files should read top down.

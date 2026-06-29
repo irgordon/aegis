@@ -199,6 +199,16 @@ No component should assume another component’s responsibility.
 
 ⸻
 
+Phase 3 Engineering Note
+
+AEGIS is not intended to become the most feature-rich AI gateway.
+
+It is intended to become the clearest, safest, and most predictable execution gateway.
+
+Simplicity that preserves security is preferred over sophistication that increases operational burden.
+
+⸻
+
 Documentation Hierarchy
 
 The repository follows strict documentation precedence.

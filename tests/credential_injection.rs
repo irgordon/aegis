@@ -147,6 +147,15 @@ fn credential_injection_evidence_appears_in_runtime_output() {
             .map(|injection| &injection.credential_injection_status),
         Some(&CredentialInjectionStatus::Injected)
     );
+    assert!(
+        output
+            .audit_record
+            .details
+            .wrapper_context
+            .as_ref()
+            .expect("sandbox audit evidence should include wrapper context")
+            .credential_injection_required
+    );
 }
 
 #[test]
@@ -366,7 +375,7 @@ fn wrapper_context(
         "external_system_schema_version": "aegis-local-v1",
         "redaction_profile": "no-secrets",
         "execution_mode": "enforce",
-        "credential_injection_required": false,
+        "credential_injection_required": wrapper_name == "sandbox.note.write",
         "sandbox_root": sandbox.map(|path| path.display().to_string())
     }))
     .expect("wrapper context should parse")

@@ -24,9 +24,9 @@ AEGIS now has a working local Gateway MVP.
 
 For a new reader, this means the repository can prove the gateway decision path locally: it reads a structured request, verifies a local policy bundle, evaluates simple policy, returns allowed, denied, or pending, records audit evidence, and can append a local audit record.
 
-The Phase 3 foundation has also begun. The local runtime can dispatch and execute the built-in read-only `health.check` wrapper after policy allows it, return structured error reports, and expose an in-memory execution lifecycle.
+The Phase 3 foundation has also begun. The local runtime can dispatch and execute the built-in read-only `health.check` wrapper after policy allows it, execute the local sandbox mutation wrapper `sandbox.note.write`, pass a safe local development credential handle for that sandbox mutation, return structured error reports, expose lifecycle state, and optionally append a local execution state log.
 
-It does not yet execute real external actions. That is why the remaining Phase 3 work focuses on governed execution beyond the local health check.
+It does not yet execute real external actions. That is why the remaining Phase 3 work focuses on approval, durable execution state, replay, recovery, and broader governed execution beyond local built-in wrappers.
 
 For contributors, the backlog has been reorganized around the shortest path from decision evidence to safe execution. Completed Phase 2 implementation work is no longer an active task list. Active work now starts with Phase 3 runtime execution boundaries.
 
@@ -151,17 +151,22 @@ Completed Phase 3 foundation:
 - wrapper dispatcher and execution boundary
 - structured gateway error reports
 - built-in local L0 `health.check` execution
+- built-in local L1 `sandbox.note.write` execution
 - in-memory execution lifecycle state model
+- durable local execution state log
+- execution authorization boundary
+- credential class boundary
+- local credential injection boundary
 
 Remaining Phase 3 priorities:
 
-1. Mutation-capable execution path
-2. Credential injection boundary
-3. Approval workflow boundary
-4. Durable execution state
-5. Replay and recovery
-6. Execution and replay evidence
-7. Governed execution integration testing
+1. Broader mutation-capable execution path
+2. Approval workflow boundary
+3. Durable execution state
+4. Replay and recovery
+5. Execution and replay evidence
+6. Governed execution integration testing
+7. Production credential provider boundary
 
 ### Exit Criteria
 - allowed actions execute only through wrappers

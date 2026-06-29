@@ -59,10 +59,6 @@ impl Gateway {
     }
 }
 
-pub fn entrypoint_status() -> &'static str {
-    "AEGIS Gateway MVP scaffold is present; governed execution is not implemented."
-}
-
 fn map_allowed_response(request: &ToolCallRequest, metadata: ResponseMetadata) -> ToolCallResponse {
     build_response(
         request,

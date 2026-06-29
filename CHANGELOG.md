@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.15] - 2026-06-29
+
+### Added
+
+- Added a repository code audit report for dead, stale, and legacy implementation paths.
+
+### Fixed
+
+- Corrected sandbox wrapper context evidence so credential injection is marked required when `sandbox.note.write` executes.
+- Removed stale gateway scaffold status text and an unused execution state reference wrapper.
+- Aligned architecture and roadmap documentation with current Phase 3 runtime capabilities.
+
 ## [0.2.14] - 2026-06-29
 
 ### Added

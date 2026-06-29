@@ -609,10 +609,14 @@ fn local_wrapper_context_with_sandbox(
         "external_system_schema_version": "aegis-local-v1",
         "redaction_profile": "no-secrets",
         "execution_mode": "enforce",
-        "credential_injection_required": false,
+        "credential_injection_required": local_credential_injection_required(wrapper_name),
         "sandbox_root": sandbox_dir.map(|path| path.display().to_string())
     }))
     .unwrap_or_else(|error| panic!("static local wrapper context should parse: {error}"))
+}
+
+fn local_credential_injection_required(wrapper_name: &str) -> bool {
+    wrapper_name == "sandbox.note.write"
 }
 
 fn local_idempotency_context_for_request(

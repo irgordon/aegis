@@ -42,6 +42,7 @@ Phase 3 work is grouped by the purpose it serves.
 | Task | Status |
 | --- | --- |
 | Add durable local execution state log | complete |
+| Add execution recovery inspection | complete |
 | Add durable execution state | planned |
 | Add replay and recovery behavior | planned |
 
@@ -149,6 +150,7 @@ Completed foundation work:
 | Add local credential injection boundary | complete |
 | Add durable local execution state log | complete |
 | Harden execution state log invariants | complete |
+| Add execution recovery inspection | complete |
 
 ## Phase 4: Platform Capabilities
 

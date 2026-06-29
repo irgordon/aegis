@@ -9,7 +9,9 @@ use aegis::error::GatewayErrorReport;
 use aegis::runtime::local::{
     process_local_gateway_request_with_context, LocalRuntimeContext, LocalRuntimeOutput,
 };
-use aegis::state::{ExecutionStateLogContext, ExecutionStateSink, ExecutionStateWriter};
+use aegis::state::{
+    ExecutionRecoveryInspector, ExecutionStateLogContext, ExecutionStateSink, ExecutionStateWriter,
+};
 use serde::Serialize;
 
 type RuntimeResult<T> = Result<T, Box<GatewayErrorReport>>;
@@ -30,7 +32,13 @@ fn run() -> i32 {
 }
 
 fn try_run() -> RuntimeResult<i32> {
-    let args = parse_args()?;
+    match parse_cli_mode()? {
+        LocalCliMode::InspectState(path) => inspect_state_log(&path),
+        LocalCliMode::Run(args) => run_gateway(args),
+    }
+}
+
+fn run_gateway(args: LocalRuntimeArgs) -> RuntimeResult<i32> {
     let input = read_input(args.request_path.as_deref())?;
     validate_state_log_path(args.state_log_path.as_deref())?;
     let mut output = process_local_gateway_request_with_context(
@@ -72,6 +80,18 @@ fn try_run() -> RuntimeResult<i32> {
     }
 }
 
+fn inspect_state_log(path: &Path) -> RuntimeResult<i32> {
+    let report = ExecutionRecoveryInspector::inspect_path(path);
+    let has_errors = !report.inspection_errors.is_empty();
+    print_structured_json(&report)?;
+    Ok(if has_errors { 1 } else { 0 })
+}
+
+enum LocalCliMode {
+    Run(LocalRuntimeArgs),
+    InspectState(PathBuf),
+}
+
 struct LocalRuntimeArgs {
     bundle_path: PathBuf,
     audit_log_path: Option<PathBuf>,
@@ -80,8 +100,28 @@ struct LocalRuntimeArgs {
     request_path: Option<PathBuf>,
 }
 
-fn parse_args() -> RuntimeResult<LocalRuntimeArgs> {
-    let mut args = env::args().skip(1);
+fn parse_cli_mode() -> RuntimeResult<LocalCliMode> {
+    let mut args = env::args().skip(1).peekable();
+
+    if matches!(args.peek().map(String::as_str), Some("--inspect-state")) {
+        return parse_inspection_args(args);
+    }
+
+    parse_runtime_args(args).map(LocalCliMode::Run)
+}
+
+fn parse_inspection_args(mut args: impl Iterator<Item = String>) -> RuntimeResult<LocalCliMode> {
+    let _flag = args.next();
+    let path = args.next().ok_or_else(runtime_usage_error)?;
+
+    if args.next().is_some() {
+        return Err(runtime_usage_error());
+    }
+
+    Ok(LocalCliMode::InspectState(PathBuf::from(path)))
+}
+
+fn parse_runtime_args(mut args: impl Iterator<Item = String>) -> RuntimeResult<LocalRuntimeArgs> {
     let mut bundle_path = None;
     let mut audit_log_path = None;
     let mut state_log_path = None;
@@ -273,7 +313,7 @@ fn next_path_arg(
 }
 
 fn usage() -> String {
-    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--state-log <state-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]"
+    "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--state-log <state-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]\n       aegis-gateway --inspect-state <state-jsonl-path>"
         .to_string()
 }
 

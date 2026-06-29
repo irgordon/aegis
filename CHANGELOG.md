@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.16] - 2026-06-29
+
+### Added
+
+- Added read-only execution recovery inspection for local execution state logs.
+- Added `--inspect-state` CLI mode for grouped lifecycle inspection without policy loading or wrapper execution.
+- Added recovery inspection tests for terminal classification, recoverability classification, malformed state records, ordering errors, and read-only CLI behavior.
+
+### Changed
+
+- Updated audit documentation and Phase 3 task tracking for execution state inspection.
+
 ## [0.2.15] - 2026-06-29
 
 ### Added

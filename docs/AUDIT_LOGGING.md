@@ -290,26 +290,6 @@ For contributors: record only bounded handle references. Do not record real cred
 
 For engineers: local credential injection evidence proves the handoff from credential class authorization to wrapper execution. It currently supports only `LocalDevelopment` handles for local execution. It is not vault integration, cloud identity, OAuth, OIDC, token generation, or production credential delivery.
 
-## Local Credential Injection Evidence
-
-The Phase 3 local runtime records safe credential injection evidence when a wrapper receives a local development credential handle.
-
-For a new reader: this means AEGIS can show that a wrapper received permission to use local runtime authority without showing any real secret.
-
-Credential injection evidence may include:
-
-- credential required
-- credential class
-- credential source
-- credential handle reference
-- wrapper name and version
-- authorization ID
-- injection status
-
-For contributors: credential handle references are safe identifiers. Do not record raw credentials, tokens, passwords, API keys, private keys, certificate contents, environment variables, secret file paths, or credential values.
-
-For engineers: local credential injection evidence proves that the gateway supplied a bounded handle after authorization and credential class validation. It is not a vault integration, production identity provider, secret retrieval path, or durable recovery mechanism.
-
 ## Local Sandbox Mutation Evidence
 
 The Phase 3 local runtime records mutation evidence when `sandbox.note.write` runs after all gateway gates pass.
@@ -363,6 +343,30 @@ Each lifecycle transition appends one JSON object with fields such as:
 For contributors: keep the audit log and state log separate. The state log uses newline-delimited JSON, appends records, preserves existing entries, and fails closed if requested state evidence cannot be written. Add tests for ordering, failure paths, JSON validity, append behavior, and secret absence.
 
 For engineers: this is durable local state evidence only. It is not replay, recovery, durable orchestration, event sourcing, a database, locking, hash chaining, signing, WORM storage, or distributed state. Logged states must come from the existing lifecycle model and must not introduce a second state vocabulary.
+
+## Local Execution State Inspection
+
+The Phase 3 local runtime can inspect a local state log without changing it.
+
+For a new reader: this means AEGIS can read the saved state log and show where each execution stopped. This does not replay, resume, repair, or rerun work.
+
+The runtime accepts:
+
+```bash
+cargo run --quiet --bin aegis-gateway -- --inspect-state state.jsonl
+```
+
+Inspection output groups records by execution ID and reports:
+
+- last known state
+- transition count
+- terminal status
+- recoverability status
+- safe inspection errors for malformed records
+
+For contributors: inspection uses the same lifecycle states as the state writer. Tests should cover completed, failed-closed, audit-failed, non-terminal, malformed JSONL, unknown state, invalid transition, duplicate index, missing first state, and read-only CLI behavior.
+
+For engineers: inspection is a read-only evidence review boundary. `completed`, `failed_closed`, and `audit_failed` are terminal states. `completed` and `failed_closed` are not recoverable in this phase. `audit_failed` and non-terminal states may be future recoverable candidates only as evidence classifications. Malformed or corrupted state logs are inspection failures, not recoverable executions.
 
 ## Durability Assumptions
 

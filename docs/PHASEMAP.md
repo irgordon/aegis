@@ -79,10 +79,10 @@ Establish documentation-driven engineering for the project.
 - acceptance criteria exist
 - architecture intent is clear enough for implementation to begin
 
-## v0.2.0: Contract Foundation
+## v0.2.0: Local Gateway MVP Readiness
 
 ### Purpose
-Define stable request, response, audit, policy, and execution contracts.
+Define stable request, response, audit, policy, and execution contracts, and prove the local Rust gateway can process a request through governed output without executing external tools.
 
 ### Required Contents
 - ToolCallRequest schema
@@ -96,38 +96,55 @@ Define stable request, response, audit, policy, and execution contracts.
 - compatibility documentation
 - repository verification script
 - changelog
+- Rust request and response models
+- request validation pipeline
+- deterministic response mapping
+- local gateway runtime
+- verified local policy bundle loading
+- SHA-256 checksum verification
+- Ed25519 signature verification
+- local policy and risk matrix evaluation
+- structured JSON output
+- append-only local JSONL audit logging
 
 ### Exit Criteria
 - schemas validate
 - required fields are defined
 - malformed input behavior is documented
-- contract tests exist or are planned in TASKS.md
+- contract tests exist
+- valid low-risk requests pass through the local gateway path
+- unknown tools are denied
+- malformed requests are denied
+- unverifiable policy bundles are denied
+- all completed decisions emit audit evidence
+- optional local audit logging appends exactly one JSONL record per completed decision
 - repository verification succeeds
 - compatibility expectations are documented
 
-## v0.3.0: Gateway MVP
+## v0.3.0: Gateway Runtime Hardening
 
 ### Purpose
-Implement the minimum executable gateway path.
+Harden the executable gateway boundary beyond the local development MVP before adding wrapper execution.
 
 ### Required Capabilities
-- receive tool request
-- validate request schema
-- assign or verify execution identity
-- evaluate simple policy
-- return allow, deny, or pending
-- emit audit record
+- explicit runtime configuration validation
+- execution identity assignment or verification
+- idempotency assignment or verification
+- policy bundle compatibility checks
+- operational failure handling
+- gateway boundary tests beyond local fixtures
 
 ### Exit Criteria
-- valid low-risk request passes through gateway
-- unknown tool is denied
-- malformed request is denied
+- valid low-risk requests pass through the hardened gateway path
+- unknown tools are denied
+- malformed requests are denied
+- missing or incompatible runtime configuration fails closed
 - every decision emits audit evidence
 
 ## v0.4.0: Policy Engine Baseline
 
 ### Purpose
-Introduce declarative policy evaluation.
+Introduce production-oriented declarative policy evaluation.
 
 ### Required Capabilities
 - gateway_policy.yaml support

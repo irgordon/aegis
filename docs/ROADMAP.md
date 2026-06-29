@@ -85,7 +85,7 @@ Define the stable protocol contracts used by orchestrators, gateways, policy eng
 ## Phase 2: Gateway MVP
 
 ### Objective
-Implement the minimum gateway capable of receiving requests, validating schema, evaluating simple policy, and returning deterministic decisions.
+Implement the minimum local gateway capable of receiving requests, validating schema, verifying a local policy bundle, evaluating simple local policy, returning deterministic decisions, emitting audit evidence, and optionally persisting local audit records.
 
 ### Deliverables
 - gateway entrypoint
@@ -94,25 +94,34 @@ Implement the minimum gateway capable of receiving requests, validating schema, 
 - response mapping
 - basic audit record creation
 - deny-by-default behavior
+- local runtime JSON output
+- local policy bundle loading
+- SHA-256 checksum verification
+- Ed25519 signature verification
+- local policy and risk matrix evaluation
+- append-only local JSONL audit logging
 
 ### Exit Criteria
-- valid L0 requests can execute through the gateway path
+- valid L0 requests can pass through the local gateway path
 - unknown tools are denied
 - malformed requests are denied
 - all decisions emit audit evidence
-- tests cover allowed and denied paths
+- verified local policy bundles can produce allowed, denied, and pending decisions
+- invalid or unverifiable policy bundles fail closed
+- optional local audit logging appends one JSONL record per completed decision
+- tests cover allowed, denied, pending, malformed, unsupported, bundle failure, policy failure, and audit persistence paths
 
-## Phase 3: Policy Engine
+## Phase 3: Policy Engine Hardening
 
 ### Objective
-Create declarative policy evaluation independent of wrappers and orchestration logic.
+Harden declarative policy evaluation beyond the local development MVP while preserving independence from wrappers and orchestration logic.
 
 ### Deliverables
-- gateway_policy.yaml format
-- risk_matrix.yaml format
-- capability class handling
-- policy validation
-- policy provenance capture
+- production-oriented gateway_policy.yaml validation
+- production-oriented risk_matrix.yaml validation
+- expanded capability class handling
+- policy compatibility validation
+- complete policy provenance capture
 - compatibility metadata
 
 ### Exit Criteria

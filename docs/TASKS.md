@@ -99,11 +99,12 @@ Objective: implement the minimum gateway path after protocol contracts are stabl
 | Implement policy decision interface | complete |
 | Add policy decision adapter interface | complete |
 | Implement deterministic response mapping | complete |
-| Implement basic audit record creation | in_progress |
+| Implement basic audit record creation | complete |
 | Add minimal audit record builder | complete |
-| Enforce deny-by-default behavior | in_progress |
+| Enforce deny-by-default behavior | complete |
 | Add deny-by-default unsupported tool handling | complete |
-| Add allowed and denied path tests | in_progress |
+| Add allowed and denied path tests | complete |
+| Complete Phase 2 exit review and v0.2.0 readiness check | complete |
 
 ## Phase 3: Policy Engine
 

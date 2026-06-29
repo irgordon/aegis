@@ -4,6 +4,14 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.0] - 2026-06-28
+
+### Changed
+
+- Completed Phase 2 exit review and v0.2.0 readiness alignment.
+- Updated ROADMAP.md and PHASEMAP.md to reflect the implemented local Gateway MVP readiness scope.
+- Updated Phase 2 task tracking for completed audit, deny-by-default, test, and exit-review work.
+
 ## [0.1.21] - 2026-06-28
 
 ### Added

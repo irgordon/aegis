@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.2] - 2026-06-28
+
+### Added
+
+- Added wrapper dispatcher and execution boundary types.
+- Added wrapper dispatcher contract tests for matched dispatch, bounded execution modes, and fail-closed wrapper failures.
+
+### Changed
+
+- Updated Phase 3 task tracking for wrapper dispatcher and execution boundary work.
+
 ## [0.2.1] - 2026-06-28
 
 ### Changed

@@ -33,8 +33,9 @@ pub use schema::{NonEmptyString, SchemaVersion, Timestamp};
 pub use support::{GatewayDecisionEvidence, SupportedTools};
 pub use validation::GatewayValidationOutcome;
 pub use wrapper::{
-    ExternalSystemSchemaVersion, RedactionProfileRef, WrapperConfigRef, WrapperExecutionContext,
-    WrapperExecutionMode,
+    ExternalSystemSchemaVersion, RedactionProfileRef, WrapperConfigRef, WrapperDispatchError,
+    WrapperDispatcher, WrapperExecutionContext, WrapperExecutionError, WrapperExecutionMode,
+    WrapperExecutionOutput, WrapperExecutionResult, WrapperExecutionStatus, WrapperExecutor,
 };
 
 use crate::policy::PolicyDecision;

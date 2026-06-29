@@ -98,8 +98,8 @@ Objective: execute real AI actions safely under governance.
 
 | Task | Status |
 | --- | --- |
-| Add wrapper dispatcher | planned |
-| Add wrapper execution boundary | planned |
+| Add wrapper dispatcher | complete |
+| Add wrapper execution boundary | complete |
 | Add execution lifecycle state machine | planned |
 | Add mutation-capable execution path | planned |
 

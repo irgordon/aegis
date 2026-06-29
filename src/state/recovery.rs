@@ -168,6 +168,7 @@ fn validate_execution_records(
     errors: &mut Vec<MalformedStateRecord>,
 ) -> bool {
     let mut seen_indexes = BTreeSet::new();
+    let mut references = ExecutionReferenceEvidence::default();
     let mut previous_new_state = None;
     let mut has_errors = false;
 
@@ -176,6 +177,7 @@ fn validate_execution_records(
             validate_record_order(execution_id, record, position, &mut seen_indexes, errors);
         has_errors |=
             validate_record_transition(execution_id, record, previous_new_state.as_ref(), errors);
+        has_errors |= validate_record_references(execution_id, record, &mut references, errors);
         previous_new_state = Some(record.new_state.clone());
     }
 
@@ -221,6 +223,76 @@ fn validate_record_transition(
     }
 
     false
+}
+
+#[derive(Default)]
+struct ExecutionReferenceEvidence {
+    request_id: Option<String>,
+    tool_name: Option<String>,
+    wrapper_name: Option<String>,
+    wrapper_version: Option<String>,
+}
+
+fn validate_record_references(
+    execution_id: &str,
+    record: &ExecutionStateLogRecord,
+    references: &mut ExecutionReferenceEvidence,
+    errors: &mut Vec<MalformedStateRecord>,
+) -> bool {
+    validate_reference(
+        execution_id,
+        record,
+        "request reference",
+        record.request_id.as_ref(),
+        &mut references.request_id,
+        errors,
+    ) | validate_reference(
+        execution_id,
+        record,
+        "tool reference",
+        record.tool_name.as_ref(),
+        &mut references.tool_name,
+        errors,
+    ) | validate_reference(
+        execution_id,
+        record,
+        "wrapper evidence",
+        record.wrapper_name.as_ref(),
+        &mut references.wrapper_name,
+        errors,
+    ) | validate_reference(
+        execution_id,
+        record,
+        "wrapper evidence",
+        record.wrapper_version.as_ref(),
+        &mut references.wrapper_version,
+        errors,
+    )
+}
+
+fn validate_reference(
+    execution_id: &str,
+    record: &ExecutionStateLogRecord,
+    reference_name: &'static str,
+    current: Option<&String>,
+    observed: &mut Option<String>,
+    errors: &mut Vec<MalformedStateRecord>,
+) -> bool {
+    let Some(current) = current else {
+        return false;
+    };
+
+    match observed {
+        Some(previous) if previous != current => {
+            errors.push(inconsistent_reference(execution_id, record, reference_name));
+            true
+        }
+        Some(_) => false,
+        None => {
+            *observed = Some(current.clone());
+            false
+        }
+    }
 }
 
 fn transition_is_valid(
@@ -387,6 +459,22 @@ fn missing_first_state(
         "A state log appears to be missing its first transition.",
         "The first record for this execution does not start at lifecycle index 0.",
         "Preserve the log and inspect earlier state log writes for this execution.",
+        None,
+        Some(execution_id),
+        Some(record.lifecycle_index),
+    )
+}
+
+fn inconsistent_reference(
+    execution_id: &str,
+    record: &ExecutionStateLogRecord,
+    reference_name: &'static str,
+) -> MalformedStateRecord {
+    state_error(
+        ErrorCode::StateInspectionInconsistentReference,
+        "A state log contains inconsistent execution evidence.",
+        format!("Records for the same execution contain a mismatched {reference_name}."),
+        "Preserve the log and inspect the state writer before attempting recovery.",
         None,
         Some(execution_id),
         Some(record.lifecycle_index),

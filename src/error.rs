@@ -60,6 +60,7 @@ pub enum ErrorCode {
     StateInspectionDuplicateLifecycleIndex,
     StateInspectionLifecycleOrderInvalid,
     StateInspectionMissingFirstState,
+    StateInspectionInconsistentReference,
     WrapperDispatchFailed,
     AuditPersistenceFailed,
     RuntimeIoFailed,

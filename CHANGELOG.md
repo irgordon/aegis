@@ -4,6 +4,16 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.17] - 2026-06-29
+
+### Added
+
+- Added recovery inspection invariant tests for corrupted, duplicated, reordered, terminal-state, and mixed state evidence.
+
+### Fixed
+
+- Fixed recovery inspection handling for inconsistent request, tool, and wrapper references within one execution.
+
 ## [0.2.16] - 2026-06-29
 
 ### Added

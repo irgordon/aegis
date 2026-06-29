@@ -364,9 +364,9 @@ Inspection output groups records by execution ID and reports:
 - recoverability status
 - safe inspection errors for malformed records
 
-For contributors: inspection uses the same lifecycle states as the state writer. Tests should cover completed, failed-closed, audit-failed, non-terminal, malformed JSONL, unknown state, invalid transition, duplicate index, missing first state, and read-only CLI behavior.
+For contributors: inspection uses the same lifecycle states as the state writer. Tests should cover completed, failed-closed, audit-failed, non-terminal, malformed JSONL, unknown state, invalid transition, duplicate index, missing first state, inconsistent request, tool, or wrapper references, and read-only CLI behavior.
 
-For engineers: inspection is a read-only evidence review boundary. `completed`, `failed_closed`, and `audit_failed` are terminal states. `completed` and `failed_closed` are not recoverable in this phase. `audit_failed` and non-terminal states may be future recoverable candidates only as evidence classifications. Malformed or corrupted state logs are inspection failures, not recoverable executions.
+For engineers: inspection is a read-only evidence review boundary. `completed`, `failed_closed`, and `audit_failed` are terminal states. `completed` and `failed_closed` are not recoverable in this phase. `audit_failed` and non-terminal states may be future recoverable candidates only as evidence classifications. Malformed, reordered, duplicated, or internally inconsistent state logs are inspection failures, not recoverable executions.
 
 ## Durability Assumptions
 

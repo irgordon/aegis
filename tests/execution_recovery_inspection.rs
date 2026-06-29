@@ -88,12 +88,60 @@ fn multiple_executions_are_grouped_by_execution_id() {
 }
 
 #[test]
+fn valid_interleaved_executions_are_grouped_without_cross_contamination() {
+    let lines = vec![
+        record("exec_a", "created", "validated", 0),
+        record("exec_b", "created", "validated", 0),
+        record("exec_a", "validated", "bundle_verified", 1),
+        record("exec_b", "validated", "failed_closed", 1),
+    ];
+
+    let report = inspect_records(&lines);
+    let exec_a = execution_by_id(&report, "exec_a");
+    let exec_b = execution_by_id(&report, "exec_b");
+
+    assert_eq!(exec_a.last_known_state, ExecutionState::BundleVerified);
+    assert_eq!(exec_a.transition_count, 2);
+    assert_eq!(exec_b.last_known_state, ExecutionState::FailedClosed);
+    assert_eq!(exec_b.transition_count, 2);
+    assert!(report.inspection_errors.is_empty());
+}
+
+#[test]
+fn duplicate_lifecycle_index_across_different_executions_is_allowed() {
+    let report = inspect_records(&[
+        record("exec_a", "created", "validated", 0),
+        record("exec_b", "created", "validated", 0),
+    ]);
+
+    assert_eq!(report.executions.len(), 2);
+    assert!(report.inspection_errors.is_empty());
+}
+
+#[test]
 fn transition_order_is_preserved() {
     let report = inspect_records(&completed_records("exec_order"));
     let execution = only_execution(&report);
 
     assert_eq!(execution.transition_count, 8);
     assert_eq!(execution.last_known_state, ExecutionState::Completed);
+}
+
+#[test]
+fn non_monotonic_lifecycle_index_is_rejected() {
+    let report = inspect_records(&[
+        record("exec_non_monotonic", "created", "validated", 0),
+        record("exec_non_monotonic", "validated", "bundle_verified", 2),
+        record(
+            "exec_non_monotonic",
+            "bundle_verified",
+            "policy_evaluated",
+            1,
+        ),
+    ]);
+
+    assert_error_code(&report, ErrorCode::StateInspectionLifecycleOrderInvalid);
+    assert_not_clean_recoverable(&report, "exec_non_monotonic");
 }
 
 #[test]
@@ -111,6 +159,104 @@ fn duplicate_lifecycle_index_is_rejected() {
 }
 
 #[test]
+fn completed_followed_by_another_transition_is_rejected() {
+    let mut records = completed_records("exec_terminal_completed");
+    records.push(record(
+        "exec_terminal_completed",
+        "completed",
+        "failed_closed",
+        8,
+    ));
+
+    let report = inspect_records(&records);
+
+    assert_error_code(&report, ErrorCode::StateInspectionInvalidTransition);
+    assert_not_clean_recoverable(&report, "exec_terminal_completed");
+}
+
+#[test]
+fn failed_closed_followed_by_another_transition_is_rejected() {
+    let mut records = failed_closed_records("exec_terminal_failed");
+    records.push(record(
+        "exec_terminal_failed",
+        "failed_closed",
+        "validated",
+        2,
+    ));
+
+    let report = inspect_records(&records);
+
+    assert_error_code(&report, ErrorCode::StateInspectionInvalidTransition);
+    assert_not_clean_recoverable(&report, "exec_terminal_failed");
+}
+
+#[test]
+fn audit_failed_followed_by_another_transition_is_rejected() {
+    let mut records = audit_failed_records("exec_terminal_audit_failed");
+    records.push(record(
+        "exec_terminal_audit_failed",
+        "audit_failed",
+        "completed",
+        7,
+    ));
+
+    let report = inspect_records(&records);
+
+    assert_error_code(&report, ErrorCode::StateInspectionInvalidTransition);
+    assert_not_clean_recoverable(&report, "exec_terminal_audit_failed");
+}
+
+#[test]
+fn mismatched_request_reference_for_same_execution_is_rejected() {
+    let mut records = non_terminal_records("exec_mixed_request");
+    records[0]["request_id"] = json!("request_one");
+    records[1]["request_id"] = json!("request_two");
+
+    let report = inspect_records(&records);
+
+    assert_error_reason_contains(&report, "request reference");
+    assert_not_clean_recoverable(&report, "exec_mixed_request");
+}
+
+#[test]
+fn mismatched_tool_reference_for_same_execution_is_rejected() {
+    let mut records = non_terminal_records("exec_mixed_tool");
+    records[0]["tool_name"] = json!("health.check");
+    records[1]["tool_name"] = json!("sandbox.note.write");
+
+    let report = inspect_records(&records);
+
+    assert_error_reason_contains(&report, "tool reference");
+    assert_not_clean_recoverable(&report, "exec_mixed_tool");
+}
+
+#[test]
+fn mismatched_wrapper_name_for_same_execution_is_rejected_when_present() {
+    let mut records = non_terminal_records("exec_mixed_wrapper_name");
+    records[0]["wrapper_name"] = json!("health.check");
+    records[1]["wrapper_name"] = json!("sandbox.note.write");
+
+    let report = inspect_records(&records);
+
+    assert_error_reason_contains(&report, "wrapper evidence");
+    assert_not_clean_recoverable(&report, "exec_mixed_wrapper_name");
+}
+
+#[test]
+fn mismatched_wrapper_version_for_same_execution_is_rejected_when_present() {
+    let mut records = non_terminal_records("exec_mixed_wrapper_version");
+    records[0]["wrapper_name"] = json!("health.check");
+    records[1]["wrapper_name"] = json!("health.check");
+    records[0]["wrapper_version"] = json!("1.0.0");
+    records[1]["wrapper_version"] = json!("2.0.0");
+
+    let report = inspect_records(&records);
+
+    assert_error_reason_contains(&report, "wrapper evidence");
+    assert_not_clean_recoverable(&report, "exec_mixed_wrapper_version");
+}
+
+#[test]
 fn invalid_transition_is_rejected() {
     let report = inspect_lines(&[state_line(
         "exec_invalid",
@@ -124,6 +270,27 @@ fn invalid_transition_is_rejected() {
     assert_eq!(
         only_execution(&report).recoverability,
         ExecutionRecoverability::InspectionFailed
+    );
+}
+
+#[test]
+fn malformed_line_does_not_block_valid_unrelated_execution() {
+    let mut lines: Vec<_> = completed_records("exec_valid")
+        .iter()
+        .map(Value::to_string)
+        .collect();
+    lines.push("{not-json}".to_string());
+
+    let report = inspect_lines(&lines);
+
+    assert_eq!(
+        execution_by_id(&report, "exec_valid").last_known_state,
+        ExecutionState::Completed
+    );
+    assert_error_code(&report, ErrorCode::StateInspectionInvalidJsonRecord);
+    assert_eq!(
+        report.inspection_status,
+        aegis::state::ExecutionRecoveryStatus::InspectionFailed
     );
 }
 
@@ -150,6 +317,22 @@ fn unknown_state_value_is_reported_as_inspection_error() {
 }
 
 #[test]
+fn incomplete_corrupted_execution_is_not_clean_recoverable() {
+    let report = inspect_records(&[
+        record("exec_corrupted_incomplete", "created", "validated", 0),
+        record(
+            "exec_corrupted_incomplete",
+            "validated",
+            "bundle_verified",
+            2,
+        ),
+    ]);
+
+    assert_error_code(&report, ErrorCode::StateInspectionLifecycleOrderInvalid);
+    assert_not_clean_recoverable(&report, "exec_corrupted_incomplete");
+}
+
+#[test]
 fn missing_state_log_returns_structured_error() {
     let path = test_dir("missing_state_log").join("missing.jsonl");
     let report = ExecutionRecoveryInspector::inspect_path(path);
@@ -160,6 +343,24 @@ fn missing_state_log_returns_structured_error() {
         ErrorLocation::ExecutionRecoveryInspection
     );
     assert!(report.executions.is_empty());
+}
+
+#[test]
+fn inspection_errors_do_not_echo_secret_like_malformed_content() {
+    let report = ExecutionRecoveryInspector::inspect_str(
+        "{password=abc token=def secret=ghi private_key=jkl}\n",
+    );
+    let output = serde_json::to_string(&report).expect("report should serialize");
+
+    assert_error_code(&report, ErrorCode::StateInspectionInvalidJsonRecord);
+    assert!(!output.contains("abc"));
+    assert!(!output.contains("def"));
+    assert!(!output.contains("ghi"));
+    assert!(!output.contains("jkl"));
+    assert!(!output.contains("password="));
+    assert!(!output.contains("token="));
+    assert!(!output.contains("secret="));
+    assert!(!output.contains("private_key="));
 }
 
 #[test]
@@ -237,6 +438,24 @@ fn only_execution(report: &ExecutionRecoveryReport) -> &aegis::state::ExecutionR
     &report.executions[0]
 }
 
+fn execution_by_id<'a>(
+    report: &'a ExecutionRecoveryReport,
+    execution_id: &str,
+) -> &'a aegis::state::ExecutionRecoveryExecution {
+    report
+        .executions
+        .iter()
+        .find(|execution| execution.execution_id == execution_id)
+        .unwrap_or_else(|| panic!("execution {execution_id} should be present"))
+}
+
+fn assert_not_clean_recoverable(report: &ExecutionRecoveryReport, execution_id: &str) {
+    assert_ne!(
+        execution_by_id(report, execution_id).recoverability,
+        ExecutionRecoverability::RecoverableCandidate
+    );
+}
+
 fn assert_error_code(report: &ExecutionRecoveryReport, code: ErrorCode) {
     assert!(
         report
@@ -244,6 +463,17 @@ fn assert_error_code(report: &ExecutionRecoveryReport, code: ErrorCode) {
             .iter()
             .any(|error| error.code == code),
         "expected inspection error {code:?}, got {:?}",
+        report.inspection_errors
+    );
+}
+
+fn assert_error_reason_contains(report: &ExecutionRecoveryReport, expected: &str) {
+    assert!(
+        report
+            .inspection_errors
+            .iter()
+            .any(|error| error.reason.contains(expected)),
+        "expected inspection error reason containing {expected:?}, got {:?}",
         report.inspection_errors
     );
 }

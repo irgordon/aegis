@@ -52,12 +52,14 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Define minimal IPC data bridge | complete |
 | Render live read-only runtime evidence | complete |
 | Harden read-only IPC evidence boundary | complete |
-| Render audit, state, recovery inspection, and recovery plan views read-only | planned |
+| Run v0.4.0 readiness review | complete |
+| Prepare v0.4.0 release notes and tagging approval | planned |
+| Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 Recommended next task:
 
 ```text
-feat(ui): Render audit, state, recovery inspection, and recovery plan views read-only
+docs(release): Prepare v0.4.0 release notes and tagging approval
 ```
 
 ## Deferred Phase Work
@@ -234,7 +236,9 @@ Status: started.
 | Define minimal IPC data bridge | complete |
 | Render live read-only runtime evidence | complete |
 | Harden read-only IPC evidence boundary | complete |
-| Render audit, state, recovery inspection, and recovery plan views read-only | planned |
+| Run v0.4.0 readiness review | complete |
+| Prepare v0.4.0 release notes and tagging approval | planned |
+| Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 ## Phase 5: Recovery and Replay Execution
 

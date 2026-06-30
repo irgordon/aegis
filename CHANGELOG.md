@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.36] - 2026-06-30
+
+### Added
+
+- Added formal v0.4.0 release readiness review.
+
+### Changed
+
+- Corrected concise roadmap, phasemap, architecture, and UI evidence wording found during release review.
+- Updated Phase 4 task tracking for remaining pre-tag work.
+
 ## [0.2.35] - 2026-06-30
 
 ### Added

@@ -2,13 +2,13 @@
 
 ## Purpose
 
-This document defines how the future AEGIS Tauri desktop shell with Slint graphical UI layer should consume and display backend evidence.
+This document defines how the AEGIS Tauri desktop shell with Slint graphical UI layer should consume and display backend evidence.
 
 The UI exists to help operators understand governed execution. It should show what happened, why it happened, where it stopped, and what evidence supports that result.
 
 The UI must not become a second policy engine, state machine, recovery engine, wrapper dispatcher, credential issuer, or error normalizer.
 
-AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
+AEGIS uses Tauri as the desktop application shell and Slint as the graphical UI layer for the Phase 4 operator surface.
 
 Core rule:
 
@@ -580,9 +580,9 @@ Do not use labels such as:
 
 ## Tauri Integration Notes
 
-Tauri will provide the future graphical desktop shell.
+Tauri provides the graphical desktop shell.
 
-Slint will provide the future graphical UI layer.
+Slint provides the graphical UI layer.
 
 The backend remains authoritative.
 

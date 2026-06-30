@@ -27,7 +27,7 @@ For a new reader, this means the repository can prove the gateway decision path 
 
 The Phase 3 local governed execution foundation is complete after reclassification. The local runtime can dispatch and execute the built-in read-only `health.check` wrapper after policy allows it, execute the local sandbox mutation wrapper `sandbox.note.write`, pass a safe local development credential handle for that sandbox mutation, return structured error reports, expose lifecycle state, optionally append a local execution state log, inspect state evidence, and generate bounded recovery plans.
 
-It does not yet execute real external actions, replay execution, approval workflow, production credential providers, HTTP service behavior, or live UI evidence. Those concerns now belong to later phases instead of the completed local execution foundation.
+It does not yet execute real external actions, replay execution, approval workflow, production credential providers, or HTTP service behavior. Those concerns now belong to later phases instead of the completed local execution foundation.
 
 Phase 4 has begun with a Tauri shell and Slint operator surface. The CLI remains a support surface for validation, inspection, testing, and automation. The UI scaffold renders fixture-backed sample evidence and can request fixed live `health.check` backend evidence through a narrow read-only IPC command. It does not submit arbitrary gateway requests, execute mutation wrappers, inspect live state logs, generate live recovery plans, define broad IPC command surfaces, or provide authority.
 
@@ -216,7 +216,6 @@ Render governed execution evidence in a non-authoritative graphical desktop oper
 - sample recovery inspection and recovery planning cards from fixture evidence
 - minimal IPC data bridge
 - live read-only runtime evidence rendering
-- read-only audit, state, recovery inspection, and recovery plan views
 
 ### Phase 4 Progression
 Completed Phase 4 foundation:
@@ -225,12 +224,13 @@ Completed Phase 4 foundation:
 - fixture-backed Slint execution timeline, status cards, normalized error card, and recovery inspection and planning cards
 - narrow read-only `get_health_check_evidence` IPC command
 - live backend `health.check` evidence rendering for current status cards and timeline fields
+- executable v0.4.0 release validation gate
 
 Next sequence:
 
-1. Verify the minimum usable local release path.
-2. Render audit, state, recovery inspection, and recovery plan views read-only.
-3. Run the full release readiness checklist.
+1. Complete the v0.4.0 readiness review.
+2. Prepare explicit v0.4.0 release notes and maintainer tagging approval.
+3. After v0.4.0, render audit, state, recovery inspection, and recovery plan views read-only.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions
@@ -238,7 +238,7 @@ Next sequence:
 - UI renders sample evidence before live IPC
 - live evidence rendering is read-only
 - graphical timelines, status cards, and error cards preserve backend meaning
-- audit, state, recovery inspection, and recovery plan views do not execute recovery or replay
+- sample recovery inspection and recovery plan labels do not imply recovery or replay execution
 
 ## Release Track: Minimum Usable Local Release
 

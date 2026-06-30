@@ -232,9 +232,8 @@ Do not create the tag as part of release planning.
 
 Recommended next tasks:
 
-1. Complete `docs/RELEASE_CHECKLIST_v0.4.0.md`.
-2. Verify the release commands end to end and record any command corrections.
-3. Add a short local release note for `v0.4.0`.
-4. Run the full validation gate on a clean checkout.
-5. Launch the desktop app locally and confirm fixed live evidence and labeled sample fallback behavior.
-6. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.
+1. Complete the v0.4.0 readiness review.
+2. Add a short local release note for `v0.4.0`.
+3. Confirm maintainer approval for tagging.
+4. Run the full validation gate on a clean checkout immediately before tagging.
+5. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.

@@ -172,7 +172,7 @@ Operator Surface
 
 AEGIS is intended to include a graphical desktop operator interface delivered through a Tauri window.
 
-AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
+The current Phase 4 operator surface uses Tauri as the desktop application shell and Slint as the graphical UI layer.
 
 The CLI is a support surface for execution, validation, inspection, testing, and automation. It is not the primary operator experience.
 

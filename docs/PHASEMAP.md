@@ -138,6 +138,7 @@ Execute real AI actions safely under governance.
 - replay and recovery behavior
 - mutation-capable execution path
 - UI-ready structured status, error, lifecycle, audit, state, inspection, and recovery plan evidence
+- documented Slint with Tauri UI direction for Phase 4
 - governed execution integration tests
 
 ### Exit Criteria
@@ -163,8 +164,8 @@ Expose and operate the governed execution engine through platform boundaries aft
 - runtime configuration model
 - operational observability
 - plugin or wrapper extension architecture
-- Tauri desktop shell
-- graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
+- Tauri desktop shell with Slint graphical UI layer
+- Slint-rendered graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
 - orchestrator integration references
 
 ### Exit Criteria

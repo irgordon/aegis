@@ -86,9 +86,15 @@ The `candidate_for_future_replay` outcome is a future evaluation classification,
 
 ## Decision: UI Is Presentation, Not Authority
 
-The future Tauri UI may render status, errors, timelines, and evidence.
+AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
+
+Future graphical operator feedback should be delivered through Slint inside the Tauri desktop shell.
 
 The CLI remains a support surface for validation, inspection, testing, and automation.
+
+The backend remains authoritative for validation, policy evaluation, execution authorization, credential handling, wrapper execution, audit evidence, state evidence, recovery inspection, and recovery planning.
+
+The UI is an operator surface, not an authority boundary.
 
 The UI must not decide policy, authorize execution, inject credentials, dispatch wrappers, make recovery decisions, or invent lifecycle state.
 

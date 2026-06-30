@@ -213,7 +213,7 @@ Implementation progress must not alter the README's Why -> What -> How -> What I
 
 ## UI-Ready Documentation
 
-AEGIS is intended to provide a Tauri graphical desktop operator interface.
+AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
 
 Documentation should not describe runtime behavior as CLI-only when that behavior is meant to appear in the UI later.
 
@@ -522,7 +522,7 @@ Examples:
 
 ### User Interface
 
-User interface documents define review standards for the Tauri graphical desktop operator surface and any future visual presentation of AEGIS state.
+User interface documents define review standards for the Tauri desktop shell, Slint graphical UI layer, and any future visual presentation of AEGIS state.
 
 Examples:
 

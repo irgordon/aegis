@@ -28,7 +28,7 @@ The Phase 3 foundation has also begun. The local runtime can dispatch and execut
 
 It does not yet execute real external actions. That is why the remaining Phase 3 work focuses on approval, durable execution state, replay, recovery, and broader governed execution beyond local built-in wrappers.
 
-AEGIS is intended to be a graphical Tauri desktop application for operators. The CLI remains a support surface for validation, inspection, testing, and automation. Phase 3 runtime evidence should remain structured so Phase 4 can render execution feedback graphically without recreating backend decisions.
+AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins. The CLI remains a support surface for validation, inspection, testing, and automation. Phase 3 preserves UI-ready backend evidence and documents the Slint with Tauri UI direction so Phase 4 can render execution feedback graphically without recreating backend decisions.
 
 For contributors, the backlog has been reorganized around the shortest path from decision evidence to safe execution. Completed Phase 2 implementation work is no longer an active task list. Active work now starts with Phase 3 runtime execution boundaries.
 
@@ -160,6 +160,7 @@ Completed Phase 3 foundation:
 - execution authorization boundary
 - credential class boundary
 - local credential injection boundary
+- Slint with Tauri UI direction documented for Phase 4
 
 Remaining Phase 3 priorities:
 
@@ -195,8 +196,8 @@ Expose and operate the governed execution engine through platform boundaries aft
 - runtime configuration model
 - operational observability
 - plugin or wrapper extension architecture
-- Tauri desktop shell
-- graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
+- Tauri desktop shell with Slint graphical UI layer
+- Slint-rendered graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
 - orchestrator integration references
 
 ### Exit Criteria

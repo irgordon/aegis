@@ -7,11 +7,15 @@ This document defines the UI design integrity standard for future AEGIS frontend
 
 AEGIS is intended to expose governed execution state through a Tauri graphical desktop interface. That interface must make security state, user intent, policy outcomes, and audit evidence clear before it tries to look polished.
 
+AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
+
 ## Scope
 
 This standard applies to any future change that adds or modifies user-facing screens, controls, workflows, frontend routes, frontend components, desktop UI, web UI, or visual presentation of AEGIS state.
 
-The Tauri desktop UI is the intended primary operator surface. The CLI remains a support surface for validation, inspection, testing, and automation.
+Generic references to frontend, desktop UI, or visual presentation in AEGIS UI planning now mean Slint UI rendered through the Tauri desktop application shell.
+
+The Tauri desktop shell with Slint graphical UI layer is the intended primary operator surface. The CLI remains a support surface for validation, inspection, testing, and automation.
 
 It applies before implementation begins.
 
@@ -20,6 +24,8 @@ It applies before implementation begins.
 The UI exists to help people understand and control governed execution.
 
 A good AEGIS interface makes state, risk, action, and consequence obvious. It must not hide policy decisions, approval state, execution status, audit status, or denial reasons behind decoration or vague wording.
+
+The UI must be visual, understandable, and operator-friendly. It must use backend evidence as its source of truth. It must not become raw-log-first, and it must not become a terminal UI.
 
 ## UI Integrity Review
 
@@ -145,7 +151,7 @@ Before implementing any UI change, confirm:
 
 This document does not define:
 
-- frontend framework selection
+- additional frontend framework selection beyond the documented Slint direction
 - visual brand system
 - component library
 - CSS architecture

@@ -172,6 +172,8 @@ Operator Surface
 
 AEGIS is intended to include a graphical desktop operator interface delivered through a Tauri window.
 
+AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
+
 The CLI is a support surface for execution, validation, inspection, testing, and automation. It is not the primary operator experience.
 
 AEGIS should not use a terminal UI as its primary interface and should not be treated as a CLI-only tool.
@@ -188,7 +190,9 @@ The graphical interface should help operators understand execution state without
 
 The UI is an operator surface, not an authority boundary.
 
-The backend remains authoritative for:
+The backend remains authoritative for validation, policy evaluation, execution authorization, credential handling, wrapper execution, audit evidence, state evidence, recovery inspection, and recovery planning.
+
+Current backend authority includes:
 
 * request validation
 * policy bundle verification

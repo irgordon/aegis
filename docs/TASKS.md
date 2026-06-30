@@ -57,6 +57,7 @@ Phase 3 work is grouped by the purpose it serves.
 | Formalize docs/wiki knowledge base | complete |
 | Review docs/wiki language and accuracy | complete |
 | Define UI-renderable evidence contract | complete |
+| Record Slint with Tauri UI direction | complete |
 | Add execution evidence | planned |
 | Add replay evidence | planned |
 | Add governed execution integration tests | planned |
@@ -163,6 +164,7 @@ Completed foundation work:
 | Formalize docs/wiki knowledge base | complete |
 | Review docs/wiki language and accuracy | complete |
 | Define UI-renderable evidence contract | complete |
+| Record Slint with Tauri UI direction | complete |
 
 ## Phase 4: Platform Capabilities
 
@@ -176,9 +178,9 @@ Objective: expose and operate the governed execution engine through platform bou
 | Add operational observability | planned |
 | Add plugin or wrapper extension architecture | planned |
 | Add orchestrator integration references | planned |
-| Add Tauri shell scaffold | planned |
-| Render execution timeline from sample runtime output | planned |
-| Render structured errors as operator-facing cards | planned |
+| Add Tauri shell with Slint UI scaffold | planned |
+| Render execution timeline from sample evidence in Slint | planned |
+| Render normalized error cards in Slint | planned |
 
 ## Phase 5: Production Hardening
 

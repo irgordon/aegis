@@ -3,11 +3,13 @@
 
 ## What Is This?
 
-This page explains how current backend evidence is intended to support a future Tauri operator UI.
+This page explains how current backend evidence is intended to support a future Slint UI inside the Tauri desktop shell.
 
 No UI is implemented here.
 
 The purpose is to make sure runtime evidence remains renderable by a future graphical interface.
+
+Future graphical operator feedback should be delivered through Slint inside the Tauri desktop shell.
 
 ## UI Role
 
@@ -73,7 +75,7 @@ If AEGIS denies or stops execution, the operator should see the structured reaso
 ```text
 runtime evidence
   -> structured JSON
-  -> future Tauri presentation layer
+  -> future Slint presentation layer inside Tauri
   -> operator timeline, cards, badges, and panels
 ```
 
@@ -81,12 +83,12 @@ This keeps Rust as the authority for execution behavior and keeps the frontend f
 
 ## Current UI Status
 
-The repository has documented the Tauri graphical UI foundation and UI design integrity standard.
+The repository has documented the Tauri shell, Slint graphical UI direction, and UI design integrity standard.
 
 It has not implemented:
 
 - Tauri shell scaffold
-- React or TypeScript frontend
+- Slint graphical UI layer
 - IPC command layer
 - timeline component
 - error card component

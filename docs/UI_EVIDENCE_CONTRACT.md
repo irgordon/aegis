@@ -2,11 +2,13 @@
 
 ## Purpose
 
-This document defines how the future AEGIS Tauri desktop interface should consume and display backend evidence.
+This document defines how the future AEGIS Tauri desktop shell with Slint graphical UI layer should consume and display backend evidence.
 
 The UI exists to help operators understand governed execution. It should show what happened, why it happened, where it stopped, and what evidence supports that result.
 
 The UI must not become a second policy engine, state machine, recovery engine, wrapper dispatcher, credential issuer, or error normalizer.
+
+AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
 
 Core rule:
 
@@ -39,6 +41,10 @@ The UI must not:
 The backend is authoritative.
 
 The UI is an operator surface.
+
+The backend remains authoritative for validation, policy evaluation, execution authorization, credential handling, wrapper execution, audit evidence, state evidence, recovery inspection, and recovery planning.
+
+The UI is an operator surface, not an authority boundary.
 
 ## Evidence Sources
 
@@ -528,15 +534,25 @@ Do not use labels such as:
 
 Tauri will provide the future graphical desktop shell.
 
+Slint will provide the future graphical UI layer.
+
 The backend remains authoritative.
 
+The evidence contract is UI-framework independent at the data layer.
+
+Slint components should render the same backend evidence fields defined in this contract.
+
 Future IPC commands should return the same structured evidence model or a deliberate versioned projection of it.
+
+Tauri integration must preserve the backend evidence model rather than creating a separate frontend state machine.
 
 UI components should be built around evidence cards and execution timelines.
 
 Do not define IPC commands here.
 
 Do not scaffold Tauri here.
+
+Do not scaffold Slint here.
 
 Do not select frontend libraries beyond existing documented direction.
 
@@ -547,8 +563,9 @@ Do not implement UI here.
 This document does not implement or define:
 
 - Tauri scaffold
-- React or Vite frontend
-- TypeScript
+- Slint scaffold
+- Rust UI integration
+- Slint markup files
 - UI components
 - CSS
 - icons
@@ -580,4 +597,3 @@ This document does not implement or define:
 - external integrations
 - new architecture
 - new invariants
-

@@ -218,15 +218,13 @@ Render governed execution evidence in a non-authoritative graphical desktop oper
 Completed Phase 4 foundation:
 
 - static Tauri shell with Slint landing window
+- fixture-backed Slint execution timeline, status cards, and normalized error card
 
 Next sequence:
 
-1. Render execution timeline from sample evidence.
-2. Render sample status cards from fixture evidence.
-3. Render normalized error cards from fixture evidence.
-4. Define the minimal IPC data bridge.
-5. Render live read-only runtime evidence.
-6. Render audit, state, recovery inspection, and recovery plan views read-only.
+1. Define the minimal IPC data bridge.
+2. Render live read-only runtime evidence.
+3. Render audit, state, recovery inspection, and recovery plan views read-only.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions

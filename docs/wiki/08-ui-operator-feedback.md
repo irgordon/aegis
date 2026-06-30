@@ -83,23 +83,31 @@ This keeps Rust as the authority for execution behavior and keeps the frontend f
 
 ## Current UI Status
 
-The repository has an initial Tauri shell with a static Slint landing window.
+The repository has an initial Tauri shell with a Slint graphical surface.
 
-The scaffold shows project identity, pre-alpha status, backend-evidence guidance, and the backend authority boundary.
+The surface renders static sample evidence from `src-tauri/ui/sample_evidence.json`.
+
+It shows:
+
+- execution timeline stages
+- status cards
+- one normalized error card
+- pre-alpha status
+- backend authority-boundary language
 
 It does not render live backend evidence, call gateway execution, define IPC commands, or implement dashboard behavior.
 
 It has not implemented:
 
 - IPC command layer
-- timeline component
-- error card component
+- live runtime evidence loading
 - approval UI
-- recovery UI
+- recovery execution UI
+- replay UI
 
 Those belong to later platform work.
 
-This page describes how future UI work should consume existing evidence. It does not describe implemented UI behavior.
+This page describes how current and future UI work should consume backend evidence. It does not make the UI authoritative.
 
 For the formal evidence rendering contract, see `docs/UI_EVIDENCE_CONTRACT.md`.
 

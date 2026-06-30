@@ -1,0 +1,172 @@
+{
+  "sample_kind": "static_ui_evidence",
+  "live_backend_connected": false,
+  "successful_execution": {
+    "execution_id": "sample_exec_001",
+    "request_id": "sample_req_001",
+    "wrapper_name": "sandbox.note.write",
+    "wrapper_version": "0.1.0",
+    "policy_rule_id": "allow_local_sandbox_note_write",
+    "policy_decision": "allow",
+    "authorization_status": "authorized",
+    "credential_boundary_status": "satisfied",
+    "credential_injection_status": "injected",
+    "wrapper_execution_status": "executed",
+    "audit_status": "recorded",
+    "state_status": "completed",
+    "last_known_state": "completed",
+    "recovery_inspection_status": "inspected",
+    "recovery_plan_outcome": "candidate_for_future_replay",
+    "allowed_future_action": "future_replay_evaluation",
+    "timeline": [
+      {
+        "stage": "Request",
+        "display_status": "Received",
+        "summary": "Sample request accepted for review.",
+        "evidence_source": "response"
+      },
+      {
+        "stage": "Validation",
+        "display_status": "Valid",
+        "summary": "Request shape matches the tool contract.",
+        "evidence_source": "response"
+      },
+      {
+        "stage": "Policy Bundle",
+        "display_status": "Verified",
+        "summary": "Bundle checksum and signature evidence are present.",
+        "evidence_source": "policy_bundle"
+      },
+      {
+        "stage": "Policy Decision",
+        "display_status": "Allowed",
+        "summary": "Verified policy matched an allow rule.",
+        "evidence_source": "policy_evaluation"
+      },
+      {
+        "stage": "Authorization",
+        "display_status": "Authorized",
+        "summary": "Execution authority is bound to this wrapper.",
+        "evidence_source": "execution_authorization"
+      },
+      {
+        "stage": "Credential Boundary",
+        "display_status": "Satisfied",
+        "summary": "Wrapper requirement matches the authorized class.",
+        "evidence_source": "credential_boundary"
+      },
+      {
+        "stage": "Credential Injection",
+        "display_status": "Handle issued",
+        "summary": "A safe local handle reference was supplied.",
+        "evidence_source": "credential_injection"
+      },
+      {
+        "stage": "Wrapper Dispatch",
+        "display_status": "Dispatched",
+        "summary": "Registered wrapper selected from sample evidence.",
+        "evidence_source": "wrapper_execution"
+      },
+      {
+        "stage": "Wrapper Execution",
+        "display_status": "Executed",
+        "summary": "Bounded local wrapper result is available.",
+        "evidence_source": "wrapper_execution"
+      },
+      {
+        "stage": "Audit",
+        "display_status": "Recorded",
+        "summary": "Audit evidence exists for this sample path.",
+        "evidence_source": "audit_record"
+      },
+      {
+        "stage": "State",
+        "display_status": "Completed",
+        "summary": "Lifecycle reached a terminal sample state.",
+        "evidence_source": "execution_lifecycle"
+      },
+      {
+        "stage": "Recovery Inspection",
+        "display_status": "Inspectable",
+        "summary": "State evidence can be inspected read-only.",
+        "evidence_source": "recovery_inspection_report"
+      },
+      {
+        "stage": "Recovery Plan",
+        "display_status": "Future evaluation only",
+        "summary": "Plan output is guidance, not replay execution.",
+        "evidence_source": "recovery_plan_report"
+      }
+    ],
+    "status_cards": [
+      {
+        "title": "Policy Bundle",
+        "status": "Verified",
+        "summary": "Bundle integrity evidence is present.",
+        "evidence_source": "policy_bundle"
+      },
+      {
+        "title": "Policy Decision",
+        "status": "Allowed",
+        "summary": "Request matches a local policy rule.",
+        "evidence_source": "policy_evaluation"
+      },
+      {
+        "title": "Authorization",
+        "status": "Authorized",
+        "summary": "Wrapper execution authority is bound.",
+        "evidence_source": "execution_authorization"
+      },
+      {
+        "title": "Credential Boundary",
+        "status": "Satisfied",
+        "summary": "Required class matches authorization.",
+        "evidence_source": "credential_boundary"
+      },
+      {
+        "title": "Credential Injection",
+        "status": "Handle issued",
+        "summary": "Safe local handle reference is present.",
+        "evidence_source": "credential_injection"
+      },
+      {
+        "title": "Wrapper Execution",
+        "status": "Executed",
+        "summary": "Bounded wrapper result is recorded.",
+        "evidence_source": "wrapper_execution"
+      },
+      {
+        "title": "Audit Log",
+        "status": "Recorded",
+        "summary": "Audit evidence is available.",
+        "evidence_source": "audit_record"
+      },
+      {
+        "title": "State Log",
+        "status": "Completed",
+        "summary": "Lifecycle evidence reached completed.",
+        "evidence_source": "execution_lifecycle"
+      },
+      {
+        "title": "Recovery Inspection",
+        "status": "Inspectable",
+        "summary": "State can be inspected read-only.",
+        "evidence_source": "recovery_inspection_report"
+      },
+      {
+        "title": "Recovery Plan",
+        "status": "Future evaluation only",
+        "summary": "Plan guidance is not execution.",
+        "evidence_source": "recovery_plan_report"
+      }
+    ]
+  },
+  "normalized_error": {
+    "code": "policy_denied",
+    "severity": "high",
+    "message": "Request was denied by policy.",
+    "reason": "The requested action did not match an allowed policy rule.",
+    "next_action": "Review the policy decision and request context.",
+    "location": "policy_evaluation"
+  }
+}

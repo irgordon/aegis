@@ -1,35 +1,231 @@
+component NavLabel inherits Rectangle {
+    in property <string> label_text;
+    in property <bool> selected;
+
+    height: 38px;
+    border-radius: 6px;
+    background: selected ? #294d7c : #102033;
+
+    Text {
+        text: root.label_text;
+        color: selected ? #ffffff : #b8c7dc;
+        font-size: 15px;
+        font-weight: selected ? 700 : 500;
+        vertical-alignment: center;
+        horizontal-alignment: left;
+        x: 14px;
+    }
+}
+
+component StatusCard inherits Rectangle {
+    in property <string> card_title;
+    in property <string> card_status;
+    in property <string> summary;
+    in property <string> evidence_source;
+    in property <color> accent;
+
+    width: 142px;
+    height: 114px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: #d6deea;
+    background: #ffffff;
+
+    VerticalLayout {
+        padding-top: 12px;
+        padding-right: 12px;
+        padding-bottom: 12px;
+        padding-left: 12px;
+        spacing: 4px;
+
+        Text {
+            text: root.card_title;
+            color: #1f2937;
+            font-size: 12px;
+            font-weight: 700;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: root.card_status;
+            color: root.accent;
+            font-size: 17px;
+            font-weight: 800;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: root.summary;
+            color: #4b5c75;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "source: " + root.evidence_source;
+            color: #6b7c93;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+    }
+}
+
+component TimelineStep inherits Rectangle {
+    in property <string> stage_label;
+    in property <string> stage_status;
+    in property <string> summary;
+    in property <color> accent;
+
+    width: 96px;
+    height: 86px;
+    background: #ffffff;
+
+    VerticalLayout {
+        spacing: 4px;
+        alignment: start;
+
+        Rectangle {
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            background: root.accent;
+        }
+
+        Text {
+            text: root.stage_label;
+            color: #111827;
+            font-size: 11px;
+            font-weight: 700;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: root.stage_status;
+            color: root.accent;
+            font-size: 11px;
+            font-weight: 700;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: root.summary;
+            color: #52637a;
+            font-size: 9px;
+            wrap: word-wrap;
+        }
+    }
+}
+
+component ErrorDetail inherits HorizontalLayout {
+    in property <string> detail_label;
+    in property <string> detail_value;
+
+    spacing: 8px;
+
+    Text {
+        width: 82px;
+        text: root.detail_label;
+        color: #6b1d1d;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    Text {
+        text: root.detail_value;
+        color: #2b2f38;
+        font-size: 12px;
+        wrap: word-wrap;
+    }
+}
+
+component ErrorCard inherits Rectangle {
+    width: 292px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: #ef9a9a;
+    background: #fff8f8;
+
+    VerticalLayout {
+        padding: 18px;
+        spacing: 12px;
+
+        Text {
+            text: "Sample Normalized Error";
+            color: #8f1d1d;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        Text {
+            text: "Static structured_error_report evidence";
+            color: #7f3b3b;
+            font-size: 11px;
+        }
+
+        ErrorDetail {
+            detail_label: "Code";
+            detail_value: "policy_denied";
+        }
+
+        ErrorDetail {
+            detail_label: "Severity";
+            detail_value: "HIGH";
+        }
+
+        ErrorDetail {
+            detail_label: "Message";
+            detail_value: "Request was denied by policy.";
+        }
+
+        ErrorDetail {
+            detail_label: "Reason";
+            detail_value: "The requested action did not match an allowed policy rule.";
+        }
+
+        ErrorDetail {
+            detail_label: "Next";
+            detail_value: "Review the policy decision and request context.";
+        }
+
+        ErrorDetail {
+            detail_label: "Location";
+            detail_value: "policy_evaluation";
+        }
+    }
+}
+
 export component AegisWindow inherits Window {
     title: "AEGIS";
-    width: 960px;
-    height: 640px;
+    width: 1280px;
+    height: 820px;
     background: #f5f7fb;
 
     HorizontalLayout {
         spacing: 0px;
 
         Rectangle {
-            width: 230px;
+            width: 220px;
             background: #102033;
 
             VerticalLayout {
-                padding-top: 42px;
-                padding-right: 24px;
+                padding-top: 30px;
+                padding-right: 22px;
                 padding-bottom: 24px;
-                padding-left: 24px;
-                spacing: 22px;
+                padding-left: 22px;
+                spacing: 14px;
 
                 Text {
                     text: "AEGIS";
                     color: #ffffff;
-                    font-size: 34px;
-                    font-weight: 700;
+                    font-size: 32px;
+                    font-weight: 800;
                     horizontal-alignment: center;
                 }
 
                 Text {
                     text: "AI Execution Governance & Interception System";
                     color: #d9e6f7;
-                    font-size: 14px;
+                    font-size: 13px;
                     horizontal-alignment: center;
                     wrap: word-wrap;
                 }
@@ -39,41 +235,13 @@ export component AegisWindow inherits Window {
                     background: #2d415c;
                 }
 
-                Text {
-                    text: "Overview";
-                    color: #ffffff;
-                    font-size: 16px;
-                }
-
-                Text {
-                    text: "Executions";
-                    color: #b8c7dc;
-                    font-size: 16px;
-                }
-
-                Text {
-                    text: "Audit";
-                    color: #b8c7dc;
-                    font-size: 16px;
-                }
-
-                Text {
-                    text: "State";
-                    color: #b8c7dc;
-                    font-size: 16px;
-                }
-
-                Text {
-                    text: "Recovery";
-                    color: #b8c7dc;
-                    font-size: 16px;
-                }
-
-                Text {
-                    text: "Policy";
-                    color: #b8c7dc;
-                    font-size: 16px;
-                }
+                NavLabel { label_text: "Overview"; selected: true; }
+                NavLabel { label_text: "Executions"; selected: false; }
+                NavLabel { label_text: "Audit"; selected: false; }
+                NavLabel { label_text: "State"; selected: false; }
+                NavLabel { label_text: "Recovery"; selected: false; }
+                NavLabel { label_text: "Policy"; selected: false; }
+                NavLabel { label_text: "Settings"; selected: false; }
 
                 Rectangle {
                     vertical-stretch: 1;
@@ -81,9 +249,9 @@ export component AegisWindow inherits Window {
                 }
 
                 Text {
-                    text: "Static scaffold";
+                    text: "Sample evidence only";
                     color: #91a6c2;
-                    font-size: 13px;
+                    font-size: 12px;
                     horizontal-alignment: center;
                 }
             }
@@ -93,26 +261,26 @@ export component AegisWindow inherits Window {
             background: #f5f7fb;
 
             VerticalLayout {
-                padding-top: 48px;
-                padding-right: 48px;
-                padding-bottom: 36px;
-                padding-left: 48px;
-                spacing: 22px;
+                padding-top: 28px;
+                padding-right: 28px;
+                padding-bottom: 24px;
+                padding-left: 28px;
+                spacing: 14px;
 
                 HorizontalLayout {
-                    spacing: 16px;
+                    spacing: 14px;
                     alignment: start;
 
                     Text {
                         text: "AEGIS";
                         color: #111827;
-                        font-size: 44px;
+                        font-size: 40px;
                         font-weight: 800;
                     }
 
                     Rectangle {
-                        width: 100px;
-                        height: 30px;
+                        width: 104px;
+                        height: 28px;
                         border-radius: 6px;
                         border-width: 1px;
                         border-color: #8fb4ee;
@@ -121,77 +289,130 @@ export component AegisWindow inherits Window {
                         Text {
                             text: "PRE-ALPHA";
                             color: #2358a6;
-                            font-size: 13px;
-                            font-weight: 700;
+                            font-size: 12px;
+                            font-weight: 800;
                             horizontal-alignment: center;
                             vertical-alignment: center;
                         }
                     }
-                }
 
-                Text {
-                    text: "Governed execution with clear operator feedback.";
-                    color: #40506a;
-                    font-size: 18px;
-                }
-
-                Rectangle {
-                    height: 150px;
-                    border-radius: 8px;
-                    border-width: 1px;
-                    border-color: #cfd8e6;
-                    background: #ffffff;
-
-                    VerticalLayout {
-                        padding: 24px;
-                        spacing: 12px;
-
-                        Text {
-                            text: "Backend evidence drives this UI";
-                            color: #133e75;
-                            font-size: 22px;
-                            font-weight: 700;
-                        }
-
-                        Text {
-                            text: "The graphical surface will render backend evidence when live UI work begins. This scaffold does not call the gateway, parse runtime output, or create policy decisions.";
-                            color: #40506a;
-                            font-size: 16px;
-                            wrap: word-wrap;
-                        }
+                    Text {
+                        text: "Fixture-backed operator evidence rendering";
+                        color: #40506a;
+                        font-size: 17px;
+                        vertical-alignment: center;
                     }
                 }
 
-                Rectangle {
-                    height: 150px;
-                    border-radius: 8px;
-                    border-width: 1px;
-                    border-color: #cfd8e6;
-                    background: #ffffff;
+                HorizontalLayout {
+                    spacing: 16px;
 
                     VerticalLayout {
-                        padding: 24px;
                         spacing: 12px;
 
                         Text {
-                            text: "Authority boundary is in the backend";
-                            color: #14532d;
-                            font-size: 22px;
-                            font-weight: 700;
+                            text: "Status Cards";
+                            color: #1f2937;
+                            font-size: 17px;
+                            font-weight: 800;
                         }
 
-                        Text {
-                            text: "The UI is an operator surface, not an authority boundary. It does not validate requests, evaluate policy, authorize execution, issue credentials, dispatch wrappers, write audit records, or plan recovery.";
-                            color: #40506a;
-                            font-size: 16px;
-                            wrap: word-wrap;
+                        HorizontalLayout {
+                            spacing: 10px;
+                            StatusCard { card_title: "Policy Bundle"; card_status: "Verified"; summary: "Bundle integrity evidence is present."; evidence_source: "policy_bundle"; accent: #157a33; }
+                            StatusCard { card_title: "Policy Decision"; card_status: "Allowed"; summary: "Request matches a local policy rule."; evidence_source: "policy_evaluation"; accent: #157a33; }
+                            StatusCard { card_title: "Authorization"; card_status: "Authorized"; summary: "Wrapper execution authority is bound."; evidence_source: "execution_authorization"; accent: #157a33; }
+                            StatusCard { card_title: "Credential Boundary"; card_status: "Satisfied"; summary: "Required class matches authorization."; evidence_source: "credential_boundary"; accent: #157a33; }
+                            StatusCard { card_title: "Credential Injection"; card_status: "Handle issued"; summary: "Safe local handle reference is present."; evidence_source: "credential_injection"; accent: #2f65c7; }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 10px;
+                            StatusCard { card_title: "Wrapper Execution"; card_status: "Executed"; summary: "Bounded wrapper result is recorded."; evidence_source: "wrapper_execution"; accent: #157a33; }
+                            StatusCard { card_title: "Audit Log"; card_status: "Recorded"; summary: "Audit evidence is available."; evidence_source: "audit_record"; accent: #157a33; }
+                            StatusCard { card_title: "State Log"; card_status: "Completed"; summary: "Lifecycle evidence reached completed."; evidence_source: "execution_lifecycle"; accent: #2f65c7; }
+                            StatusCard { card_title: "Recovery Inspection"; card_status: "Inspectable"; summary: "State can be inspected read-only."; evidence_source: "recovery_inspection_report"; accent: #6b46c1; }
+                            StatusCard { card_title: "Recovery Plan"; card_status: "Future evaluation only"; summary: "Plan guidance is not execution."; evidence_source: "recovery_plan_report"; accent: #c46210; }
+                        }
+
+                        Rectangle {
+                            height: 238px;
+                            border-radius: 8px;
+                            border-width: 1px;
+                            border-color: #d6deea;
+                            background: #ffffff;
+
+                            VerticalLayout {
+                                padding: 16px;
+                                spacing: 10px;
+
+                                Text {
+                                    text: "Execution Timeline";
+                                    color: #1f2937;
+                                    font-size: 17px;
+                                    font-weight: 800;
+                                }
+
+                                Text {
+                                    text: "Display labels derived from sample execution_lifecycle and related evidence.";
+                                    color: #52637a;
+                                    font-size: 12px;
+                                }
+
+                                HorizontalLayout {
+                                    spacing: 10px;
+                                    TimelineStep { stage_label: "Request"; stage_status: "Received"; summary: "Sample request accepted."; accent: #2f65c7; }
+                                    TimelineStep { stage_label: "Validation"; stage_status: "Valid"; summary: "Request shape matches."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Policy Bundle"; stage_status: "Verified"; summary: "Bundle evidence present."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Policy Decision"; stage_status: "Allowed"; summary: "Allow rule matched."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Authorization"; stage_status: "Authorized"; summary: "Wrapper authority bound."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Credential Boundary"; stage_status: "Satisfied"; summary: "Class check passed."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Credential Injection"; stage_status: "Handle issued"; summary: "Safe local handle ref."; accent: #2f65c7; }
+                                }
+
+                                HorizontalLayout {
+                                    spacing: 10px;
+                                    TimelineStep { stage_label: "Wrapper Dispatch"; stage_status: "Dispatched"; summary: "Registered wrapper selected."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Wrapper Execution"; stage_status: "Executed"; summary: "Bounded result present."; accent: #157a33; }
+                                    TimelineStep { stage_label: "Audit"; stage_status: "Recorded"; summary: "Audit evidence exists."; accent: #157a33; }
+                                    TimelineStep { stage_label: "State"; stage_status: "Completed"; summary: "Terminal sample state."; accent: #2f65c7; }
+                                    TimelineStep { stage_label: "Recovery Inspection"; stage_status: "Inspectable"; summary: "Read-only inspection."; accent: #6b46c1; }
+                                    TimelineStep { stage_label: "Recovery Plan"; stage_status: "Future evaluation only"; summary: "Guidance, not replay."; accent: #c46210; }
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            height: 84px;
+                            border-radius: 8px;
+                            border-width: 1px;
+                            border-color: #b7cae9;
+                            background: #edf5ff;
+
+                            HorizontalLayout {
+                                padding: 16px;
+                                spacing: 14px;
+
+                                Text {
+                                    width: 124px;
+                                    text: "Backend evidence drives this UI";
+                                    color: #133e75;
+                                    font-size: 14px;
+                                    font-weight: 800;
+                                    wrap: word-wrap;
+                                }
+
+                                Text {
+                                    text: "The UI is an operator surface, not an authority boundary. This view renders sample evidence only; it does not call the gateway, evaluate policy, authorize execution, issue credentials, dispatch wrappers, write audit records, or plan recovery.";
+                                    color: #2e4b70;
+                                    font-size: 13px;
+                                    wrap: word-wrap;
+                                }
+                            }
                         }
                     }
-                }
 
-                Rectangle {
-                    vertical-stretch: 1;
-                    background: #f5f7fb;
+                    ErrorCard {}
                 }
             }
         }

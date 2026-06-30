@@ -27,9 +27,9 @@ The UI must render fixture evidence before live IPC or live runtime calls.
 | Task | Status |
 | --- | --- |
 | Add Tauri shell with Slint UI scaffold | complete |
-| Render execution timeline from sample evidence | planned |
-| Render sample status cards from fixture evidence | planned |
-| Render normalized error cards from sample evidence | planned |
+| Render execution timeline from sample evidence | complete |
+| Render sample status cards from fixture evidence | complete |
+| Render normalized error cards from sample evidence | complete |
 | Define minimal IPC data bridge | planned |
 | Render live read-only runtime evidence | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |
@@ -37,7 +37,7 @@ The UI must render fixture evidence before live IPC or live runtime calls.
 Recommended next task:
 
 ```text
-feat(ui): Render execution timeline from sample evidence
+feat(ui): Define minimal IPC data bridge
 ```
 
 ## Deferred Phase Work
@@ -203,9 +203,9 @@ Status: started.
 | Task | Status |
 | --- | --- |
 | Add Tauri shell with Slint UI scaffold | complete |
-| Render execution timeline from sample evidence | planned |
-| Render sample status cards from fixture evidence | planned |
-| Render normalized error cards from sample evidence | planned |
+| Render execution timeline from sample evidence | complete |
+| Render sample status cards from fixture evidence | complete |
+| Render normalized error cards from sample evidence | complete |
 | Define minimal IPC data bridge | planned |
 | Render live read-only runtime evidence | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |

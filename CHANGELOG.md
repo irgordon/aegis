@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.27] - 2026-06-30
+
+### Added
+
+- Added fixture-backed Slint execution timeline and status-card rendering for the desktop UI scaffold.
+- Added sample normalized error card rendering for the graphical operator surface.
+- Added static sample UI evidence fixture and smoke tests for evidence labels, secret safety, and non-authoritative navigation.
+
+### Changed
+
+- Updated Phase 4 task tracking and UI documentation to reflect sample evidence rendering without live backend integration or IPC.
+
 ## [0.2.26] - 2026-06-30
 
 ### Added

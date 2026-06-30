@@ -66,6 +66,24 @@ Future UI components should consume current backend evidence sources.
 | recovery plan report | Read-only future recovery classification | `RecoveryPlanReport` | plan outcome, allowed future action, plan reason, planning errors | recovery approval, replay execution, or audit retry execution |
 | structured error report | Normalized operator-facing failure report | `GatewayErrorReport`, `MalformedStateRecord`, `RecoveryPlanningError` | code, severity, message, reason, next action, location | new error categories or different severity |
 
+## Current Sample Rendering
+
+The current Tauri plus Slint shell renders fixture-backed sample evidence.
+
+It shows:
+
+- execution timeline stages
+- status cards
+- one normalized error card
+- the backend authority boundary
+- pre-alpha status
+
+The sample fixture lives at `src-tauri/ui/sample_evidence.json`.
+
+This sample is not live runtime output. It does not load audit logs, state logs, recovery reports, policy bundles, or gateway output.
+
+The UI still does not define IPC commands, call the local gateway runtime, execute wrappers, issue credentials, authorize execution, inspect recovery, or generate recovery plans.
+
 ## Execution Timeline Model
 
 The UI timeline should be built from backend evidence. It should not invent stages that the backend did not report.

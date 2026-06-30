@@ -68,7 +68,7 @@ Future UI components should consume current backend evidence sources.
 
 ## Current Sample Rendering
 
-The current Tauri plus Slint shell renders fixture-backed sample evidence.
+The current Tauri plus Slint shell renders fixture-backed sample evidence and a narrow live backend evidence path.
 
 It shows:
 
@@ -82,9 +82,13 @@ It shows:
 
 The sample fixture lives at `src-tauri/ui/sample_evidence.json`.
 
-This sample is not live runtime output. It does not load audit logs, state logs, recovery reports, policy bundles, or gateway output.
+The live path is a fixed read-only `health.check` evidence command exposed as `get_health_check_evidence`.
 
-The UI still does not define IPC commands, call the local gateway runtime, execute wrappers, issue credentials, authorize execution, inspect recovery, or generate recovery plans.
+The command uses the bundled health request and the included local development policy bundle. The UI does not provide request JSON, policy bundle paths, wrapper names, audit log paths, state log paths, sandbox paths, credential classes, authorization overrides, or recovery inputs.
+
+The UI can display live health-check evidence when available. Recovery inspection and recovery planning cards remain labeled sample evidence.
+
+The UI still does not submit arbitrary gateway requests, execute mutation wrappers, issue credentials, authorize execution, inspect live state logs, generate live recovery plans, replay, recover, or write audit or state records.
 
 ## Recovery Display Labels
 
@@ -574,7 +578,7 @@ Do not use labels such as:
 - Credential granted
 - Production ready
 
-## Future Tauri Integration Notes
+## Tauri Integration Notes
 
 Tauri will provide the future graphical desktop shell.
 
@@ -592,9 +596,9 @@ Tauri integration must preserve the backend evidence model rather than creating 
 
 UI components should be built around evidence cards and execution timelines.
 
-The current Tauri + Slint scaffold is static. It proves the graphical shell can launch, but it does not render live backend evidence yet.
+The current Tauri plus Slint scaffold can render fixed live `health.check` backend evidence through a narrow read-only command. It does not provide broad runtime control.
 
-Do not define IPC commands here.
+Do not define additional IPC commands here.
 
 Do not scaffold Tauri here.
 

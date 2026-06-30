@@ -49,8 +49,8 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Define minimum usable local release path | complete |
 | Add v0.4.0 release readiness checklist | complete |
 | Verify minimum usable local release commands | planned |
-| Define minimal IPC data bridge | planned |
-| Render live read-only runtime evidence | planned |
+| Define minimal IPC data bridge | complete |
+| Render live read-only runtime evidence | complete |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |
 
 Recommended next task:
@@ -230,8 +230,8 @@ Status: started.
 | Define minimum usable local release path | complete |
 | Add v0.4.0 release readiness checklist | complete |
 | Verify minimum usable local release commands | planned |
-| Define minimal IPC data bridge | planned |
-| Render live read-only runtime evidence | planned |
+| Define minimal IPC data bridge | complete |
+| Render live read-only runtime evidence | complete |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |
 
 ## Phase 5: Recovery and Replay Execution

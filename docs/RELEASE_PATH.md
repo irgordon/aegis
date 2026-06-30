@@ -215,14 +215,14 @@ Use `docs/RELEASE_CHECKLIST_v0.4.0.md` as the concrete readiness checklist befor
 - [ ] Recovery inspection command returns structured JSON.
 - [ ] Recovery planning command returns structured JSON.
 - [ ] Desktop app launches locally.
-- [ ] UI remains sample-only and non-authoritative.
+- [ ] UI distinguishes fixed live health-check evidence from sample fallback evidence.
 - [ ] README remains short and points to `docs/`.
 - [ ] Changelog records the release.
 - [ ] No generated logs, sandbox files, or build artifacts are staged.
 
 ## Out-of-Scope for Minimum Release
 
-The minimum release does not include live backend UI rendering, IPC command execution, HTTP service behavior, production packaging, installer generation, signing, auto-update, production credentials, approval workflow, replay execution, recovery execution, audit retry execution, external integrations, or enterprise hardening.
+The minimum release does not include arbitrary gateway execution from the UI, mutation execution from the UI, user-selected policy bundles, live audit or state log loading, live recovery execution, HTTP service behavior, production packaging, installer generation, signing, auto-update, production credentials, approval workflow, replay execution, recovery execution, audit retry execution, external integrations, or enterprise hardening.
 
 ## Recommended Version Target
 
@@ -240,7 +240,7 @@ Do not create the tag as part of release planning.
 
 ## Risks
 
-- The desktop UI is sample-only and may be mistaken for live backend integration.
+- The desktop UI combines fixed live health-check evidence with sample fallback evidence, so fallback labels must remain clear.
 - Local logs are development artifacts and are not production audit storage.
 - Recovery planning is read-only guidance and may be mistaken for recovery execution.
 - The local credential handle is safe development evidence, not a real credential provider.
@@ -254,5 +254,5 @@ Recommended next tasks:
 2. Verify the release commands end to end and record any command corrections.
 3. Add a short local release note for `v0.4.0`.
 4. Run the full validation gate on a clean checkout.
-5. Launch the desktop app locally and confirm sample-only UI behavior.
+5. Launch the desktop app locally and confirm fixed live evidence and labeled sample fallback behavior.
 6. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.

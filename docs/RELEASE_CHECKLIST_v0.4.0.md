@@ -32,6 +32,7 @@ Before tagging, confirm these capabilities work or are accurately represented:
 
 - [ ] Desktop app launches locally.
 - [ ] Static/sample UI evidence renders in the desktop app.
+- [ ] Fixed live `health.check` backend evidence renders in the desktop app.
 - [ ] Local gateway binary runs.
 - [ ] `health.check` wrapper executes under policy allow.
 - [ ] `sandbox.note.write` wrapper executes under policy allow and sandbox containment.
@@ -56,7 +57,8 @@ Confirm the graphical operator surface:
 - [ ] Slint UI builds.
 - [ ] Desktop app launches.
 - [ ] UI shows AEGIS identity.
-- [ ] UI shows pre-alpha, local-only, and sample-evidence status.
+- [ ] UI shows pre-alpha, local-only, live-evidence, and sample-fallback status.
+- [ ] UI renders fixed live `health.check` evidence when available.
 - [ ] UI renders sample execution timeline.
 - [ ] UI renders sample status cards.
 - [ ] UI renders sample normalized error card.
@@ -64,7 +66,7 @@ Confirm the graphical operator surface:
 - [ ] UI renders sample recovery plan card.
 - [ ] UI states that backend evidence drives the UI.
 - [ ] UI states that the authority boundary is in the backend.
-- [ ] UI does not imply live backend wiring.
+- [ ] UI does not imply arbitrary live backend control.
 - [ ] UI does not imply replay or recovery execution.
 
 Do not require installer generation, code signing, auto-update, or production packaging for `v0.4.0`.

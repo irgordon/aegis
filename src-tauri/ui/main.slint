@@ -139,6 +139,15 @@ component ErrorDetail inherits HorizontalLayout {
 }
 
 component ErrorCard inherits Rectangle {
+    in property <string> error_title;
+    in property <string> error_source;
+    in property <string> error_code;
+    in property <string> error_severity;
+    in property <string> error_message;
+    in property <string> error_reason;
+    in property <string> error_next_action;
+    in property <string> error_location;
+
     width: 292px;
     border-radius: 8px;
     border-width: 1px;
@@ -150,46 +159,46 @@ component ErrorCard inherits Rectangle {
         spacing: 12px;
 
         Text {
-            text: "Sample Normalized Error";
+            text: root.error_title;
             color: #8f1d1d;
             font-size: 16px;
             font-weight: 800;
         }
 
         Text {
-            text: "Static structured_error_report evidence";
+            text: root.error_source;
             color: #7f3b3b;
             font-size: 11px;
         }
 
         ErrorDetail {
             detail_label: "Code";
-            detail_value: "policy_denied";
+            detail_value: root.error_code;
         }
 
         ErrorDetail {
             detail_label: "Severity";
-            detail_value: "HIGH";
+            detail_value: root.error_severity;
         }
 
         ErrorDetail {
             detail_label: "Message";
-            detail_value: "Request was denied by policy.";
+            detail_value: root.error_message;
         }
 
         ErrorDetail {
             detail_label: "Reason";
-            detail_value: "The requested action did not match an allowed policy rule.";
+            detail_value: root.error_reason;
         }
 
         ErrorDetail {
             detail_label: "Next";
-            detail_value: "Review the policy decision and request context.";
+            detail_value: root.error_next_action;
         }
 
         ErrorDetail {
             detail_label: "Location";
-            detail_value: "policy_evaluation";
+            detail_value: root.error_location;
         }
     }
 }
@@ -325,6 +334,55 @@ component RecoveryPlanCard inherits Rectangle {
 }
 
 export component AegisWindow inherits Window {
+    in-out property <string> evidence_mode_label: "Sample evidence fallback";
+    in-out property <string> header_summary: "Fixture-backed operator evidence rendering";
+    in-out property <string> policy_bundle_status: "Verified";
+    in-out property <string> policy_bundle_summary: "Bundle integrity evidence is present.";
+    in-out property <string> policy_decision_status: "Allowed";
+    in-out property <string> policy_decision_summary: "Request matches a local policy rule.";
+    in-out property <string> authorization_status: "Authorized";
+    in-out property <string> authorization_summary: "Wrapper execution authority is bound.";
+    in-out property <string> credential_boundary_status: "Satisfied";
+    in-out property <string> credential_boundary_summary: "Required class matches authorization.";
+    in-out property <string> credential_injection_status: "Handle issued";
+    in-out property <string> credential_injection_summary: "Safe local handle reference is present.";
+    in-out property <string> wrapper_execution_status: "Executed";
+    in-out property <string> wrapper_execution_summary: "Bounded wrapper result is recorded.";
+    in-out property <string> audit_status: "Recorded";
+    in-out property <string> audit_summary: "Audit evidence is available.";
+    in-out property <string> state_status: "Completed";
+    in-out property <string> state_summary: "Lifecycle evidence reached completed.";
+    in-out property <string> request_status: "Received";
+    in-out property <string> request_summary: "Sample request accepted.";
+    in-out property <string> validation_status: "Valid";
+    in-out property <string> validation_summary: "Request shape matches.";
+    in-out property <string> bundle_timeline_status: "Verified";
+    in-out property <string> bundle_timeline_summary: "Bundle evidence present.";
+    in-out property <string> policy_timeline_status: "Allowed";
+    in-out property <string> policy_timeline_summary: "Allow rule matched.";
+    in-out property <string> authorization_timeline_status: "Authorized";
+    in-out property <string> authorization_timeline_summary: "Wrapper authority bound.";
+    in-out property <string> credential_boundary_timeline_status: "Satisfied";
+    in-out property <string> credential_boundary_timeline_summary: "Class check passed.";
+    in-out property <string> credential_injection_timeline_status: "Handle issued";
+    in-out property <string> credential_injection_timeline_summary: "Safe local handle ref.";
+    in-out property <string> dispatch_status: "Dispatched";
+    in-out property <string> dispatch_summary: "Registered wrapper selected.";
+    in-out property <string> wrapper_timeline_status: "Executed";
+    in-out property <string> wrapper_timeline_summary: "Bounded result present.";
+    in-out property <string> audit_timeline_status: "Recorded";
+    in-out property <string> audit_timeline_summary: "Audit evidence exists.";
+    in-out property <string> state_timeline_status: "Completed";
+    in-out property <string> state_timeline_summary: "Terminal sample state.";
+    in-out property <string> error_title: "Sample Normalized Error";
+    in-out property <string> error_source: "Static structured_error_report evidence";
+    in-out property <string> error_code: "policy_denied";
+    in-out property <string> error_severity: "HIGH";
+    in-out property <string> error_message: "Request was denied by policy.";
+    in-out property <string> error_reason: "The requested action did not match an allowed policy rule.";
+    in-out property <string> error_next_action: "Review the policy decision and request context.";
+    in-out property <string> error_location: "policy_evaluation";
+
     title: "AEGIS";
     width: 1280px;
     height: 820px;
@@ -379,7 +437,7 @@ export component AegisWindow inherits Window {
                 }
 
                 Text {
-                    text: "Sample evidence only";
+                    text: root.evidence_mode_label;
                     color: #91a6c2;
                     font-size: 12px;
                     horizontal-alignment: center;
@@ -427,7 +485,7 @@ export component AegisWindow inherits Window {
                     }
 
                     Text {
-                        text: "Fixture-backed operator evidence rendering";
+                        text: root.header_summary;
                         color: #40506a;
                         font-size: 17px;
                         vertical-alignment: center;
@@ -449,20 +507,20 @@ export component AegisWindow inherits Window {
 
                         HorizontalLayout {
                             spacing: 10px;
-                            StatusCard { card_title: "Policy Bundle"; card_status: "Verified"; summary: "Bundle integrity evidence is present."; evidence_source: "policy_bundle"; accent: #157a33; }
-                            StatusCard { card_title: "Policy Decision"; card_status: "Allowed"; summary: "Request matches a local policy rule."; evidence_source: "policy_evaluation"; accent: #157a33; }
-                            StatusCard { card_title: "Authorization"; card_status: "Authorized"; summary: "Wrapper execution authority is bound."; evidence_source: "execution_authorization"; accent: #157a33; }
-                            StatusCard { card_title: "Credential Boundary"; card_status: "Satisfied"; summary: "Required class matches authorization."; evidence_source: "credential_boundary"; accent: #157a33; }
-                            StatusCard { card_title: "Credential Injection"; card_status: "Handle issued"; summary: "Safe local handle reference is present."; evidence_source: "credential_injection"; accent: #2f65c7; }
+                            StatusCard { card_title: "Policy Bundle"; card_status: root.policy_bundle_status; summary: root.policy_bundle_summary; evidence_source: "policy_bundle"; accent: #157a33; }
+                            StatusCard { card_title: "Policy Decision"; card_status: root.policy_decision_status; summary: root.policy_decision_summary; evidence_source: "policy_evaluation"; accent: #157a33; }
+                            StatusCard { card_title: "Authorization"; card_status: root.authorization_status; summary: root.authorization_summary; evidence_source: "execution_authorization"; accent: #157a33; }
+                            StatusCard { card_title: "Credential Boundary"; card_status: root.credential_boundary_status; summary: root.credential_boundary_summary; evidence_source: "credential_boundary"; accent: #157a33; }
+                            StatusCard { card_title: "Credential Injection"; card_status: root.credential_injection_status; summary: root.credential_injection_summary; evidence_source: "credential_injection"; accent: #2f65c7; }
                         }
 
                         HorizontalLayout {
                             spacing: 10px;
-                            StatusCard { card_title: "Wrapper Execution"; card_status: "Executed"; summary: "Bounded wrapper result is recorded."; evidence_source: "wrapper_execution"; accent: #157a33; }
-                            StatusCard { card_title: "Audit Log"; card_status: "Recorded"; summary: "Audit evidence is available."; evidence_source: "audit_record"; accent: #157a33; }
-                            StatusCard { card_title: "State Log"; card_status: "Completed"; summary: "Lifecycle evidence reached completed."; evidence_source: "execution_lifecycle"; accent: #2f65c7; }
-                            StatusCard { card_title: "Recovery Inspection"; card_status: "Inspectable"; summary: "State can be inspected read-only."; evidence_source: "recovery_inspection_report"; accent: #6b46c1; }
-                            StatusCard { card_title: "Recovery Plan"; card_status: "Future evaluation only"; summary: "Plan guidance is not execution."; evidence_source: "recovery_plan_report"; accent: #c46210; }
+                            StatusCard { card_title: "Wrapper Execution"; card_status: root.wrapper_execution_status; summary: root.wrapper_execution_summary; evidence_source: "wrapper_execution"; accent: #157a33; }
+                            StatusCard { card_title: "Audit Log"; card_status: root.audit_status; summary: root.audit_summary; evidence_source: "audit_record"; accent: #157a33; }
+                            StatusCard { card_title: "State Log"; card_status: root.state_status; summary: root.state_summary; evidence_source: "execution_lifecycle"; accent: #2f65c7; }
+                            StatusCard { card_title: "Recovery Inspection"; card_status: "Sample only"; summary: "Live health.check does not inspect state logs."; evidence_source: "sample recovery_inspection_report"; accent: #6b46c1; }
+                            StatusCard { card_title: "Recovery Plan"; card_status: "Sample only"; summary: "Live health.check does not plan recovery."; evidence_source: "sample recovery_plan_report"; accent: #c46210; }
                         }
 
                         Rectangle {
@@ -484,30 +542,30 @@ export component AegisWindow inherits Window {
                                 }
 
                                 Text {
-                                    text: "Display labels derived from sample execution_lifecycle and related evidence.";
+                                    text: "Display labels derive from live health.check backend evidence when available; recovery stages remain sample-only.";
                                     color: #52637a;
                                     font-size: 12px;
                                 }
 
                                 HorizontalLayout {
                                     spacing: 10px;
-                                    TimelineStep { stage_label: "Request"; stage_status: "Received"; summary: "Sample request accepted."; accent: #2f65c7; }
-                                    TimelineStep { stage_label: "Validation"; stage_status: "Valid"; summary: "Request shape matches."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Policy Bundle"; stage_status: "Verified"; summary: "Bundle evidence present."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Policy Decision"; stage_status: "Allowed"; summary: "Allow rule matched."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Authorization"; stage_status: "Authorized"; summary: "Wrapper authority bound."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Credential Boundary"; stage_status: "Satisfied"; summary: "Class check passed."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Credential Injection"; stage_status: "Handle issued"; summary: "Safe local handle ref."; accent: #2f65c7; }
+                                    TimelineStep { stage_label: "Request"; stage_status: root.request_status; summary: root.request_summary; accent: #2f65c7; }
+                                    TimelineStep { stage_label: "Validation"; stage_status: root.validation_status; summary: root.validation_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Policy Bundle"; stage_status: root.bundle_timeline_status; summary: root.bundle_timeline_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Policy Decision"; stage_status: root.policy_timeline_status; summary: root.policy_timeline_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Authorization"; stage_status: root.authorization_timeline_status; summary: root.authorization_timeline_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Credential Boundary"; stage_status: root.credential_boundary_timeline_status; summary: root.credential_boundary_timeline_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Credential Injection"; stage_status: root.credential_injection_timeline_status; summary: root.credential_injection_timeline_summary; accent: #2f65c7; }
                                 }
 
                                 HorizontalLayout {
                                     spacing: 10px;
-                                    TimelineStep { stage_label: "Wrapper Dispatch"; stage_status: "Dispatched"; summary: "Registered wrapper selected."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Wrapper Execution"; stage_status: "Executed"; summary: "Bounded result present."; accent: #157a33; }
-                                    TimelineStep { stage_label: "Audit"; stage_status: "Recorded"; summary: "Audit evidence exists."; accent: #157a33; }
-                                    TimelineStep { stage_label: "State"; stage_status: "Completed"; summary: "Terminal sample state."; accent: #2f65c7; }
-                                    TimelineStep { stage_label: "Recovery Inspection"; stage_status: "Inspectable"; summary: "Read-only inspection."; accent: #6b46c1; }
-                                    TimelineStep { stage_label: "Recovery Plan"; stage_status: "Future evaluation only"; summary: "Guidance, not replay."; accent: #c46210; }
+                                    TimelineStep { stage_label: "Wrapper Dispatch"; stage_status: root.dispatch_status; summary: root.dispatch_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Wrapper Execution"; stage_status: root.wrapper_timeline_status; summary: root.wrapper_timeline_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "Audit"; stage_status: root.audit_timeline_status; summary: root.audit_timeline_summary; accent: #157a33; }
+                                    TimelineStep { stage_label: "State"; stage_status: root.state_timeline_status; summary: root.state_timeline_summary; accent: #2f65c7; }
+                                    TimelineStep { stage_label: "Recovery Inspection"; stage_status: "Sample only"; summary: "No live state inspection."; accent: #6b46c1; }
+                                    TimelineStep { stage_label: "Recovery Plan"; stage_status: "Sample only"; summary: "No live recovery plan."; accent: #c46210; }
                                 }
                             }
                         }
@@ -533,7 +591,7 @@ export component AegisWindow inherits Window {
                                 }
 
                                 Text {
-                                    text: "The UI is an operator surface, not an authority boundary. This view renders sample evidence only; it does not call the gateway, evaluate policy, authorize execution, issue credentials, dispatch wrappers, write audit records, or plan recovery.";
+                                    text: "The UI is an operator surface, not an authority boundary. This view renders fixed read-only live health.check evidence when available and labeled sample recovery evidence otherwise; it does not accept arbitrary requests, evaluate policy, authorize execution, issue credentials, dispatch mutation wrappers, write audit or state logs, inspect state logs, plan recovery, replay, or recover.";
                                     color: #2e4b70;
                                     font-size: 13px;
                                     wrap: word-wrap;
@@ -545,7 +603,16 @@ export component AegisWindow inherits Window {
                     VerticalLayout {
                         spacing: 12px;
 
-                        ErrorCard {}
+                        ErrorCard {
+                            error_title: root.error_title;
+                            error_source: root.error_source;
+                            error_code: root.error_code;
+                            error_severity: root.error_severity;
+                            error_message: root.error_message;
+                            error_reason: root.error_reason;
+                            error_next_action: root.error_next_action;
+                            error_location: root.error_location;
+                        }
                         RecoveryInspectionCard {}
                         RecoveryPlanCard {}
                     }

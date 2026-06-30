@@ -3,13 +3,13 @@
 
 ## What Is This?
 
-This page explains how current backend evidence is intended to support the Slint UI inside the Tauri desktop shell.
+This page explains how current backend evidence supports the Slint UI inside the Tauri desktop shell.
 
-The current UI implementation is a static scaffold only.
+The current UI implementation renders sample evidence and a fixed live `health.check` backend evidence path.
 
 The purpose is to make sure runtime evidence remains renderable by a future graphical interface.
 
-Future graphical operator feedback should be delivered through Slint inside the Tauri desktop shell.
+Graphical operator feedback is delivered through Slint inside the Tauri desktop shell.
 
 ## UI Role
 
@@ -87,6 +87,8 @@ The repository has an initial Tauri shell with a Slint graphical surface.
 
 The surface renders static sample evidence from `src-tauri/ui/sample_evidence.json`.
 
+It also exposes a narrow read-only Tauri command, `get_health_check_evidence`, that returns live backend evidence for the fixed local `health.check` path.
+
 It shows:
 
 - execution timeline stages
@@ -97,12 +99,14 @@ It shows:
 - pre-alpha status
 - backend authority-boundary language
 
-It does not render live backend evidence, call gateway execution, define IPC commands, inspect live state logs, generate live recovery plans, replay execution, or implement dashboard behavior.
+It can render fixed live health-check evidence when available.
+
+It does not submit arbitrary gateway requests, execute `sandbox.note.write`, choose wrapper names, choose policy bundles, choose audit or state paths, inspect live state logs, generate live recovery plans, replay execution, recover execution, or implement dashboard behavior.
 
 It has not implemented:
 
-- IPC command layer
-- live runtime evidence loading
+- broad IPC command layer
+- live audit or state evidence loading
 - approval UI
 - recovery execution UI
 - replay UI

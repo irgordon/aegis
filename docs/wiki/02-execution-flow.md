@@ -9,10 +9,10 @@ The main idea is simple: a request must pass through every governance boundary b
 
 ## Signal Flow
 
-The current and planned operator signal flow is:
+The current operator signal flow is:
 
 ```text
-CLI or future Tauri UI
+CLI or Tauri UI evidence surface
   -> structured request
   -> runtime local path
   -> policy bundle verification
@@ -25,10 +25,12 @@ CLI or future Tauri UI
   -> audit record
   -> state transition log
   -> structured JSON output
-  -> future UI visual feedback
+  -> UI visual feedback
 ```
 
-The CLI exists today. The Tauri UI is future work. Runtime output is already structured so a future UI can render it without inventing policy or execution state.
+The CLI exists for local execution and validation.
+
+The Tauri UI can now render fixture-backed evidence and fixed live `health.check` backend evidence. It does not submit arbitrary gateway requests, run mutation wrappers, inspect live state logs, or generate live recovery plans.
 
 ## Flow Diagram
 
@@ -127,9 +129,11 @@ The current planner can classify records into bounded outcomes such as:
 - candidate for future replay evaluation
 - inspection failed
 
-## Future UI Output
+## UI Output
 
-The future Tauri UI should render the same evidence that the CLI emits today:
+The Tauri UI should render backend evidence without creating authority.
+
+Current live UI evidence is limited to a fixed read-only `health.check` path. The broader evidence model remains structured so future UI views can render:
 
 - lifecycle timeline
 - policy bundle status

@@ -28,10 +28,12 @@ The backend can:
 The UI can:
 
 - launch a Tauri desktop shell
-- render a static Slint pre-alpha landing window
+- render Slint status cards, timeline, normalized error, and recovery sample evidence
+- request fixed live `health.check` backend evidence through a narrow read-only IPC command
+- distinguish fixed live evidence from sample fallback evidence
 - state the backend authority boundary
 
-The UI does not yet render sample evidence, consume live runtime evidence, define IPC commands, or provide any authority boundary.
+The UI does not submit arbitrary gateway requests, execute mutation wrappers, load live audit or state logs, run recovery actions, or provide any authority boundary.
 
 ## Completed Phases
 
@@ -42,7 +44,7 @@ The UI does not yet render sample evidence, consume live runtime evidence, defin
 | 2 | Local Gateway MVP | Complete | Local runtime validates requests, verifies bundles, evaluates policy, fails closed, emits JSON, and persists audit records. |
 | 3 | Governed Execution Engine | Complete for local built-in execution foundation | Local wrappers, authorization, credential boundaries, lifecycle, state log, recovery inspection, and recovery planning exist. |
 | 3.5 | UI-Ready Evidence and Documentation | Complete | UI evidence contract, wiki explanations, and Slint with Tauri direction are documented. |
-| 4 | Graphical Operator Surface | Started | Static Tauri shell with Slint landing window exists. |
+| 4 | Graphical Operator Surface | Started | Tauri shell with Slint evidence rendering and fixed live health-check IPC exists. |
 
 ## Phase Drift
 
@@ -93,17 +95,17 @@ The UI does not yet render sample evidence, consume live runtime evidence, defin
 Recommended next task:
 
 ```text
-feat(ui): Render execution timeline from sample evidence
+chore(release): Verify minimum usable local release path
 ```
 
-This keeps Phase 4 evidence-first and non-authoritative. It should render fixture-backed lifecycle evidence before live IPC, live gateway calls, approval UI, replay execution, or service deployment.
+This keeps Phase 4 release-focused. It should verify the existing local gateway, desktop launch, fixed live evidence, and read-only evidence behavior before expanding UI scope.
 
 ## Required Roadmap Updates
 
 - Mark Phase 3 complete for the local governed execution foundation after moving replay, approval, and production credential provider work into later phases.
 - Record Phase 3.5 as the completed UI-ready evidence and documentation bridge.
 - Rename Phase 4 to Graphical Operator Surface.
-- Make Phase 4 focus on sample evidence rendering before IPC and live backend evidence.
+- Make Phase 4 focus on release-ready evidence rendering before expanding live backend UI scope.
 - Move recovery and replay execution into Phase 5.
 - Move approval workflow and production credential providers into Phase 6.
 - Move HTTP, service deployment, observability, plugin architecture, packaging, and production hardening into Phase 7.

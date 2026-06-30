@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.33] - 2026-06-30
+
+### Added
+
+- Added a narrow read-only Tauri IPC path for live backend health-check evidence.
+- Updated the Slint UI to distinguish live backend evidence from sample fallback evidence.
+
+### Changed
+
+- Updated Phase 4 task tracking and UI documentation for fixed live backend evidence rendering without arbitrary UI execution.
+- Updated the v0.4.0 release path and phase review to distinguish fixed live health-check evidence from broader deferred UI execution surfaces.
+
 ## [0.2.32] - 2026-06-30
 
 ### Changed

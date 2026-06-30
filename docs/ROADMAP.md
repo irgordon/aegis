@@ -29,7 +29,7 @@ The Phase 3 local governed execution foundation is complete after reclassificati
 
 It does not yet execute real external actions, replay execution, approval workflow, production credential providers, HTTP service behavior, or live UI evidence. Those concerns now belong to later phases instead of the completed local execution foundation.
 
-Phase 4 has begun with a static Tauri shell and Slint landing window. The CLI remains a support surface for validation, inspection, testing, and automation. The UI scaffold renders fixture-backed sample evidence, but it does not render live backend evidence, call gateway execution, define IPC commands, or provide authority.
+Phase 4 has begun with a Tauri shell and Slint operator surface. The CLI remains a support surface for validation, inspection, testing, and automation. The UI scaffold renders fixture-backed sample evidence and can request fixed live `health.check` backend evidence through a narrow read-only IPC command. It does not submit arbitrary gateway requests, execute mutation wrappers, inspect live state logs, generate live recovery plans, define broad IPC command surfaces, or provide authority.
 
 The next release boundary is a minimum usable local release. It should be small enough to ship and safe enough to explain: local gateway execution, local evidence generation, read-only recovery inspection and planning, and a launchable sample-evidence desktop UI. Features not required for that local release should not block it.
 
@@ -223,13 +223,14 @@ Completed Phase 4 foundation:
 
 - static Tauri shell with Slint landing window
 - fixture-backed Slint execution timeline, status cards, normalized error card, and recovery inspection and planning cards
+- narrow read-only `get_health_check_evidence` IPC command
+- live backend `health.check` evidence rendering for current status cards and timeline fields
 
 Next sequence:
 
 1. Verify the minimum usable local release path.
-2. Define the minimal IPC data bridge.
-3. Render live read-only runtime evidence.
-4. Render audit, state, recovery inspection, and recovery plan views read-only.
+2. Render audit, state, recovery inspection, and recovery plan views read-only.
+3. Run the full release readiness checklist.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions

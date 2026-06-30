@@ -26,15 +26,15 @@ fn slint_landing_screen_states_ui_boundary() {
     assert!(slint_ui.contains("PRE-ALPHA"));
     assert!(slint_ui.contains("Backend evidence drives this UI"));
     assert!(slint_ui.contains("The UI is an operator surface, not an authority boundary."));
-    assert!(slint_ui.contains("sample evidence only"));
+    assert!(read(DESKTOP_ENTRYPOINT).contains("Live backend health.check evidence"));
+    assert!(slint_ui.contains("Sample evidence fallback"));
 }
 
 #[test]
-fn desktop_entrypoint_does_not_import_backend_execution() {
+fn desktop_entrypoint_imports_only_local_runtime_bridge() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
     let forbidden_imports = [
         "aegis::gateway",
-        "aegis::runtime",
         "aegis::policy",
         "aegis::auth",
         "aegis::audit",
@@ -42,20 +42,63 @@ fn desktop_entrypoint_does_not_import_backend_execution() {
         "aegis::wrappers",
     ];
 
+    assert!(entrypoint.contains("runtime::local::process_local_gateway_request"));
+
     for forbidden in forbidden_imports {
         assert!(
             !entrypoint.contains(forbidden),
-            "desktop scaffold must not import backend execution module {forbidden}"
+            "desktop IPC bridge must not import broad backend execution module {forbidden}"
         );
     }
 }
 
 #[test]
-fn desktop_entrypoint_defines_no_ipc_commands() {
+fn desktop_entrypoint_defines_one_read_only_ipc_command() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
 
-    assert!(!entrypoint.contains("#[tauri::command]"));
-    assert!(!entrypoint.contains(".invoke_handler("));
+    assert!(entrypoint.contains("#[tauri::command]"));
+    assert!(entrypoint.contains("fn get_health_check_evidence() -> UiEvidence"));
+    assert!(entrypoint.contains("tauri::generate_handler![get_health_check_evidence]"));
+    assert_eq!(entrypoint.matches("#[tauri::command]").count(), 1);
+    assert_eq!(entrypoint.matches("generate_handler!").count(), 1);
+}
+
+#[test]
+fn ipc_command_accepts_no_arbitrary_ui_input() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT);
+    let command_signature = "fn get_health_check_evidence() -> UiEvidence";
+    let forbidden_inputs = [
+        "request_json",
+        "request_path",
+        "bundle_path:",
+        "audit_log_path",
+        "state_log_path",
+        "sandbox_dir",
+        "wrapper_name:",
+        "policy_bundle_path",
+        "credential_class",
+    ];
+
+    assert!(entrypoint.contains(command_signature));
+
+    for forbidden in forbidden_inputs {
+        assert!(
+            !entrypoint.contains(&format!("get_health_check_evidence({forbidden}")),
+            "IPC command must not accept {forbidden}"
+        );
+    }
+}
+
+#[test]
+fn ipc_command_uses_fixed_health_check_evidence_source() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT);
+
+    assert!(entrypoint.contains("HealthCheckRequest.json"));
+    assert!(entrypoint.contains("../examples/policy-bundles/local-dev"));
+    assert!(entrypoint.contains("process_local_gateway_request"));
+    assert!(!entrypoint.contains("SandboxNoteWriteRequest.json"));
+    assert!(!entrypoint.contains("sandbox.note.write"));
+    assert!(!entrypoint.contains("--sandbox-dir"));
 }
 
 #[test]
@@ -86,8 +129,9 @@ fn sample_evidence_is_static_and_not_live() {
             .and_then(Value::as_bool),
         Some(false)
     );
-    assert!(slint_ui.contains("Sample evidence only"));
+    assert!(slint_ui.contains("Sample evidence fallback"));
     assert!(slint_ui.contains("Fixture-backed operator evidence rendering"));
+    assert!(read(DESKTOP_ENTRYPOINT).contains("Live backend health.check evidence"));
     assert!(slint_ui.contains("PRE-ALPHA"));
 }
 
@@ -438,6 +482,8 @@ fn sample_recovery_evidence_is_clearly_sample_and_non_live() {
     assert!(combined.contains("sample recovery inspection"));
     assert!(combined.contains("sample recovery plan"));
     assert!(combined.contains("does not read state logs"));
+    assert!(combined.contains("live health.check does not inspect state logs"));
+    assert!(combined.contains("live health.check does not plan recovery"));
     assert!(combined.contains("does not inspect live state"));
 }
 
@@ -474,6 +520,8 @@ fn sample_ui_does_not_imply_live_backend_or_runtime_control() {
     ];
 
     assert_absent(&combined, forbidden_live_claims);
+    assert!(combined.contains("fixed read-only live health.check evidence"));
+    assert!(combined.contains("labeled sample recovery evidence"));
 }
 
 #[test]
@@ -590,6 +638,27 @@ fn ui_direction_remains_tauri_slint_not_web_dashboard_or_tui() {
     ];
 
     assert_absent(&combined, forbidden_ui_directions);
+}
+
+#[test]
+fn ui_does_not_introduce_arbitrary_gateway_command_surfaces() {
+    let combined = format!("{}\n{}", read(DESKTOP_ENTRYPOINT), read(SLINT_UI)).to_lowercase();
+    let forbidden_terms = [
+        "request json from ui",
+        "choose wrapper",
+        "select bundle",
+        "policy override",
+        "approval button",
+        "replay button",
+        "recovery button",
+        "sandboxnote",
+        "sandbox.note.write",
+        "audit log path",
+        "state log path",
+    ];
+
+    assert_absent(&combined, forbidden_terms);
+    assert!(combined.contains("get_health_check_evidence"));
 }
 
 fn sample_evidence() -> Value {

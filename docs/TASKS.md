@@ -22,7 +22,7 @@ No other status values should be used unless this document is updated.
 
 `v0.4.0` is complete, tagged, and pushed as a local-only source release.
 
-Current work plans the next distribution step without changing runtime behavior, UI behavior, release artifacts, or release automation.
+Current work plans and validates the next distribution step without changing runtime behavior, UI behavior, public release assets, or release publishing.
 
 Every new task after `v0.4.0` should identify whether it improves operator usability, removes a release blocker, improves release reliability, or reduces release-critical technical debt.
 
@@ -63,7 +63,7 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Finalize v0.4.0 local release | complete |
 | Define post-v0.4.0 distribution plan | complete |
 | Select first downloadable artifact targets | complete |
-| Add draft GitHub Release build workflow | planned |
+| Add draft artifact build workflow | complete |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |
@@ -262,7 +262,7 @@ Status: started.
 | Finalize v0.4.0 local release | complete |
 | Define post-v0.4.0 distribution plan | complete |
 | Select first downloadable artifact targets | complete |
-| Add draft GitHub Release build workflow | planned |
+| Add draft artifact build workflow | complete |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |

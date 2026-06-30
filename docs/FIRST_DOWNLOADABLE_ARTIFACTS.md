@@ -4,7 +4,9 @@
 
 The first downloadable developer-preview release should be `v0.4.1`.
 
-It should publish archive-based artifacts through draft GitHub Releases after maintainer review.
+It should publish archive-based artifacts through a future draft GitHub Release after maintainer review.
+
+Before publishing exists, `.github/workflows/draft-artifacts.yml` builds draft macOS archive artifacts for inspection as GitHub Actions workflow artifacts only.
 
 Stage 1 should target macOS arm64 and macOS x64.
 
@@ -127,6 +129,20 @@ Do not require `SHA256SUMS.sig` for the first developer-preview release unless s
 
 Signed checksum manifests are future work.
 
+## Draft Workflow Status
+
+The draft artifact workflow exists for inspection only.
+
+It:
+
+- runs manually through GitHub Actions
+- targets macOS arm64 and macOS x64 archives
+- includes the gateway binary and desktop binary output when the build succeeds
+- generates `SHA256SUMS` for produced archives
+- uploads GitHub Actions workflow artifacts only
+
+It does not create a GitHub Release, publish release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+
 ## Release Notes Requirements
 
 The first downloadable release notes must state:
@@ -217,7 +233,7 @@ It gives the next implementation task enough detail to create a draft build work
 
 ## Next Implementation Tasks
 
-1. `ci(release): Add draft GitHub Release build workflow`
+1. `ci(release): Add draft artifact build workflow` - complete
 2. `test(release): Validate artifact naming and checksum generation`
 3. `docs(release): Draft v0.4.1 developer-preview release notes`
 4. `chore(release): Publish first unsigned developer-preview build`

@@ -4,7 +4,7 @@
 
 This document defines the post-`v0.4.0` distribution path for AEGIS.
 
-It is a plan only. It does not add release automation, packaging, installers, signing, notarization, GitHub Release publishing, or downloadable artifacts.
+It is a planning document. It does not publish releases, create public downloadable assets, add installers, sign artifacts, or notarize app bundles.
 
 The first concrete artifact target decision is recorded in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
 
@@ -63,7 +63,7 @@ AEGIS should use staged release channels.
 | --- | --- | --- |
 | Source release | Tag and source checkout only. | `v0.4.0` complete. |
 | Pre-alpha downloadable build | Unsigned downloadable developer-preview artifacts with checksums and strong warnings. | First target selected in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`. |
-| Unsigned developer preview | Early artifact channel for maintainers and technical evaluators. | First target selected for `v0.4.1`. |
+| Unsigned developer preview | Early artifact channel for maintainers and technical evaluators. | Draft workflow artifacts exist for inspection only. |
 | Signed/notarized release | Downloadable artifacts with platform trust controls. | Deferred. |
 | Installer-based release | Installer packages for normal user installation. | Deferred. |
 
@@ -169,6 +169,12 @@ Do not store signing keys, certificates, or secrets in this repository.
 
 ## GitHub Release Workflow
 
+A draft artifact build workflow now exists at `.github/workflows/draft-artifacts.yml`.
+
+The workflow is manually triggered. It builds macOS draft archives, generates `SHA256SUMS`, and uploads GitHub Actions workflow artifacts only.
+
+It does not create a GitHub Release, upload release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+
 A future GitHub Release workflow should:
 
 1. Trigger on an approved version tag.
@@ -242,7 +248,7 @@ Because `docs/PHASEMAP.md` currently assigns `v0.5.0` to recovery and replay exe
 
 ## Recommended Next Tasks
 
-1. `ci(release): Add draft GitHub Release build workflow`
+1. `ci(release): Add draft artifact build workflow` - complete
 2. `test(release): Validate artifact naming and checksum generation`
 3. `docs(release): Draft v0.4.1 developer-preview release notes`
 4. `chore(release): Publish first unsigned developer-preview build`

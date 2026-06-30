@@ -258,4 +258,8 @@ The plan keeps `v0.4.0` source-only and defines a staged path toward GitHub Rele
 
 The first downloadable artifact targets are selected in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
 
-Downloadable artifacts remain future work.
+A manual draft artifact workflow now builds macOS archive-style artifacts for inspection as GitHub Actions workflow artifacts only.
+
+It does not publish a GitHub Release, create release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+
+Public downloadable release artifacts remain future work.

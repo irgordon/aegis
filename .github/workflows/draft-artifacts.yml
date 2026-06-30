@@ -1,0 +1,120 @@
+name: Draft Release Artifacts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AEGIS_DRAFT_VERSION: v0.4.1
+
+jobs:
+  macos-draft-artifacts:
+    name: Draft macOS artifact (${{ matrix.platform }})
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-arm64
+            rust_target: aarch64-apple-darwin
+            archive_name: aegis-v0.4.1-macos-arm64.tar.gz
+          - platform: macos-x64
+            rust_target: x86_64-apple-darwin
+            archive_name: aegis-v0.4.1-macos-x64.tar.gz
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+          targets: ${{ matrix.rust_target }}
+
+      - name: Run repository verifier
+        run: python3 scripts/verify.py
+
+      - name: Check gateway formatting
+        run: cargo fmt --check
+
+      - name: Run gateway lints
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run gateway tests
+        run: cargo test
+
+      - name: Check desktop formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+
+      - name: Run desktop lints
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -- -D warnings
+
+      - name: Run desktop tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml
+
+      - name: Check desktop crate
+        run: cargo check --manifest-path src-tauri/Cargo.toml
+
+      - name: Build gateway binary
+        run: cargo build --release --bin aegis-gateway --target "${{ matrix.rust_target }}"
+
+      - name: Build desktop binary
+        run: cargo build --release --manifest-path src-tauri/Cargo.toml --target "${{ matrix.rust_target }}"
+
+      - name: Assemble draft artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          base="aegis-${AEGIS_DRAFT_VERSION}-${{ matrix.platform }}"
+          archive="${{ matrix.archive_name }}"
+          staging="dist/${base}"
+
+          rm -rf dist
+          mkdir -p "${staging}/bin" "${staging}/desktop"
+
+          cp "target/${{ matrix.rust_target }}/release/aegis-gateway" "${staging}/bin/aegis-gateway"
+          cp "src-tauri/target/${{ matrix.rust_target }}/release/aegis-desktop" "${staging}/desktop/aegis-desktop"
+          cp "docs/releases/artifact-readme-v0.4.1.md" "${staging}/README.md"
+
+          cat > "${staging}/ARTIFACT-CONTENTS.md" <<'CONTENTS'
+          # Artifact Contents
+
+          This draft archive contains the AEGIS gateway binary and the desktop binary build output.
+
+          This workflow produces GitHub Actions workflow artifacts for inspection only.
+          It does not publish a GitHub Release.
+          CONTENTS
+
+          tar -czf "dist/${archive}" -C dist "${base}"
+
+          (
+            cd dist
+            shasum -a 256 "${archive}" > SHA256SUMS
+            grep -F "${archive}" SHA256SUMS
+          )
+
+      - name: Verify draft artifact names
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "dist/${{ matrix.archive_name }}"
+          test -s "dist/SHA256SUMS"
+          grep -F "${{ matrix.archive_name }}" "dist/SHA256SUMS"
+
+      - name: Upload draft workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: draft-${{ matrix.platform }}-v0.4.1
+          if-no-files-found: error
+          path: |
+            dist/${{ matrix.archive_name }}
+            dist/SHA256SUMS

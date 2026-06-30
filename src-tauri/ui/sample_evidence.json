@@ -16,8 +16,75 @@
     "state_status": "completed",
     "last_known_state": "completed",
     "recovery_inspection_status": "inspected",
-    "recovery_plan_outcome": "candidate_for_future_replay",
-    "allowed_future_action": "future_replay_evaluation",
+    "terminal_status": "terminal",
+    "recoverability_status": "not_recoverable_terminal",
+    "inspection_error_summary": "No inspection errors in sample evidence.",
+    "recovery_plan_status": "planned",
+    "recovery_plan_outcome": "not_recoverable_terminal",
+    "allowed_future_action": "none",
+    "plan_reason": "Execution already reached a terminal completed state.",
+    "planning_error_summary": "No planning errors in sample evidence.",
+    "recovery_inspection": {
+      "inspection_status": "inspected",
+      "execution_ref": "sample_exec_001",
+      "last_known_state": "completed",
+      "terminal_status": "terminal",
+      "recoverability_status": "not_recoverable_terminal",
+      "inspection_error_summary": "No inspection errors in sample evidence.",
+      "plain_language_meaning": "This sample execution is terminal and should not be replayed."
+    },
+    "recovery_plan": {
+      "plan_status": "planned",
+      "plan_outcome": "not_recoverable_terminal",
+      "plan_outcome_label": "Not recoverable",
+      "allowed_future_action": "none",
+      "allowed_future_action_label": "No future action",
+      "plan_reason": "Execution already reached a terminal completed state.",
+      "planning_error_summary": "No planning errors in sample evidence.",
+      "plain_language_meaning": "Recovery planning is sample guidance only, not recovery execution."
+    },
+    "recovery_display_mappings": {
+      "plan_outcomes": [
+        {
+          "value": "not_recoverable_terminal",
+          "display_label": "Not recoverable"
+        },
+        {
+          "value": "not_recoverable_corrupted",
+          "display_label": "Not recoverable: evidence corrupted"
+        },
+        {
+          "value": "candidate_for_audit_retry",
+          "display_label": "Audit retry candidate"
+        },
+        {
+          "value": "candidate_for_future_replay",
+          "display_label": "Future evaluation only"
+        },
+        {
+          "value": "inspection_failed",
+          "display_label": "Inspection failed"
+        }
+      ],
+      "future_actions": [
+        {
+          "value": "none",
+          "display_label": "No future action"
+        },
+        {
+          "value": "audit_retry_only",
+          "display_label": "Audit retry only"
+        },
+        {
+          "value": "future_replay_evaluation_only",
+          "display_label": "Future evaluation only"
+        },
+        {
+          "value": "manual_review_only",
+          "display_label": "Manual review only"
+        }
+      ]
+    },
     "timeline": [
       {
         "stage": "Request",

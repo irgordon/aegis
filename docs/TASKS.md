@@ -31,6 +31,7 @@ The UI must render fixture evidence before live IPC or live runtime calls.
 | Render sample status cards from fixture evidence | complete |
 | Render normalized error cards from sample evidence | complete |
 | Harden sample evidence rendering invariants | complete |
+| Render sample recovery inspection and planning cards | complete |
 | Define minimal IPC data bridge | planned |
 | Render live read-only runtime evidence | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |
@@ -208,6 +209,7 @@ Status: started.
 | Render sample status cards from fixture evidence | complete |
 | Render normalized error cards from sample evidence | complete |
 | Harden sample evidence rendering invariants | complete |
+| Render sample recovery inspection and planning cards | complete |
 | Define minimal IPC data bridge | planned |
 | Render live read-only runtime evidence | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |

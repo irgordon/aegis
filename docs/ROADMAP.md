@@ -210,6 +210,7 @@ Render governed execution evidence in a non-authoritative graphical desktop oper
 - sample execution timeline from fixture evidence
 - sample status cards from fixture evidence
 - normalized error cards from fixture evidence
+- sample recovery inspection and recovery planning cards from fixture evidence
 - minimal IPC data bridge
 - live read-only runtime evidence rendering
 - read-only audit, state, recovery inspection, and recovery plan views
@@ -218,7 +219,7 @@ Render governed execution evidence in a non-authoritative graphical desktop oper
 Completed Phase 4 foundation:
 
 - static Tauri shell with Slint landing window
-- fixture-backed Slint execution timeline, status cards, and normalized error card
+- fixture-backed Slint execution timeline, status cards, normalized error card, and recovery inspection and planning cards
 
 Next sequence:
 

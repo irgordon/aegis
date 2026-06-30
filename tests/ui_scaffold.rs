@@ -265,17 +265,198 @@ fn recovery_plan_sample_remains_future_evaluation_only() {
         successful_execution(&evidence)
             .get("recovery_plan_outcome")
             .and_then(Value::as_str),
-        Some("candidate_for_future_replay")
+        Some("not_recoverable_terminal")
     );
     assert_eq!(
         successful_execution(&evidence)
             .get("allowed_future_action")
             .and_then(Value::as_str),
-        Some("future_replay_evaluation")
+        Some("none")
     );
     assert!(combined.contains("future evaluation only"));
     assert!(combined.contains("not replay execution"));
     assert_absent(&combined, forbidden_replay_claims);
+}
+
+#[test]
+fn recovery_inspection_card_labels_are_present() {
+    let slint_ui = read(SLINT_UI);
+
+    for label in [
+        "Sample Recovery Inspection",
+        "Inspection available",
+        "Execution",
+        "Last state",
+        "Completed",
+        "Terminal",
+        "Yes",
+        "Recoverability",
+        "Not recoverable",
+        "does not read state logs",
+    ] {
+        assert!(
+            slint_ui.contains(label),
+            "recovery inspection card must render {label}"
+        );
+    }
+}
+
+#[test]
+fn recovery_plan_card_labels_are_present() {
+    let slint_ui = read(SLINT_UI);
+
+    for label in [
+        "Sample Recovery Plan",
+        "Plan status",
+        "Planned",
+        "Outcome",
+        "Future action",
+        "No future action",
+        "Reason",
+        "Sample guidance only",
+    ] {
+        assert!(
+            slint_ui.contains(label),
+            "recovery plan card must render {label}"
+        );
+    }
+}
+
+#[test]
+fn recovery_sample_fields_match_backend_recovery_semantics() {
+    let evidence = sample_evidence();
+    let inspection = recovery_inspection(&evidence);
+    let plan = recovery_plan(&evidence);
+
+    assert_eq!(
+        inspection.get("inspection_status").and_then(Value::as_str),
+        Some("inspected")
+    );
+    assert_eq!(
+        inspection.get("last_known_state").and_then(Value::as_str),
+        Some("completed")
+    );
+    assert_eq!(
+        inspection.get("terminal_status").and_then(Value::as_str),
+        Some("terminal")
+    );
+    assert_eq!(
+        inspection
+            .get("recoverability_status")
+            .and_then(Value::as_str),
+        Some("not_recoverable_terminal")
+    );
+    assert_eq!(
+        plan.get("plan_outcome").and_then(Value::as_str),
+        Some("not_recoverable_terminal")
+    );
+    assert_eq!(
+        plan.get("allowed_future_action").and_then(Value::as_str),
+        Some("none")
+    );
+}
+
+#[test]
+fn bounded_recovery_plan_outcomes_are_represented_safely() {
+    let evidence = sample_evidence();
+    let mappings = recovery_mapping_field_set(&evidence, "plan_outcomes", "value");
+    let labels = recovery_mapping_field_set(&evidence, "plan_outcomes", "display_label");
+    let slint_ui = read(SLINT_UI);
+
+    for expected in expected_plan_outcomes() {
+        assert!(
+            mappings.contains(expected),
+            "sample recovery mappings must include {expected}"
+        );
+    }
+
+    for expected in [
+        "Not recoverable",
+        "Not recoverable: evidence corrupted",
+        "Audit retry candidate",
+        "Future evaluation only",
+        "Inspection failed",
+    ] {
+        assert!(
+            labels.contains(expected) || slint_ui.contains(expected),
+            "sample UI must safely render {expected}"
+        );
+    }
+}
+
+#[test]
+fn bounded_future_actions_are_represented_safely() {
+    let evidence = sample_evidence();
+    let mappings = recovery_mapping_field_set(&evidence, "future_actions", "value");
+    let labels = recovery_mapping_field_set(&evidence, "future_actions", "display_label");
+    let slint_ui = read(SLINT_UI);
+
+    for expected in expected_future_actions() {
+        assert!(
+            mappings.contains(expected),
+            "sample recovery future actions must include {expected}"
+        );
+    }
+
+    for expected in [
+        "No future action",
+        "Audit retry only",
+        "Future evaluation only",
+        "Manual review only",
+    ] {
+        assert!(
+            labels.contains(expected) || slint_ui.contains(expected),
+            "sample UI must safely render {expected}"
+        );
+    }
+}
+
+#[test]
+fn audit_retry_and_corrupted_recovery_labels_are_not_executed_or_recoverable() {
+    let combined = combined_sample_ui_text().to_lowercase();
+    let forbidden_recovery_claims = [
+        "audit retry executed",
+        "audit retry complete",
+        "corrupted evidence is recoverable",
+        "corrupted evidence recoverable",
+        "safe to recover",
+        "run recovery",
+    ];
+
+    assert!(combined.contains("audit retry candidate"));
+    assert!(combined.contains("audit retry only"));
+    assert!(combined.contains("not recoverable: evidence corrupted"));
+    assert!(combined.contains("manual review only"));
+    assert_absent(&combined, forbidden_recovery_claims);
+}
+
+#[test]
+fn sample_recovery_evidence_is_clearly_sample_and_non_live() {
+    let combined = combined_sample_ui_text().to_lowercase();
+
+    assert!(combined.contains("sample evidence"));
+    assert!(combined.contains("sample recovery inspection"));
+    assert!(combined.contains("sample recovery plan"));
+    assert!(combined.contains("does not read state logs"));
+    assert!(combined.contains("does not inspect live state"));
+}
+
+#[test]
+fn desktop_scaffold_does_not_read_audit_state_or_recovery_files() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT).to_lowercase();
+    let slint_ui = read(SLINT_UI).to_lowercase();
+    let forbidden_runtime_loading = [
+        "read_to_string",
+        "audit.jsonl",
+        "state.jsonl",
+        "--inspect-state",
+        "--plan-recovery",
+        "executionrecoveryinspector",
+        "recoveryplangenerator",
+    ];
+
+    assert_absent(&entrypoint, forbidden_runtime_loading);
+    assert_absent(&slint_ui, forbidden_runtime_loading);
 }
 
 #[test]
@@ -421,6 +602,18 @@ fn successful_execution(evidence: &Value) -> &Value {
         .expect("successful_execution should exist")
 }
 
+fn recovery_inspection(evidence: &Value) -> &Value {
+    successful_execution(evidence)
+        .get("recovery_inspection")
+        .expect("recovery_inspection should exist")
+}
+
+fn recovery_plan(evidence: &Value) -> &Value {
+    successful_execution(evidence)
+        .get("recovery_plan")
+        .expect("recovery_plan should exist")
+}
+
 fn ordered_timeline_stages(evidence: &Value) -> Vec<String> {
     ordered_evidence_strings(evidence, &["successful_execution", "timeline"], "stage")
 }
@@ -435,6 +628,14 @@ fn timeline_field_set(evidence: &Value, field: &str) -> BTreeSet<String> {
 
 fn status_card_field_set(evidence: &Value, field: &str) -> BTreeSet<String> {
     evidence_string_set(evidence, &["successful_execution", "status_cards"], field)
+}
+
+fn recovery_mapping_field_set(evidence: &Value, mapping: &str, field: &str) -> BTreeSet<String> {
+    evidence_string_set(
+        evidence,
+        &["successful_execution", "recovery_display_mappings", mapping],
+        field,
+    )
 }
 
 fn ordered_evidence_strings(evidence: &Value, path: &[&str], field: &str) -> Vec<String> {
@@ -551,6 +752,25 @@ fn expected_evidence_sources() -> [&'static str; 11] {
         "execution_lifecycle",
         "recovery_inspection_report",
         "recovery_plan_report",
+    ]
+}
+
+fn expected_plan_outcomes() -> [&'static str; 5] {
+    [
+        "not_recoverable_terminal",
+        "not_recoverable_corrupted",
+        "candidate_for_audit_retry",
+        "candidate_for_future_replay",
+        "inspection_failed",
+    ]
+}
+
+fn expected_future_actions() -> [&'static str; 4] {
+    [
+        "none",
+        "audit_retry_only",
+        "future_replay_evaluation_only",
+        "manual_review_only",
     ]
 }
 

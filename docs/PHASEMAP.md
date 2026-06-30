@@ -220,6 +220,7 @@ Started.
 - Slint-rendered sample execution timeline from fixture evidence
 - Slint-rendered sample status cards from fixture evidence
 - Slint-rendered normalized error cards from fixture evidence
+- Slint-rendered sample recovery inspection and recovery planning cards from fixture evidence
 - minimal IPC data bridge
 - live read-only runtime evidence rendering
 - read-only audit, state, recovery inspection, and recovery plan views

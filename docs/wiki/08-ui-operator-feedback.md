@@ -92,10 +92,12 @@ It shows:
 - execution timeline stages
 - status cards
 - one normalized error card
+- sample recovery inspection evidence
+- sample recovery planning guidance
 - pre-alpha status
 - backend authority-boundary language
 
-It does not render live backend evidence, call gateway execution, define IPC commands, or implement dashboard behavior.
+It does not render live backend evidence, call gateway execution, define IPC commands, inspect live state logs, generate live recovery plans, replay execution, or implement dashboard behavior.
 
 It has not implemented:
 

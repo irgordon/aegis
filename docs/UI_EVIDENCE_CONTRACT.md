@@ -75,6 +75,8 @@ It shows:
 - execution timeline stages
 - status cards
 - one normalized error card
+- sample recovery inspection card
+- sample recovery planning card
 - the backend authority boundary
 - pre-alpha status
 
@@ -83,6 +85,30 @@ The sample fixture lives at `src-tauri/ui/sample_evidence.json`.
 This sample is not live runtime output. It does not load audit logs, state logs, recovery reports, policy bundles, or gateway output.
 
 The UI still does not define IPC commands, call the local gateway runtime, execute wrappers, issue credentials, authorize execution, inspect recovery, or generate recovery plans.
+
+## Recovery Display Labels
+
+Recovery inspection and planning evidence must use safe display labels.
+
+These labels are presentation mappings only. They do not authorize recovery, replay, audit retry, or execution.
+
+| Backend value | Safe display label |
+| --- | --- |
+| `candidate_for_future_replay` | Future evaluation only |
+| `future_replay_evaluation_only` | Future evaluation only |
+| `candidate_for_audit_retry` | Audit retry candidate |
+| `audit_retry_only` | Audit retry only |
+| `not_recoverable_terminal` | Not recoverable |
+| `not_recoverable_corrupted` | Not recoverable: evidence corrupted |
+| `inspection_failed` | Inspection failed |
+| `manual_review_only` | Manual review only |
+| `none` | No future action |
+
+The UI must not display `candidate_for_future_replay` as replay-ready, replay-approved, safe-to-replay, or resumable.
+
+The UI must not display `audit_retry_only` as an executed audit retry.
+
+Corrupted evidence must be displayed as not recoverable or manual-review-only, never as recoverable.
 
 ## Execution Timeline Model
 

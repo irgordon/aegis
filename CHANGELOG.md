@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.29] - 2026-06-30
+
+### Added
+
+- Added sample recovery inspection and recovery planning cards to the Slint desktop UI scaffold.
+- Added UI tests covering safe recovery and planning display labels.
+
+### Changed
+
+- Updated sample UI evidence and documentation for non-live recovery inspection and recovery planning display.
+- Updated Phase 4 task tracking for fixture-backed recovery and planning cards.
+
 ## [0.2.28] - 2026-06-30
 
 ### Added

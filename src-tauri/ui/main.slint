@@ -194,6 +194,136 @@ component ErrorCard inherits Rectangle {
     }
 }
 
+component RecoveryDetail inherits HorizontalLayout {
+    in property <string> detail_label;
+    in property <string> detail_value;
+
+    spacing: 8px;
+
+    Text {
+        width: 108px;
+        text: root.detail_label;
+        color: #3b3667;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    Text {
+        text: root.detail_value;
+        color: #2b2f38;
+        font-size: 12px;
+        wrap: word-wrap;
+    }
+}
+
+component RecoveryInspectionCard inherits Rectangle {
+    width: 292px;
+    height: 188px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: #c4b5fd;
+    background: #fbfaff;
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 8px;
+
+        Text {
+            text: "Sample Recovery Inspection";
+            color: #4c1d95;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        RecoveryDetail {
+            detail_label: "Status";
+            detail_value: "Inspection available";
+        }
+
+        RecoveryDetail {
+            detail_label: "Execution";
+            detail_value: "sample_exec_001";
+        }
+
+        RecoveryDetail {
+            detail_label: "Last state";
+            detail_value: "Completed";
+        }
+
+        RecoveryDetail {
+            detail_label: "Terminal";
+            detail_value: "Yes";
+        }
+
+        RecoveryDetail {
+            detail_label: "Recoverability";
+            detail_value: "Not recoverable";
+        }
+
+        Text {
+            text: "No inspection errors in sample evidence. This card does not read state logs.";
+            color: #4b5563;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+    }
+}
+
+component RecoveryPlanCard inherits Rectangle {
+    width: 292px;
+    height: 214px;
+    border-radius: 8px;
+    border-width: 1px;
+    border-color: #fdba74;
+    background: #fffaf3;
+
+    VerticalLayout {
+        padding: 14px;
+        spacing: 8px;
+
+        Text {
+            text: "Sample Recovery Plan";
+            color: #9a3412;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        RecoveryDetail {
+            detail_label: "Plan status";
+            detail_value: "Planned";
+        }
+
+        RecoveryDetail {
+            detail_label: "Outcome";
+            detail_value: "Not recoverable";
+        }
+
+        RecoveryDetail {
+            detail_label: "Future action";
+            detail_value: "No future action";
+        }
+
+        RecoveryDetail {
+            detail_label: "Reason";
+            detail_value: "Execution already reached a terminal completed state.";
+        }
+
+        Text {
+            text: "Safe labels: Future evaluation only; Audit retry candidate; Audit retry only; Not recoverable: evidence corrupted; Manual review only.";
+            color: #4b5563;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Sample guidance only. This UI does not inspect live state, approve recovery, execute audit retry, replay, or resume execution.";
+            color: #7c2d12;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+    }
+}
+
 export component AegisWindow inherits Window {
     title: "AEGIS";
     width: 1280px;
@@ -412,7 +542,13 @@ export component AegisWindow inherits Window {
                         }
                     }
 
-                    ErrorCard {}
+                    VerticalLayout {
+                        spacing: 12px;
+
+                        ErrorCard {}
+                        RecoveryInspectionCard {}
+                        RecoveryPlanCard {}
+                    }
                 }
             }
         }

@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.26] - 2026-06-30
+
+### Added
+
+- Added PHASE_REVIEW.md to record the current phase assessment and corrected phase model.
+
+### Changed
+
+- Reconciled ROADMAP.md, PHASEMAP.md, and TASKS.md with the current local execution engine and static Tauri plus Slint UI scaffold.
+- Clarified that Phase 4 is now the Graphical Operator Surface and should proceed through fixture-backed evidence rendering before live IPC.
+- Deferred replay execution, approval workflow, production credential providers, HTTP service, deployment, observability, and production hardening to later phases.
+
 ## [0.2.25] - 2026-06-30
 
 ### Added

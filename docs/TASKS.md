@@ -18,49 +18,68 @@ Task status values are bounded:
 
 No other status values should be used unless this document is updated.
 
-## Active Phase 3 Work
+## Active Phase 4 Work
 
-Phase 3 work is grouped by the purpose it serves.
+Phase 4 work renders backend evidence in a non-authoritative graphical operator surface.
 
-### Execute
-
-| Task | Status |
-| --- | --- |
-| Add local sandbox L1 mutation wrapper | complete |
-| Add broader mutation-capable execution path | planned |
-
-### Govern
+The UI must render fixture evidence before live IPC or live runtime calls.
 
 | Task | Status |
 | --- | --- |
-| Add local credential injection boundary | complete |
+| Add Tauri shell with Slint UI scaffold | complete |
+| Render execution timeline from sample evidence | planned |
+| Render sample status cards from fixture evidence | planned |
+| Render normalized error cards from sample evidence | planned |
+| Define minimal IPC data bridge | planned |
+| Render live read-only runtime evidence | planned |
+| Render audit, state, recovery inspection, and recovery plan views read-only | planned |
+
+Recommended next task:
+
+```text
+feat(ui): Render execution timeline from sample evidence
+```
+
+## Deferred Phase Work
+
+### Phase 5: Recovery and Replay Execution
+
+| Task | Status |
+| --- | --- |
+| Add replay eligibility report | planned |
+| Add replay dry-run plan | planned |
+| Add constrained replay execution | planned |
+| Add audit retry path | planned |
+| Add recovery execution guardrails | planned |
+
+### Phase 6: Approval and Production Credential Providers
+
+| Task | Status |
+| --- | --- |
 | Add approval workflow boundary | planned |
+| Add approval evidence and state persistence | planned |
 | Add production credential provider boundary | planned |
+| Add provider compatibility checks | planned |
 
-### Recover
-
-| Task | Status |
-| --- | --- |
-| Add durable local execution state log | complete |
-| Add execution recovery inspection | complete |
-| Add recovery plan generation | complete |
-| Add durable execution state | planned |
-| Add replay and recovery behavior | planned |
-
-### Prove
+### Phase 7: Platform and Production Hardening
 
 | Task | Status |
 | --- | --- |
-| Harden execution state log invariants | complete |
-| Harden recovery inspection invariants | complete |
-| Harden recovery plan invariants | complete |
-| Formalize docs/wiki knowledge base | complete |
-| Review docs/wiki language and accuracy | complete |
-| Define UI-renderable evidence contract | complete |
-| Record Slint with Tauri UI direction | complete |
-| Add execution evidence | planned |
-| Add replay evidence | planned |
-| Add governed execution integration tests | planned |
+| Add HTTP API boundary | planned |
+| Add service deployment model | planned |
+| Add runtime configuration model | planned |
+| Add operational observability | planned |
+| Add plugin or wrapper extension architecture | planned |
+| Add orchestrator integration references | planned |
+| Add production PKI or trust distribution | planned |
+| Add remote policy distribution | planned |
+| Add high-availability deployment guidance | planned |
+| Add performance and load testing | planned |
+| Complete security review | planned |
+| Add fuzz testing for critical parsers and boundaries | planned |
+| Add compatibility guarantees | planned |
+| Add release engineering | planned |
+| Add operational documentation | planned |
 
 Completed phase history remains below for traceability and repository verification.
 
@@ -140,7 +159,7 @@ Status: complete.
 
 Objective: execute real AI actions safely under governance.
 
-Status: in progress.
+Status: complete for local built-in execution foundation.
 
 Completed foundation work:
 
@@ -161,14 +180,62 @@ Completed foundation work:
 | Harden recovery inspection invariants | complete |
 | Add recovery plan generation | complete |
 | Harden recovery plan invariants | complete |
+
+## Phase 3.5: UI-Ready Evidence and Documentation
+
+Objective: prepare backend evidence and documentation for graphical rendering without granting UI authority.
+
+Status: complete.
+
+| Task | Status |
+| --- | --- |
 | Formalize docs/wiki knowledge base | complete |
 | Review docs/wiki language and accuracy | complete |
 | Define UI-renderable evidence contract | complete |
 | Record Slint with Tauri UI direction | complete |
 
-## Phase 4: Platform Capabilities
+## Phase 4: Graphical Operator Surface
 
-Objective: expose and operate the governed execution engine through platform boundaries after runtime behavior is stable.
+Objective: render backend evidence in a non-authoritative Tauri plus Slint desktop operator surface.
+
+Status: started.
+
+| Task | Status |
+| --- | --- |
+| Add Tauri shell with Slint UI scaffold | complete |
+| Render execution timeline from sample evidence | planned |
+| Render sample status cards from fixture evidence | planned |
+| Render normalized error cards from sample evidence | planned |
+| Define minimal IPC data bridge | planned |
+| Render live read-only runtime evidence | planned |
+| Render audit, state, recovery inspection, and recovery plan views read-only | planned |
+
+## Phase 5: Recovery and Replay Execution
+
+Objective: add constrained recovery and replay behavior after read-only inspection and planning.
+
+| Task | Status |
+| --- | --- |
+| Add replay eligibility report | planned |
+| Add replay dry-run plan | planned |
+| Add constrained replay execution | planned |
+| Add audit retry path | planned |
+| Add recovery execution guardrails | planned |
+
+## Phase 6: Approval and Production Credential Providers
+
+Objective: add human approval workflow and production credential provider boundaries.
+
+| Task | Status |
+| --- | --- |
+| Add approval workflow boundary | planned |
+| Add approval evidence and state persistence | planned |
+| Add production credential provider boundary | planned |
+| Add provider compatibility checks | planned |
+
+## Phase 7: Platform and Production Hardening
+
+Objective: prepare AEGIS for production-oriented evaluation.
 
 | Task | Status |
 | --- | --- |
@@ -178,16 +245,6 @@ Objective: expose and operate the governed execution engine through platform bou
 | Add operational observability | planned |
 | Add plugin or wrapper extension architecture | planned |
 | Add orchestrator integration references | planned |
-| Add Tauri shell with Slint UI scaffold | complete |
-| Render execution timeline from sample evidence in Slint | planned |
-| Render normalized error cards in Slint | planned |
-
-## Phase 5: Production Hardening
-
-Objective: prepare AEGIS for production-oriented evaluation.
-
-| Task | Status |
-| --- | --- |
 | Add production PKI or trust distribution | planned |
 | Add remote policy distribution | planned |
 | Add high-availability deployment guidance | planned |

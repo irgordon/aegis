@@ -19,11 +19,17 @@ AEGIS exists so execution is not trusted just because an AI requested it. AEGIS 
 
 AEGIS is pre-alpha.
 
-The repository currently contains a local Rust gateway MVP and early Governed Execution Engine work. It can validate structured requests, verify a local policy bundle, evaluate local policy, authorize governed execution, dispatch built-in local wrappers, optionally append local audit and state evidence, inspect local execution state, and generate read-only recovery plan reports.
+`v0.4.0` is complete, tagged, pushed, and closed as a local-only source release.
+
+The repository currently contains a local Rust gateway, a Tauri plus Slint desktop shell, governed built-in wrappers, audit and state evidence, recovery inspection, recovery planning, and an executable release validation gate.
+
+It can validate structured requests, verify a local policy bundle, evaluate local policy, authorize governed execution, dispatch built-in local wrappers, optionally append local audit and state evidence, inspect local execution state, generate read-only recovery plan reports, and show fixed live health-check evidence in the desktop UI.
 
 AEGIS is not ready for production use.
 
-It does not yet provide production deployment, HTTP service behavior, production identity providers, real external system integrations, approval workflow execution, replay execution, or a completed Tauri operator UI.
+It does not provide published binaries, installers, packaging, signing, auto-update, production deployment, HTTP service behavior, production identity providers, real external system integrations, approval workflow execution, replay execution, recovery execution, or enterprise hardening.
+
+Post-`v0.4.0` distribution planning has started. `v0.4.1` is selected as the first planned downloadable developer-preview target, starting with macOS arm64 and macOS x64 archive artifacts. No public release assets exist yet.
 
 ## What It Does Today
 
@@ -41,12 +47,17 @@ At a high level, AEGIS can:
 - record execution lifecycle transitions
 - inspect local state logs
 - generate read-only bounded recovery plan reports
+- launch a local desktop UI that renders fixed live `health.check` evidence and labeled sample evidence
+- run the v0.4.0 release validation gate
 - return structured JSON output
 
 ## What It Does Not Do Yet
 
 AEGIS does not yet:
 
+- publish downloadable release assets
+- provide installers or packaged apps
+- sign or notarize artifacts
 - execute arbitrary external tools
 - inject real secrets
 - retrieve credentials from a vault
@@ -54,7 +65,7 @@ AEGIS does not yet:
 - replay executions
 - recover executions automatically
 - expose a production HTTP API
-- provide a completed desktop UI
+- let the UI submit arbitrary gateway requests
 - provide production PKI or remote policy distribution
 
 ## Who Should Read This?

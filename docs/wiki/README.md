@@ -35,6 +35,7 @@ It should:
 - link to higher-authority documents instead of copying them
 - describe what exists today
 - make future UI rendering needs understandable without implementing UI
+- keep release and distribution status accurate
 
 It should not:
 
@@ -44,6 +45,7 @@ It should not:
 - replace `docs/INVARIANTS.md`
 - behave like a changelog
 - become a development diary
+- imply published downloads, installers, signing, or production readiness before they exist
 
 ## Authoritative References
 
@@ -56,6 +58,8 @@ Use these documents when implementation details matter:
 - `docs/POLICY_ENGINE.md`
 - `docs/AUDIT_LOGGING.md`
 - `docs/API_SPEC.md`
+- `docs/RELEASE_PATH.md`
+- `docs/RELEASE_DISTRIBUTION_PLAN.md`
+- `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`
 - `docs/TASKS.md`
 - `CHANGELOG.md`
-

@@ -12,8 +12,9 @@ The main idea is simple: a request must pass through every governance boundary b
 The current operator signal flow is:
 
 ```text
-CLI or Tauri UI evidence surface
+CLI request path or fixed Tauri UI evidence path
   -> structured request
+  -> request validation
   -> runtime local path
   -> policy bundle verification
   -> policy decision
@@ -28,7 +29,7 @@ CLI or Tauri UI evidence surface
   -> UI visual feedback
 ```
 
-The CLI exists for local execution and validation.
+The CLI exists for local execution, validation, inspection, testing, and automation.
 
 The Tauri UI can now render fixture-backed evidence and fixed live `health.check` backend evidence. It does not submit arbitrary gateway requests, run mutation wrappers, inspect live state logs, or generate live recovery plans.
 
@@ -36,7 +37,7 @@ The Tauri UI can now render fixture-backed evidence and fixed live `health.check
 
 ```mermaid
 flowchart TD
-    A["CLI input or future Tauri UI intent"] --> B["Structured ToolCallRequest"]
+    A["CLI input or fixed UI health-check evidence request"] --> B["Structured ToolCallRequest"]
     B --> C["Local runtime"]
     C --> D{"Request valid?"}
     D -- "No" --> X["Failed closed"]
@@ -62,7 +63,7 @@ flowchart TD
     Y --> S
     Z --> T["Structured JSON output"]
     S --> T
-    T --> U["Future UI visual feedback"]
+    T --> U["UI visual feedback when evidence is available"]
     V["Optional state log evidence"] --> W["Read-only recovery inspection"]
     W --> N["Read-only recovery plan classification"]
     N --> U

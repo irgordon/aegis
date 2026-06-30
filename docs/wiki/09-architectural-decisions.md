@@ -86,9 +86,9 @@ The `candidate_for_future_replay` outcome is a future evaluation classification,
 
 ## Decision: UI Is Presentation, Not Authority
 
-AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins.
+AEGIS uses Tauri as the desktop application shell and Slint as the graphical UI layer for the current operator surface.
 
-Future graphical operator feedback should be delivered through Slint inside the Tauri desktop shell.
+Graphical operator feedback is delivered through Slint inside the Tauri desktop shell.
 
 The CLI remains a support surface for validation, inspection, testing, and automation.
 
@@ -97,6 +97,28 @@ The backend remains authoritative for validation, policy evaluation, execution a
 The UI is an operator surface, not an authority boundary.
 
 The UI must not decide policy, authorize execution, inject credentials, dispatch wrappers, make recovery decisions, or invent lifecycle state.
+
+## Decision: v0.4.0 Is Closed and Source-Only
+
+`v0.4.0` is complete, tagged, pushed, and closed as a local-only source release.
+
+It has no published binaries, installers, packages, signed artifacts, notarization, auto-update, or GitHub Release assets.
+
+Do not retroactively expand `v0.4.0`.
+
+## Decision: Distribution Starts as Draft Artifact Evidence
+
+Post-`v0.4.0` distribution work targets `v0.4.1` as the first planned downloadable developer-preview release.
+
+The first planned platforms are macOS arm64 and macOS x64.
+
+Artifacts are planned as unsigned archive-based developer previews with `SHA256SUMS`.
+
+Signing, notarization, installers, auto-update, and public GitHub Release publishing remain deferred until deliberately added.
+
+Draft artifacts should be workflow artifacts only until GitHub Release publishing is explicitly implemented.
+
+The draft artifact workflow exists locally in commit `3ab2874`, but the push is blocked until GitHub authentication has `workflow` scope.
 
 ## Decision: Abstractions Must Earn Their Place
 

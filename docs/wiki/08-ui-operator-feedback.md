@@ -7,7 +7,7 @@ This page explains how current backend evidence supports the Slint UI inside the
 
 The current UI implementation renders sample evidence and a fixed live `health.check` backend evidence path.
 
-The purpose is to make sure runtime evidence remains renderable by a future graphical interface.
+The purpose is to make runtime evidence understandable without giving the UI authority.
 
 Graphical operator feedback is delivered through Slint inside the Tauri desktop shell.
 
@@ -36,6 +36,7 @@ It must not:
 - make recovery decisions
 - bypass the gateway
 - create hidden execution paths
+- approve, replay, recover, authorize, issue credentials, or execute arbitrary gateway requests
 
 ## Evidence the UI Should Render
 
@@ -83,7 +84,7 @@ This keeps Rust as the authority for execution behavior and keeps the frontend f
 
 ## Current UI Status
 
-The repository has an initial Tauri shell with a Slint graphical surface.
+The repository has a Tauri shell with a Slint graphical surface.
 
 The surface renders static sample evidence from `src-tauri/ui/sample_evidence.json`.
 
@@ -97,11 +98,16 @@ It shows:
 - sample recovery inspection evidence
 - sample recovery planning guidance
 - pre-alpha status
+- local-only release posture
 - backend authority-boundary language
 
 It can render fixed live health-check evidence when available.
 
 It does not submit arbitrary gateway requests, execute `sandbox.note.write`, choose wrapper names, choose policy bundles, choose audit or state paths, inspect live state logs, generate live recovery plans, replay execution, recover execution, or implement dashboard behavior.
+
+The v0.4.0 UI uses a warm palette, status-first cards, explicit live/sample/error/not-available labels, and an authority-boundary message.
+
+The visual readability review passed for v0.4.0. Evidence is recorded in `docs/assets/release/v0.4.0-desktop-readability-review.md`.
 
 It has not implemented:
 

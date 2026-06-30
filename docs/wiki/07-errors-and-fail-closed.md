@@ -40,6 +40,8 @@ Optional safe fields may include:
 
 Error reports must not include secrets, credentials, private key material, raw tokens, or stack traces.
 
+They should not expose raw panic text or unsafe parser output.
+
 ## Fail-Closed Rule
 
 When AEGIS cannot prove the request is safe to continue, it denies or stops execution.
@@ -92,9 +94,9 @@ Avoid exposing internal enum names as the main explanation.
 
 Developer details may exist, but they must be safe and clearly secondary.
 
-## Future UI Use
+## UI Use
 
-A future Tauri UI should render structured errors as operator-facing feedback.
+The Tauri UI renders structured errors as operator-facing feedback when error evidence is available.
 
 Useful visual forms include:
 

@@ -107,7 +107,9 @@ Keeping them separate prevents a recovery mechanism from treating audit evidence
 
 ## Future UI Use
 
-A future Tauri UI can render:
+The current Tauri UI renders fixed live health-check evidence and labeled sample recovery evidence.
+
+Current and future Tauri UI views can render:
 
 - audit evidence as decision cards
 - state evidence as timelines
@@ -115,3 +117,5 @@ A future Tauri UI can render:
 - recovery plans as bounded operator guidance
 
 The UI must display backend evidence. It must not invent recovery actions or execution state.
+
+Recovery execution, replay execution, and audit retry execution are not implemented.

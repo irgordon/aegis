@@ -24,6 +24,8 @@ No other status values should be used unless this document is updated.
 
 Current work plans and validates the next distribution step without changing runtime behavior, UI behavior, public release assets, or release publishing.
 
+The draft artifact workflow exists in local commit `3ab2874`. Pushing that commit is currently blocked until GitHub authentication has `workflow` scope.
+
 Every new task after `v0.4.0` should identify whether it improves operator usability, removes a release blocker, improves release reliability, or reduces release-critical technical debt.
 
 Tasks that satisfy none should be deferred.
@@ -64,6 +66,8 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Define post-v0.4.0 distribution plan | complete |
 | Select first downloadable artifact targets | complete |
 | Add draft artifact build workflow | complete |
+| Refresh wiki for post-v0.4.0 distribution work | complete |
+| Push local draft artifact workflow commit after workflow-scope authentication | blocked |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |
@@ -263,6 +267,8 @@ Status: started.
 | Define post-v0.4.0 distribution plan | complete |
 | Select first downloadable artifact targets | complete |
 | Add draft artifact build workflow | complete |
+| Refresh wiki for post-v0.4.0 distribution work | complete |
+| Push local draft artifact workflow commit after workflow-scope authentication | blocked |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |

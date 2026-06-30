@@ -12,6 +12,8 @@ It is a guide, not a replacement for source code or architecture documents.
 | Component | Purpose | Main Inputs | Main Outputs |
 | --- | --- | --- | --- |
 | CLI entrypoint | Accept local commands and request paths | command arguments, stdin or file path | structured JSON output |
+| Tauri plus Slint desktop shell | Display operator evidence without owning authority | sample evidence, fixed live health-check evidence | timeline, status cards, normalized error and recovery cards |
+| Read-only IPC health-check bridge | Return fixed live backend evidence to the UI | no arbitrary UI runtime input | structured health-check evidence or normalized error evidence |
 | Local runtime | Coordinate the governed request path | request JSON, bundle path, optional audit/state/sandbox paths | runtime output, audit evidence, state evidence |
 | Gateway models | Represent request and response contracts | schema-backed request data | bounded response data |
 | Validation pipeline | Reject malformed or unsupported requests | raw request JSON | validated request or fail-closed response |
@@ -28,6 +30,7 @@ It is a guide, not a replacement for source code or architecture documents.
 | Recovery inspector | Read state logs and classify executions | state JSONL records | inspection report |
 | Recovery planner | Convert inspection report into bounded read-only future recovery guidance | inspection report | recovery plan report |
 | Structured errors | Explain failures safely | bounded error sources | code, severity, message, reason, next action, location |
+| Release validation script | Run the v0.4.0 local release gate | repository checkout | pass/fail release validation result |
 
 ## Important Source Areas
 
@@ -42,7 +45,10 @@ It is a guide, not a replacement for source code or architecture documents.
 | `src/audit/` | Audit record building and optional JSONL persistence |
 | `src/state/` | Lifecycle, state logging, recovery inspection, and recovery planning |
 | `src/error.rs` | Structured error reporting |
+| `src-tauri/` | Tauri shell and Slint operator surface |
 | `tests/` | Contract, runtime, fail-closed, wrapper, state, and recovery tests |
+| `scripts/validate-v0.4.0-release.sh` | Executable local release validation gate |
+| `.github/workflows/` | GitHub Actions workflows. Changes here require workflow-scope authentication to push. |
 | `examples/policy-bundles/local-dev/` | Local signed development policy bundle |
 | `schemas/` | Protocol schemas and examples |
 

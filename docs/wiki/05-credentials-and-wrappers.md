@@ -85,6 +85,10 @@ It requires:
 
 If any gate fails, the wrapper does not write.
 
+The desktop UI does not expose `sandbox.note.write`.
+
+Current UI live evidence is fixed to `health.check`. Sandbox mutation remains a CLI-governed local path.
+
 ## Wrapper Responsibilities
 
 Wrappers may:

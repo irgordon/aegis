@@ -65,6 +65,8 @@ It records:
 
 Denied and pending decisions do not create execution authorization and do not dispatch wrappers.
 
+The UI does not create authorization. It displays authorization evidence that the backend produced.
+
 ## Authority Sources
 
 The current runtime uses bounded authority sources.
@@ -102,6 +104,8 @@ Wrapper dispatch answers:
 > Is there a registered wrapper that can execute this request under the provided authority?
 
 Keeping these boundaries separate prevents a wrapper from becoming a hidden policy engine.
+
+The UI is outside this authority chain. It does not approve, authorize, override, or reinterpret policy outcomes.
 
 ## What Is Not Implemented
 

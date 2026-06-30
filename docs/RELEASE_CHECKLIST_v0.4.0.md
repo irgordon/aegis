@@ -26,38 +26,45 @@ Release identity:
 
 Do not tag `v0.4.0` if release notes, README text, UI text, or documentation imply production or enterprise readiness.
 
-## Release Candidate Status
+## Final Local Release Status
 
-Release candidate prepared. Pending maintainer approval to tag `v0.4.0`.
+`v0.4.0` is approved for local-only release closure.
+
+Maintainer approval was received in the final release task on 2026-06-30.
+
+Release validation passed before tagging.
 
 - [x] Release notes are complete.
 - [x] `CHANGELOG.md` contains an explicit `v0.4.0` section.
 - [x] Visual readability review passed.
 - [x] Release validation gate passes.
-- [ ] Maintainer explicitly approves tagging.
-- [ ] `v0.4.0` tag is created.
-- [ ] `v0.4.0` release is published.
+- [x] Maintainer explicitly approves tagging.
+- [x] `v0.4.0` tag is created from the final release-status commit.
+- [x] `v0.4.0` tag is pushed to origin.
+- [x] `main` is pushed to origin.
+- [x] GitHub Release publishing is deferred.
+- [x] No binaries, installers, packages, signatures, or release assets are published.
 
 ## Required Capability Checks
 
 Before tagging, confirm these capabilities work or are accurately represented:
 
-- [ ] Desktop app launches locally.
-- [ ] Static/sample UI evidence renders in the desktop app.
-- [ ] Fixed live `health.check` backend evidence renders in the desktop app.
-- [ ] Local gateway binary runs.
-- [ ] `health.check` wrapper executes under policy allow.
-- [ ] `sandbox.note.write` wrapper executes under policy allow and sandbox containment.
-- [ ] Local policy bundle verification succeeds for the included local development bundle.
-- [ ] Local policy evaluation produces bounded decisions.
-- [ ] Execution authorization is required before wrapper execution.
-- [ ] Credential boundary and safe local credential handle evidence are present where required.
-- [ ] `audit.jsonl` output is created when requested.
-- [ ] `state.jsonl` output is created when requested.
-- [ ] Recovery inspection runs from a state log.
-- [ ] Recovery plan generation runs from a state log.
-- [ ] Structured errors are emitted for failure paths.
-- [ ] Build and launch documentation is accurate.
+- [x] Desktop app launches locally.
+- [x] Static/sample UI evidence renders in the desktop app.
+- [x] Fixed live `health.check` backend evidence renders in the desktop app.
+- [x] Local gateway binary runs.
+- [x] `health.check` wrapper executes under policy allow.
+- [x] `sandbox.note.write` wrapper executes under policy allow and sandbox containment.
+- [x] Local policy bundle verification succeeds for the included local development bundle.
+- [x] Local policy evaluation produces bounded decisions.
+- [x] Execution authorization is required before wrapper execution.
+- [x] Credential boundary and safe local credential handle evidence are present where required.
+- [x] `audit.jsonl` output is created when requested.
+- [x] `state.jsonl` output is created when requested.
+- [x] Recovery inspection runs from a state log.
+- [x] Recovery plan generation runs from a state log.
+- [x] Structured errors are emitted for failure paths.
+- [x] Build and launch documentation is accurate.
 
 Do not add unimplemented capabilities to satisfy this checklist.
 
@@ -65,23 +72,23 @@ Do not add unimplemented capabilities to satisfy this checklist.
 
 Confirm the graphical operator surface:
 
-- [ ] Tauri shell builds.
-- [ ] Slint UI builds.
-- [ ] Desktop app launches.
-- [ ] UI shows AEGIS identity.
-- [ ] UI shows pre-alpha, local-only, live-evidence, and sample-fallback status.
-- [ ] UI renders fixed live `health.check` evidence when available.
-- [ ] UI read-only IPC boundary tests pass.
-- [ ] UI IPC accepts no arbitrary request, wrapper, bundle, filesystem path, recovery, replay, approval, or credential input.
-- [ ] UI renders sample execution timeline.
-- [ ] UI renders sample status cards.
-- [ ] UI renders sample normalized error card.
-- [ ] UI renders sample recovery inspection card.
-- [ ] UI renders sample recovery plan card.
-- [ ] UI states that backend evidence drives the UI.
-- [ ] UI states that the authority boundary is in the backend.
-- [ ] UI does not imply arbitrary live backend control.
-- [ ] UI does not imply replay or recovery execution.
+- [x] Tauri shell builds.
+- [x] Slint UI builds.
+- [x] Desktop app launches.
+- [x] UI shows AEGIS identity.
+- [x] UI shows pre-alpha, local-only, live-evidence, and sample-fallback status.
+- [x] UI renders fixed live `health.check` evidence when available.
+- [x] UI read-only IPC boundary tests pass.
+- [x] UI IPC accepts no arbitrary request, wrapper, bundle, filesystem path, recovery, replay, approval, or credential input.
+- [x] UI renders sample execution timeline.
+- [x] UI renders sample status cards.
+- [x] UI renders sample normalized error card.
+- [x] UI renders sample recovery inspection card.
+- [x] UI renders sample recovery plan card.
+- [x] UI states that backend evidence drives the UI.
+- [x] UI states that the authority boundary is in the backend.
+- [x] UI does not imply arbitrary live backend control.
+- [x] UI does not imply replay or recovery execution.
 - [x] The v0.4.0 desktop UI is visually clear enough that a first-time user can understand the screen purpose, current state, and next available information in under 10 seconds.
 
 Do not require installer generation, code signing, auto-update, or production packaging for `v0.4.0`.
@@ -90,15 +97,15 @@ Do not require installer generation, code signing, auto-update, or production pa
 
 Confirm the local gateway:
 
-- [ ] Gateway binary runs.
-- [ ] Local policy bundle verifies.
-- [ ] `schemas/examples/valid/HealthCheckRequest.json` works.
-- [ ] `schemas/examples/valid/SandboxNoteWriteRequest.json` works.
-- [ ] `sandbox.note.write` writes only under the supplied sandbox directory.
-- [ ] Malformed requests fail closed.
-- [ ] Denied requests do not execute wrappers.
-- [ ] Pending requests do not execute wrappers.
-- [ ] Unsupported wrappers fail closed.
+- [x] Gateway binary runs.
+- [x] Local policy bundle verifies.
+- [x] `schemas/examples/valid/HealthCheckRequest.json` works.
+- [x] `schemas/examples/valid/SandboxNoteWriteRequest.json` works.
+- [x] `sandbox.note.write` writes only under the supplied sandbox directory.
+- [x] Malformed requests fail closed.
+- [x] Denied requests do not execute wrappers.
+- [x] Pending requests do not execute wrappers.
+- [x] Unsupported wrappers fail closed.
 
 Keep this gate practical. Broad fuzzing, enterprise validation, remote trust, and production hardening are not part of `v0.4.0`.
 
@@ -106,14 +113,14 @@ Keep this gate practical. Broad fuzzing, enterprise validation, remote trust, an
 
 Confirm evidence behavior:
 
-- [ ] `audit.jsonl` is created when requested.
-- [ ] `state.jsonl` is created when requested.
-- [ ] Audit and state logs remain separate files.
-- [ ] Audit evidence does not contain secrets.
-- [ ] State evidence does not contain secrets.
-- [ ] Runtime stdout is structured JSON.
-- [ ] Structured error reports include `code`, `severity`, `message`, `reason`, `next_action`, and `location`.
-- [ ] Generated repo-local audit and state logs are removed before commit.
+- [x] `audit.jsonl` is created when requested.
+- [x] `state.jsonl` is created when requested.
+- [x] Audit and state logs remain separate files.
+- [x] Audit evidence does not contain secrets.
+- [x] State evidence does not contain secrets.
+- [x] Runtime stdout is structured JSON.
+- [x] Structured error reports include `code`, `severity`, `message`, `reason`, `next_action`, and `location`.
+- [x] Generated repo-local audit and state logs are removed before commit.
 
 Secret-like material must not appear in runtime output, audit logs, state logs, UI fixtures, screenshots, or documentation.
 
@@ -121,17 +128,17 @@ Secret-like material must not appear in runtime output, audit logs, state logs, 
 
 Confirm recovery evidence behavior:
 
-- [ ] `--inspect-state` reads `state.jsonl` read-only.
-- [ ] `--inspect-state` groups executions by `execution_id`.
-- [ ] `--inspect-state` reports last known state.
-- [ ] `--inspect-state` reports terminal status.
-- [ ] `--inspect-state` reports recoverability status.
-- [ ] `--plan-recovery` produces bounded recovery plan outcomes.
-- [ ] Completed executions are not recoverable.
-- [ ] Failed-closed executions are not recoverable.
-- [ ] `audit_failed` is an audit-retry candidate only.
-- [ ] `candidate_for_future_replay` means future evaluation only.
-- [ ] Recovery planning does not replay, resume, or mutate state.
+- [x] `--inspect-state` reads `state.jsonl` read-only.
+- [x] `--inspect-state` groups executions by `execution_id`.
+- [x] `--inspect-state` reports last known state.
+- [x] `--inspect-state` reports terminal status.
+- [x] `--inspect-state` reports recoverability status.
+- [x] `--plan-recovery` produces bounded recovery plan outcomes.
+- [x] Completed executions are not recoverable.
+- [x] Failed-closed executions are not recoverable.
+- [x] `audit_failed` is an audit-retry candidate only.
+- [x] `candidate_for_future_replay` means future evaluation only.
+- [x] Recovery planning does not replay, resume, or mutate state.
 
 Do not imply recovery execution, replay execution, or audit retry execution exists.
 
@@ -139,28 +146,28 @@ Do not imply recovery execution, replay execution, or audit retry execution exis
 
 Verify documentation clearly explains:
 
-- [ ] what AEGIS is
-- [ ] how to build the local gateway
-- [ ] how to launch the desktop app
-- [ ] how to run `health.check`
-- [ ] how to run `sandbox.note.write`
-- [ ] how to write audit and state logs
-- [ ] how to inspect state logs
-- [ ] how to generate a recovery plan
-- [ ] what the UI currently does
-- [ ] what the UI does not yet do
-- [ ] what is deferred beyond `v0.4.0`
+- [x] what AEGIS is
+- [x] how to build the local gateway
+- [x] how to launch the desktop app
+- [x] how to run `health.check`
+- [x] how to run `sandbox.note.write`
+- [x] how to write audit and state logs
+- [x] how to inspect state logs
+- [x] how to generate a recovery plan
+- [x] what the UI currently does
+- [x] what the UI does not yet do
+- [x] what is deferred beyond `v0.4.0`
 
 Check these files at minimum:
 
-- [ ] `README.md`
-- [ ] `docs/RELEASE_PATH.md`
-- [ ] `docs/ROADMAP.md`
-- [ ] `docs/PHASEMAP.md`
-- [ ] `docs/TASKS.md`
-- [ ] `docs/wiki/README.md`
-- [ ] `docs/wiki/10-contributor-guide.md`
-- [ ] `docs/UI_EVIDENCE_CONTRACT.md`
+- [x] `README.md`
+- [x] `docs/RELEASE_PATH.md`
+- [x] `docs/ROADMAP.md`
+- [x] `docs/PHASEMAP.md`
+- [x] `docs/TASKS.md`
+- [x] `docs/wiki/README.md`
+- [x] `docs/wiki/10-contributor-guide.md`
+- [x] `docs/UI_EVIDENCE_CONTRACT.md`
 
 Do not rewrite these files unless a release-readiness contradiction is found.
 
@@ -229,24 +236,24 @@ Remove generated local `audit.jsonl`, `state.jsonl`, and sandbox files before co
 
 Confirm these are not part of `v0.4.0`:
 
-- [ ] replay execution
-- [ ] recovery execution
-- [ ] audit retry execution
-- [ ] approval workflow
-- [ ] production credential providers
-- [ ] vault integration
-- [ ] cloud identity
-- [ ] remote logging
-- [ ] SIEM export
-- [ ] database persistence
-- [ ] HTTP/service deployment
-- [ ] installer generation
-- [ ] enterprise packaging
-- [ ] code signing
-- [ ] auto-update
-- [ ] distributed state
-- [ ] plugin architecture
-- [ ] external integrations
+- [x] replay execution
+- [x] recovery execution
+- [x] audit retry execution
+- [x] approval workflow
+- [x] production credential providers
+- [x] vault integration
+- [x] cloud identity
+- [x] remote logging
+- [x] SIEM export
+- [x] database persistence
+- [x] HTTP/service deployment
+- [x] installer generation
+- [x] enterprise packaging
+- [x] code signing
+- [x] auto-update
+- [x] distributed state
+- [x] plugin architecture
+- [x] external integrations
 
 If any of these appear to be required for the release, stop and revisit the release scope instead of expanding `v0.4.0`.
 
@@ -269,28 +276,28 @@ Any of these block tagging:
 
 ## Tagging Preconditions
 
-Do not create a tag from this checklist task.
-
 Tagging may happen only after:
 
-- [ ] all validation commands pass
-- [ ] manual verification passes
-- [ ] release blockers are absent
-- [ ] `CHANGELOG.md` has the release entry
-- [ ] release limitations are documented
-- [ ] working tree is clean
-- [ ] maintainer explicitly approves tagging
+- [x] all validation commands pass
+- [x] manual verification passes
+- [x] release blockers are absent
+- [x] `CHANGELOG.md` has the release entry
+- [x] release limitations are documented
+- [x] working tree is clean
+- [x] maintainer explicitly approves tagging
 
 ## Final Readiness Decision
 
-Complete this section only after validation and manual verification.
-
 | Field | Value |
 | --- | --- |
-| Ready to tag | yes/no |
-| Maintainer |  |
-| Date |  |
-| Validation gate passed | yes/no |
-| Manual verification passed | yes/no |
-| Release blockers absent | yes/no |
-| Notes |  |
+| Ready to tag | yes |
+| Maintainer | local maintainer approval recorded from final release task |
+| Date | 2026-06-30 |
+| Validation gate passed | yes |
+| Manual verification passed | yes, through the executable release validation gate |
+| Release blockers absent | yes |
+| Tag status | annotated `v0.4.0` created from the final release-status commit and pushed to origin |
+| Main branch status | pushed to origin |
+| Publishing status | GitHub Release publishing deferred |
+| Asset status | no binaries, installers, packages, signatures, or release assets published |
+| Notes | `v0.4.0` remains local-only, pre-alpha, developer-oriented, and source-oriented. Distribution planning is deferred. |

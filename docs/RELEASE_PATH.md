@@ -76,7 +76,9 @@ The repository currently implements the local runtime, local policy bundle verif
 
 The UI currently renders fixed live health-check evidence for current status and timeline fields, plus labeled sample normalized error, recovery inspection, and recovery planning evidence.
 
-The current implementation is enough to define a minimum usable local release path, but not enough to tag it without completing the checklist below.
+The current implementation satisfies the minimum usable local release path.
+
+`v0.4.0` is complete after maintainer approval, release validation, annotated tag creation, main branch push, and tag push.
 
 ## Required Before Tagging
 
@@ -90,6 +92,10 @@ Complete only these tasks before tagging the minimum usable release:
 - confirm generated local logs and sandbox files are not committed
 - confirm README still points readers to `docs/`
 - confirm release notes state local-only pre-alpha limitations
+- obtain maintainer approval
+- create the annotated `v0.4.0` tag
+- push `main`
+- push only the `v0.4.0` tag
 
 Do not add replay execution, approval workflow, production credentials, HTTP service behavior, packaging, signing, or installer generation to this release gate.
 
@@ -194,13 +200,16 @@ Do not tag the release unless the validation gate passes on a clean worktree.
 
 ## Release Candidate Checklist
 
-Use `docs/RELEASE_CHECKLIST_v0.4.0.md` as the concrete readiness checklist before tagging.
+Use `docs/RELEASE_CHECKLIST_v0.4.0.md` as the concrete readiness and final local release checklist.
 
-- [ ] `bash scripts/validate-v0.4.0-release.sh` passes.
-- [ ] UI distinguishes fixed live health-check evidence from sample fallback evidence.
-- [ ] README remains short and points to `docs/`.
-- [ ] Changelog records the release.
-- [ ] No generated logs, sandbox files, or build artifacts are staged.
+- [x] `bash scripts/validate-v0.4.0-release.sh` passes.
+- [x] UI distinguishes fixed live health-check evidence from sample fallback evidence.
+- [x] README remains short and points to `docs/`.
+- [x] Changelog records the release.
+- [x] No generated logs, sandbox files, or build artifacts are staged.
+- [x] Maintainer approval is recorded.
+- [x] Annotated `v0.4.0` tag is created and pushed.
+- [x] GitHub Release publishing and distribution artifacts remain deferred.
 
 ## Out-of-Scope for Minimum Release
 
@@ -218,7 +227,7 @@ Reason:
 
 `v0.3.0` is already assigned to the completed local Governed Execution Engine foundation. The minimum usable release depends on the Phase 4 desktop shell and fixture-backed UI evidence, so `v0.4.0` is the clearest version target.
 
-Do not create the tag as part of release planning.
+The final local release task creates the annotated `v0.4.0` tag after maintainer approval and release validation.
 
 ## Risks
 
@@ -228,11 +237,15 @@ Do not create the tag as part of release planning.
 - The local credential handle is safe development evidence, not a real credential provider.
 - Without packaging, users must launch from source.
 
-## Next Tasks
+## Final Release Closure
 
-Recommended next tasks:
+`v0.4.0` closes when:
 
-1. Confirm maintainer approval for tagging.
-2. Run the full validation gate on a clean checkout immediately before tagging.
-3. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.
-4. Publish only after the tag is created and approval remains explicit.
+1. Maintainer approval is recorded.
+2. The full validation gate passes on a clean checkout.
+3. The final release-status documents are committed.
+4. The annotated `v0.4.0` tag is created.
+5. `main` is pushed to origin.
+6. The `v0.4.0` tag is pushed to origin.
+
+GitHub Release publishing, downloadable binaries, installers, packaging, signing, notarization, auto-update, and distribution workflow remain deferred.

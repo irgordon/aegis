@@ -57,15 +57,18 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Apply v0.4.0 visual design system | complete |
 | Complete v0.4.0 visual readability review | complete |
 | Prepare v0.4.0 release candidate | complete |
-| Maintainer approval to tag v0.4.0 | planned |
-| Create v0.4.0 tag | planned |
-| Publish v0.4.0 release | planned |
+| Maintainer approval to tag v0.4.0 | complete |
+| Create v0.4.0 tag | complete |
+| Push v0.4.0 tag | complete |
+| Finalize v0.4.0 local release | complete |
+| GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
-Recommended next task:
+Deferred release distribution work:
 
 ```text
-chore(release): Record maintainer approval before v0.4.0 tag
+GitHub Release publishing, downloadable binaries, installers, packaging,
+signing, notarization, auto-update, and distribution workflow remain deferred.
 ```
 
 ## Deferred Phase Work
@@ -247,9 +250,11 @@ Status: started.
 | Apply v0.4.0 visual design system | complete |
 | Complete v0.4.0 visual readability review | complete |
 | Prepare v0.4.0 release candidate | complete |
-| Maintainer approval to tag v0.4.0 | planned |
-| Create v0.4.0 tag | planned |
-| Publish v0.4.0 release | planned |
+| Maintainer approval to tag v0.4.0 | complete |
+| Create v0.4.0 tag | complete |
+| Push v0.4.0 tag | complete |
+| Finalize v0.4.0 local release | complete |
+| GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 ## Phase 5: Recovery and Replay Execution

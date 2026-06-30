@@ -4,11 +4,13 @@
 
 Review date: 2026-06-30
 
-Recommendation: Ready for maintainer approval.
+Recommendation: Complete for local-only `v0.4.0`.
 
 AEGIS satisfies the implemented capability requirements for the `v0.4.0` Minimum Usable Local Release. The executable release validation gate passes on a clean worktree, the local gateway paths execute, the desktop shell launches, fixed live `health.check` evidence is available through read-only IPC, sample fallback evidence is clearly labeled, and the visual readability review has screenshot evidence.
 
-The release candidate is prepared. The repository is not approved to tag until maintainer approval is explicit. No runtime, UI authority, architecture, validation, documentation, or visual clarity blocker was found.
+Maintainer approval to tag was received in the final release task. No runtime, UI authority, architecture, validation, documentation, or visual clarity blocker was found.
+
+Final outcome: `v0.4.0` COMPLETE after the annotated tag is created from the final release-status commit and pushed to origin.
 
 ## Repository Maturity
 
@@ -88,13 +90,13 @@ Result: PASS.
 | `README.md` | PASS | Short 4MAT orientation, pre-alpha warning, points to `docs/`, no production claim. |
 | `docs/ROADMAP.md` | PASS | Updated to remove stale "live UI evidence" exclusion and clarify next release steps. |
 | `docs/PHASEMAP.md` | PASS | Updated to keep broader audit/state/recovery views out of the `v0.4.0` release blocker set. |
-| `docs/RELEASE_PATH.md` | PASS | Describes local-only scope, release gate, explicit deferrals, and next pre-tag work. |
+| `docs/RELEASE_PATH.md` | PASS | Describes local-only scope, release gate, explicit deferrals, and final local tag closure. |
 | `docs/RELEASE_CHECKLIST_v0.4.0.md` | PASS | Matches the executable release gate and avoids production readiness claims. |
 | `docs/UI_EVIDENCE_CONTRACT.md` | PASS | Updated stale "future UI" wording; preserves UI authority boundary. |
 | `docs/wiki/README.md` | PASS | Explains wiki role and points to authoritative documents. |
-| `docs/TASKS.md` | PASS | Updated release candidate and remaining approval/tagging task tracking. |
-| `CHANGELOG.md` | PASS | Explicit `v0.4.0` release section and `0.2.40` release-candidate entry are present. |
-| `docs/releases/v0.4.0.md` | PASS | Release notes describe local-only pre-alpha scope, validation status, limitations, and pending approval. |
+| `docs/TASKS.md` | PASS | Updated final local release task tracking and deferred publishing status. |
+| `CHANGELOG.md` | PASS | Explicit `v0.4.0` release section and final local release status entry are present. |
+| `docs/releases/v0.4.0.md` | PASS | Release notes describe local-only pre-alpha scope, validation status, limitations, approval, tag status, and deferred publishing. |
 
 No production or enterprise readiness overstatement was found.
 
@@ -105,7 +107,7 @@ No production or enterprise readiness overstatement was found.
 | P0 | Runtime, validation, or UI authority blocker | None found | None. |
 | P1 | Visual polish and readability review against the v0.4.0 UI design guidance | Resolved | Screenshot evidence and review notes are recorded in `docs/assets/release/v0.4.0-desktop-readability-review.md`. |
 | P1 | Explicit `v0.4.0` release notes | Resolved | Release notes are recorded in `docs/releases/v0.4.0.md`, and `CHANGELOG.md` contains an explicit `v0.4.0` section. |
-| P1 | Maintainer approval to tag is not recorded | Open | Obtain explicit maintainer approval before creating the tag. |
+| P1 | Maintainer approval to tag is not recorded | Resolved | Maintainer approval was received in the final release task. |
 | P2 | Broader read-only audit/state/recovery UI views remain planned | Deferred | Not a `v0.4.0` blocker under the minimum usable local release scope. |
 
 ## Risks
@@ -118,25 +120,36 @@ No production or enterprise readiness overstatement was found.
 | Maintainability | Release validation is broad and can take time. | It is intentionally a release gate, not a per-edit quick check. |
 | Release process | Source-only launch may limit first-user experience. | Packaging and installers are explicitly deferred beyond `v0.4.0`. |
 
-## Recommendation
+## Final Release Status
 
-Ready for maintainer approval.
+Local-only `v0.4.0` is complete.
 
 Evidence:
 
 - The executable release gate passed.
 - The local gateway and desktop shell satisfy the documented minimum usable local release capabilities.
 - No P0 blocker was found.
-- Remaining P1 item: obtain maintainer tagging approval.
+- Maintainer approval to tag was recorded.
+- Visual readability passed.
+- The annotated `v0.4.0` tag is created from the final release-status commit and pushed to origin.
+- GitHub Release publishing, downloadable binaries, installers, packaging, signing, notarization, and release assets remain deferred.
 
-## Required Work Before Tag
+## Final Tagging Record
 
-Before tagging `v0.4.0`:
+| Field | Status |
+| --- | --- |
+| Maintainer approval | received in final release task |
+| Release gate before tag | PASS |
+| Visual readability | PASS |
+| Engineering blockers | none observed |
+| Annotated tag | `v0.4.0` created from final release-status commit |
+| Tag push | `v0.4.0` pushed to origin |
+| Main branch push | pushed to origin |
+| Publishing | deferred |
+| Distribution planning | deferred to a later version |
+| Final outcome | `v0.4.0` COMPLETE |
 
-1. Confirm maintainer approval to tag.
-2. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
-3. Confirm `git status --short --branch` is clean.
-4. Tag only after maintainer approval is explicit.
+No GitHub Release, downloadable artifacts, binaries, installers, packages, signed artifacts, or published release assets were created.
 
 ## Appendix
 
@@ -158,4 +171,4 @@ Manual review confirmed:
 - UI states backend authority
 - UI does not expose replay, recovery execution, approval, credential issuance, arbitrary gateway execution, or mutation wrapper controls
 - screenshot-backed visual readability review passed after reducing visible text density
-- release candidate notes are recorded in `docs/releases/v0.4.0.md`
+- final local release notes are recorded in `docs/releases/v0.4.0.md`

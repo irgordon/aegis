@@ -26,7 +26,7 @@ A version is valid only when its documented exit criteria are satisfied.
 | 2 | v0.2.0 | Local Gateway MVP | Complete | Prove local governed request-to-response behavior. | None. | None. |
 | 3 | v0.3.0 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
 | 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
-| 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | Post-v0.4.0 distribution planning. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
+| 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | Draft release workflow planning. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
 | 5 | v0.5.0 | Recovery and Replay Execution | Not started | Add constrained recovery and replay behavior after read-only inspection and planning. | None. | Approval workflow and production credential providers. |
 | 6 | v0.6.0 | Approval and Production Credential Providers | Not started | Add human approval workflow and real credential provider boundaries. | None. | Platform and production hardening. |
 | 7 | v0.7.0 | Platform and Production Hardening | Not started | Add service, deployment, observability, extension, security, release, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
@@ -247,7 +247,7 @@ Complete for local-only `v0.4.0`.
 Plan a safe path from source-only local release to downloadable developer-preview artifacts.
 
 ### Status
-Started.
+Complete for target selection.
 
 ### Required Planning Outputs
 - release distribution plan
@@ -258,6 +258,7 @@ Started.
 - signing and notarization sequencing
 - GitHub Release workflow outline
 - open decisions for first downloadable artifacts
+- first downloadable artifact target decision
 
 ### Exit Criteria
 - `docs/RELEASE_DISTRIBUTION_PLAN.md` exists
@@ -266,6 +267,10 @@ Started.
 - future artifacts require SHA-256 checksums before publication
 - signing, notarization, installers, and auto-update remain deferred until scheduled
 - no release automation or artifact publishing is implemented by the planning task
+- first downloadable developer-preview version is selected as `v0.4.1`
+- first platform stage is selected as macOS arm64 and macOS x64
+- first artifact format is archive-based, not installer-based
+- draft GitHub Release publishing mode is selected for future implementation
 
 ## v0.5.0: Recovery and Replay Execution
 

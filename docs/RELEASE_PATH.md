@@ -256,4 +256,6 @@ After `v0.4.0`, distribution work should follow `docs/RELEASE_DISTRIBUTION_PLAN.
 
 The plan keeps `v0.4.0` source-only and defines a staged path toward GitHub Release artifacts, checksums, platform builds, signing, notarization, and installers.
 
+The first downloadable artifact targets are selected in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
+
 Downloadable artifacts remain future work.

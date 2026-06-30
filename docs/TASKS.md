@@ -62,9 +62,10 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Push v0.4.0 tag | complete |
 | Finalize v0.4.0 local release | complete |
 | Define post-v0.4.0 distribution plan | complete |
-| Select first downloadable artifact targets | planned |
+| Select first downloadable artifact targets | complete |
 | Add draft GitHub Release build workflow | planned |
 | Validate artifact naming and checksum generation | planned |
+| Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |
 | GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
@@ -260,9 +261,10 @@ Status: started.
 | Push v0.4.0 tag | complete |
 | Finalize v0.4.0 local release | complete |
 | Define post-v0.4.0 distribution plan | complete |
-| Select first downloadable artifact targets | planned |
+| Select first downloadable artifact targets | complete |
 | Add draft GitHub Release build workflow | planned |
 | Validate artifact naming and checksum generation | planned |
+| Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |
 | GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |

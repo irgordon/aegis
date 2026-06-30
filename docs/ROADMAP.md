@@ -33,7 +33,7 @@ Phase 4 has a Tauri shell and Slint operator surface. The CLI remains a support 
 
 `v0.4.0` is complete, tagged, and pushed as a local-only, pre-alpha, source-oriented release.
 
-Post-`v0.4.0` distribution planning has begun. The next distribution work should make AEGIS easier to try through GitHub Releases without changing runtime authority, bypassing validation, or implying production readiness.
+Post-`v0.4.0` distribution planning has begun. The first downloadable developer-preview target is `v0.4.1`, starting with macOS archives. The next implementation work should make AEGIS easier to try through GitHub Releases without changing runtime authority, bypassing validation, or implying production readiness.
 
 For contributors, the backlog has been reorganized around the shortest path from local execution evidence to a useful operator surface. Completed Phase 2 and Phase 3 foundation work is no longer an active task list. Active work now starts with Phase 4 evidence-first graphical rendering.
 
@@ -233,7 +233,7 @@ Post-`v0.4.0` sequence:
 
 1. Define the post-v0.4.0 distribution plan.
 2. Select the first downloadable artifact targets.
-3. Add draft release workflow and checksum validation only after the plan is accepted.
+3. Add draft release workflow and checksum validation only after maintainers approve implementation scope.
 4. Render audit, state, recovery inspection, and recovery plan views read-only when they satisfy release criteria.
 
 ### Exit Criteria
@@ -277,6 +277,8 @@ Create the smallest local-only AEGIS release that a user can build, launch, unde
 See `docs/RELEASE_PATH.md`.
 
 Post-`v0.4.0` distribution planning is tracked in `docs/RELEASE_DISTRIBUTION_PLAN.md`.
+
+The selected first artifact targets are tracked in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
 
 ### Release Governance
 

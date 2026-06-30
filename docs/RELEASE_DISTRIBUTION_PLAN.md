@@ -6,6 +6,8 @@ This document defines the post-`v0.4.0` distribution path for AEGIS.
 
 It is a plan only. It does not add release automation, packaging, installers, signing, notarization, GitHub Release publishing, or downloadable artifacts.
 
+The first concrete artifact target decision is recorded in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
+
 ## Current Baseline
 
 `v0.4.0` is complete.
@@ -60,8 +62,8 @@ AEGIS should use staged release channels.
 | Channel | Purpose | Status |
 | --- | --- | --- |
 | Source release | Tag and source checkout only. | `v0.4.0` complete. |
-| Pre-alpha downloadable build | Unsigned downloadable developer-preview artifacts with checksums and strong warnings. | Planned. |
-| Unsigned developer preview | Early artifact channel for maintainers and technical evaluators. | Planned. |
+| Pre-alpha downloadable build | Unsigned downloadable developer-preview artifacts with checksums and strong warnings. | First target selected in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`. |
+| Unsigned developer preview | Early artifact channel for maintainers and technical evaluators. | First target selected for `v0.4.1`. |
 | Signed/notarized release | Downloadable artifacts with platform trust controls. | Deferred. |
 | Installer-based release | Installer packages for normal user installation. | Deferred. |
 
@@ -80,6 +82,8 @@ Optional future targets:
 - Windows arm64
 
 No platform is supported until its build, validation, checksum, and release notes path exists.
+
+The first selected rollout starts with macOS arm64 and macOS x64. Windows x64 and Linux x64 follow after the Stage 1 artifact path is stable.
 
 ## Artifact Types
 
@@ -126,6 +130,8 @@ SHA256SUMS.sig
 ```
 
 Exact extensions should be selected when the first artifact target is chosen.
+
+For the first developer preview, `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md` selects one combined archive per platform when practical.
 
 ## Checksums and Integrity
 
@@ -221,27 +227,24 @@ Recommended sequence:
 | Version | Distribution posture |
 | --- | --- |
 | `v0.4.0` | Source-only local release. Complete. |
-| `v0.4.1` | Recommended first packaging-only developer-preview target if distribution starts before recovery work. |
+| `v0.4.1` | Selected first packaging-only developer-preview target. |
 | `v0.5.0` | First downloadable cross-platform developer-preview target only if maintainers reassign the next milestone from recovery to distribution. |
 | Later | Signed, notarized, installer-based, and broader user-facing artifacts. |
 
-Because `docs/PHASEMAP.md` currently assigns `v0.5.0` to recovery and replay execution, the conservative path is a smaller `v0.4.1` distribution preview unless maintainers deliberately rebaseline the phasemap.
+Because `docs/PHASEMAP.md` currently assigns `v0.5.0` to recovery and replay execution, the first downloadable artifact target is `v0.4.1` unless maintainers deliberately rebaseline the phasemap.
 
 ## Open Decisions
 
-- Which artifact format should be first for each platform?
-- Should early artifacts be unsigned tar/zip developer previews?
-- Should installers wait until signing is available?
-- Should GitHub Release publishing be manual or automated at first?
-- Should checksum manifests be signed immediately or in a later version?
-- Which platform should be validated first?
+- Can the desktop app and gateway binary be bundled cleanly in one archive per platform?
+- Should Stage 1 build both macOS architectures in one workflow pass or one at a time?
+- Should checksum manifests be signed in `v0.4.1` or a later version?
 - Should distribution ship desktop-only artifacts, gateway-only artifacts, or both?
 
 ## Recommended Next Tasks
 
-1. `docs(release): Select first downloadable artifact targets`
-2. `ci(release): Add draft GitHub Release build workflow`
-3. `test(release): Validate artifact naming and checksum generation`
+1. `ci(release): Add draft GitHub Release build workflow`
+2. `test(release): Validate artifact naming and checksum generation`
+3. `docs(release): Draft v0.4.1 developer-preview release notes`
 4. `chore(release): Publish first unsigned developer-preview build`
 
 Do not begin these tasks until maintainers approve the first distribution target and version.

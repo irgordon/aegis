@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.34] - 2026-06-30
+
+### Added
+
+- Added invariant tests protecting the read-only desktop IPC evidence boundary.
+- Added desktop evidence tests for deterministic shape, normalized errors, secret safety, and CLI compatibility.
+
+### Changed
+
+- Updated release readiness documentation and Phase 4 task tracking for fixed-scope IPC hardening.
+
 ## [0.2.33] - 2026-06-30
 
 ### Added

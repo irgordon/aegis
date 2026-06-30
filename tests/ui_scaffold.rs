@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fs, path::Path};
+use std::{collections::BTreeSet, fs, path::Path, process::Command};
 
 use serde_json::Value;
 
@@ -55,10 +55,15 @@ fn desktop_entrypoint_imports_only_local_runtime_bridge() {
 #[test]
 fn desktop_entrypoint_defines_one_read_only_ipc_command() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
+    let command_names = tauri_command_names(&entrypoint);
 
     assert!(entrypoint.contains("#[tauri::command]"));
     assert!(entrypoint.contains("fn get_health_check_evidence() -> UiEvidence"));
     assert!(entrypoint.contains("tauri::generate_handler![get_health_check_evidence]"));
+    assert_eq!(
+        command_names,
+        BTreeSet::from(["get_health_check_evidence".to_string()])
+    );
     assert_eq!(entrypoint.matches("#[tauri::command]").count(), 1);
     assert_eq!(entrypoint.matches("generate_handler!").count(), 1);
 }
@@ -67,6 +72,7 @@ fn desktop_entrypoint_defines_one_read_only_ipc_command() {
 fn ipc_command_accepts_no_arbitrary_ui_input() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
     let command_signature = "fn get_health_check_evidence() -> UiEvidence";
+    let command_line = tauri_command_signature(&entrypoint, "get_health_check_evidence");
     let forbidden_inputs = [
         "request_json",
         "request_path",
@@ -80,6 +86,10 @@ fn ipc_command_accepts_no_arbitrary_ui_input() {
     ];
 
     assert!(entrypoint.contains(command_signature));
+    assert!(
+        command_line.contains("get_health_check_evidence()"),
+        "IPC command must remain input-free"
+    );
 
     for forbidden in forbidden_inputs {
         assert!(
@@ -87,6 +97,29 @@ fn ipc_command_accepts_no_arbitrary_ui_input() {
             "IPC command must not accept {forbidden}"
         );
     }
+}
+
+#[test]
+fn ipc_handler_registers_no_general_execution_commands() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT);
+    let handler = tauri_generate_handler_line(&entrypoint);
+    let forbidden_commands = [
+        "execute_request",
+        "run_wrapper",
+        "load_bundle",
+        "inspect_state",
+        "plan_recovery",
+        "replay",
+        "resume",
+        "approve",
+        "authorize",
+        "issue_credentials",
+        "inject_credentials",
+        "sandbox_note_write",
+    ];
+
+    assert!(handler.contains("get_health_check_evidence"));
+    assert_absent(&handler.to_lowercase(), forbidden_commands);
 }
 
 #[test]
@@ -99,6 +132,64 @@ fn ipc_command_uses_fixed_health_check_evidence_source() {
     assert!(!entrypoint.contains("SandboxNoteWriteRequest.json"));
     assert!(!entrypoint.contains("sandbox.note.write"));
     assert!(!entrypoint.contains("--sandbox-dir"));
+}
+
+#[test]
+fn ipc_bridge_does_not_accept_runtime_paths_from_ui() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT);
+    let command_signature = tauri_command_signature(&entrypoint, "get_health_check_evidence");
+    let forbidden_path_inputs = [
+        "bundle",
+        "manifest",
+        "policy",
+        "risk_matrix",
+        "audit",
+        "state",
+        "sandbox",
+        "wrapper",
+        "path",
+    ];
+
+    assert!(command_signature.starts_with("fn get_health_check_evidence() -> UiEvidence"));
+    assert_absent(&command_signature.to_lowercase(), forbidden_path_inputs);
+}
+
+#[test]
+fn ipc_bridge_uses_no_filesystem_or_log_loading() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT).to_lowercase();
+    let forbidden_loading = [
+        "std::fs",
+        "fs::",
+        "file::open",
+        "read_to_string",
+        "audit.jsonl",
+        "state.jsonl",
+        "sandbox_dir",
+        "env::args",
+        "args()",
+    ];
+
+    assert!(entrypoint.contains("include_str!"));
+    assert_absent(&entrypoint, forbidden_loading);
+}
+
+#[test]
+fn ipc_bridge_invokes_only_fixed_local_health_check_runtime_path() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT).to_lowercase();
+    let forbidden_runtime_paths = [
+        "process_local_gateway_request_with_context",
+        "process_local_gateway_request_with_wrapper_registry",
+        "sandboxnotewrite",
+        "sandbox.note.write",
+        "recoveryinspector",
+        "recoveryplangenerator",
+        "auditwriter",
+        "executionstatewriter",
+    ];
+
+    assert!(entrypoint.contains("process_local_gateway_request("));
+    assert!(entrypoint.contains("healthcheckrequest.json"));
+    assert_absent(&entrypoint, forbidden_runtime_paths);
 }
 
 #[test]
@@ -133,6 +224,18 @@ fn sample_evidence_is_static_and_not_live() {
     assert!(slint_ui.contains("Fixture-backed operator evidence rendering"));
     assert!(read(DESKTOP_ENTRYPOINT).contains("Live backend health.check evidence"));
     assert!(slint_ui.contains("PRE-ALPHA"));
+}
+
+#[test]
+fn live_and_sample_evidence_labels_remain_explicit() {
+    let slint_ui = read(SLINT_UI).to_lowercase();
+    let entrypoint = read(DESKTOP_ENTRYPOINT).to_lowercase();
+
+    assert!(slint_ui.contains("sample evidence fallback"));
+    assert!(slint_ui.contains("sample only"));
+    assert!(slint_ui.contains("fixed read-only live health.check evidence"));
+    assert!(entrypoint.contains("live backend health.check evidence"));
+    assert!(entrypoint.contains("error evidence; sample fallback remains labeled"));
 }
 
 #[test]
@@ -172,6 +275,45 @@ fn sample_evidence_status_card_order_is_deterministic() {
             .map(String::from)
             .collect::<Vec<_>>()
     );
+}
+
+#[test]
+fn cli_health_check_behavior_is_unchanged_by_desktop_ipc() {
+    let output = gateway_cli_json(&[
+        "--bundle",
+        "examples/policy-bundles/local-dev",
+        "schemas/examples/valid/HealthCheckRequest.json",
+    ]);
+
+    assert_eq!(json_string(&output, "/response/status"), "allowed");
+    assert_eq!(
+        json_string(&output, "/policy_bundle/verification_status"),
+        "verified"
+    );
+    assert_eq!(json_string(&output, "/policy_evaluation/decision"), "allow");
+    assert_eq!(
+        json_string(&output, "/wrapper_execution/wrapper_name"),
+        "health.check"
+    );
+    assert_eq!(
+        json_string(&output, "/wrapper_execution/wrapper_status"),
+        "executed"
+    );
+    assert_eq!(
+        json_string(&output, "/execution_lifecycle/execution_state"),
+        "completed"
+    );
+}
+
+#[test]
+fn desktop_crate_depends_on_backend_without_server_or_web_frameworks() {
+    let cargo = read(TAURI_CARGO).to_lowercase();
+    let forbidden_dependencies = [
+        "axum", "hyper", "reqwest", "warp", "rocket", "actix", "vite", "react",
+    ];
+
+    assert!(cargo.contains("aegis = { path = \"..\" }"));
+    assert_absent(&cargo, forbidden_dependencies);
 }
 
 #[test]
@@ -661,8 +803,98 @@ fn ui_does_not_introduce_arbitrary_gateway_command_surfaces() {
     assert!(combined.contains("get_health_check_evidence"));
 }
 
+#[test]
+fn ipc_boundary_has_no_approval_replay_recovery_or_credential_command_names() {
+    let command_names = tauri_command_names(&read(DESKTOP_ENTRYPOINT))
+        .into_iter()
+        .collect::<Vec<_>>()
+        .join("\n")
+        .to_lowercase();
+    let forbidden_terms = [
+        "approve",
+        "deny",
+        "override",
+        "break_glass",
+        "authorize",
+        "credential",
+        "replay",
+        "resume",
+        "recover",
+        "inspect",
+        "plan",
+        "sandbox",
+        "write",
+    ];
+
+    assert_eq!(command_names, "get_health_check_evidence");
+    assert_absent(&command_names, forbidden_terms);
+}
+
 fn sample_evidence() -> Value {
     serde_json::from_str(&read(SAMPLE_EVIDENCE)).expect("sample evidence should be valid JSON")
+}
+
+fn gateway_cli_json(args: &[&str]) -> Value {
+    let output = Command::new(env!("CARGO_BIN_EXE_aegis-gateway"))
+        .args(args)
+        .output()
+        .expect("gateway CLI should run");
+
+    assert!(
+        output.status.success(),
+        "gateway CLI failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+
+    serde_json::from_slice(&output.stdout).expect("gateway CLI stdout should be valid JSON")
+}
+
+fn tauri_command_names(entrypoint: &str) -> BTreeSet<String> {
+    entrypoint
+        .lines()
+        .collect::<Vec<_>>()
+        .windows(2)
+        .filter_map(|window| command_name_after_attribute(window[0], window[1]))
+        .collect()
+}
+
+fn command_name_after_attribute(attribute: &str, signature: &str) -> Option<String> {
+    if !attribute.trim().starts_with("#[tauri::command]") {
+        return None;
+    }
+
+    Some(function_name(signature).to_string())
+}
+
+fn function_name(signature: &str) -> &str {
+    signature
+        .trim()
+        .strip_prefix("fn ")
+        .and_then(|rest| rest.split_once('('))
+        .map(|(name, _)| name)
+        .expect("tauri command should be followed by a function")
+}
+
+fn tauri_command_signature(entrypoint: &str, command: &str) -> String {
+    entrypoint
+        .lines()
+        .find(|line| line.trim().starts_with(&format!("fn {command}(")))
+        .map(|line| line.trim().to_string())
+        .expect("tauri command signature should exist")
+}
+
+fn tauri_generate_handler_line(entrypoint: &str) -> String {
+    entrypoint
+        .lines()
+        .find(|line| line.contains("tauri::generate_handler!"))
+        .map(|line| line.trim().to_string())
+        .expect("tauri generate_handler line should exist")
+}
+
+fn json_string<'a>(json: &'a Value, pointer: &str) -> &'a str {
+    json.pointer(pointer)
+        .and_then(Value::as_str)
+        .expect("runtime JSON pointer should resolve to a string")
 }
 
 fn successful_execution(evidence: &Value) -> &Value {

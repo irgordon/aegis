@@ -59,6 +59,8 @@ Confirm the graphical operator surface:
 - [ ] UI shows AEGIS identity.
 - [ ] UI shows pre-alpha, local-only, live-evidence, and sample-fallback status.
 - [ ] UI renders fixed live `health.check` evidence when available.
+- [ ] UI read-only IPC boundary tests pass.
+- [ ] UI IPC accepts no arbitrary request, wrapper, bundle, filesystem path, recovery, replay, approval, or credential input.
 - [ ] UI renders sample execution timeline.
 - [ ] UI renders sample status cards.
 - [ ] UI renders sample normalized error card.
@@ -263,6 +265,7 @@ Any of these block tagging:
 - recovery inspection or recovery planning is broken
 - README or release docs imply production readiness
 - UI implies live backend authority
+- UI IPC accepts arbitrary execution input
 - sample UI implies replay or recovery execution exists
 - secret-like material appears in runtime output, audit, state, UI fixture, or docs
 - worktree is not clean

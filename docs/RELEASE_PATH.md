@@ -20,7 +20,7 @@ It must let a user:
 - run the local gateway with current supported wrappers
 - produce audit and state evidence
 - run recovery inspection and recovery planning
-- see sample evidence clearly in the UI
+- see fixed live health-check evidence and sample fallback evidence clearly in the UI
 - understand what is implemented and what is not
 
 It must not claim production readiness, enterprise readiness, or live UI authority.
@@ -44,12 +44,13 @@ The release includes:
 - optional local JSONL state log
 - read-only recovery inspection
 - read-only recovery planning
+- fixed read-only live `health.check` UI evidence
 - structured error output
 - validation and launch instructions
 
 ## User-Visible Capabilities
 
-A user can launch the desktop app and see sample execution evidence.
+A user can launch the desktop app and see fixed live health-check evidence with labeled sample fallback evidence.
 
 A user can run the local gateway from the CLI with the included local policy bundle.
 
@@ -63,17 +64,17 @@ A user can inspect a state log.
 
 A user can generate a read-only recovery plan from inspected state evidence.
 
-The desktop UI does not yet run live backend actions.
+The desktop UI does not run arbitrary live backend actions.
 
 The desktop UI does not yet load live audit or state logs.
 
-The desktop UI currently renders sample evidence only.
+The desktop UI currently renders fixed live `health.check` evidence and labeled sample fallback evidence.
 
 ## Current Implemented Capabilities
 
-The repository currently implements the local runtime, local policy bundle verification, local policy evaluation, governed built-in wrappers, structured errors, audit evidence, state evidence, recovery inspection, recovery planning, and a static Tauri plus Slint UI scaffold.
+The repository currently implements the local runtime, local policy bundle verification, local policy evaluation, governed built-in wrappers, structured errors, audit evidence, state evidence, recovery inspection, recovery planning, and a Tauri plus Slint UI scaffold.
 
-The UI currently renders sample timeline, status, normalized error, recovery inspection, and recovery planning evidence.
+The UI currently renders fixed live health-check evidence for current status and timeline fields, plus labeled sample normalized error, recovery inspection, and recovery planning evidence.
 
 The current implementation is enough to define a minimum usable local release path, but not enough to tag it without completing the checklist below.
 
@@ -84,7 +85,7 @@ Complete only these tasks before tagging the minimum usable release:
 - document build and launch commands
 - verify local gateway commands in this release path
 - verify the desktop scaffold build command
-- verify the sample UI launch command
+- verify the desktop launch command and fixed live health-check evidence boundary
 - confirm all validation gates pass
 - confirm generated local logs and sandbox files are not committed
 - confirm README still points readers to `docs/`

@@ -437,6 +437,7 @@ fn enum_json(value: &impl Serialize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::Value;
 
     #[test]
     fn health_check_command_returns_live_evidence() {
@@ -475,5 +476,78 @@ mod tests {
         assert!(evidence
             .credential_injection_summary
             .contains("No credential handle"));
+    }
+
+    #[test]
+    fn health_check_evidence_has_deterministic_json_shape() {
+        let first = evidence_shape(get_health_check_evidence());
+        let second = evidence_shape(get_health_check_evidence());
+
+        assert_eq!(first, second);
+        assert!(first.contains(&"live_backend_connected".to_string()));
+        assert!(first.contains(&"policy_bundle_status".to_string()));
+        assert!(first.contains(&"wrapper_execution_status".to_string()));
+        assert!(first.contains(&"error_next_action".to_string()));
+    }
+
+    #[test]
+    fn missing_bundle_error_preserves_normalized_shape() {
+        let evidence = live_health_check_evidence(Path::new("missing-policy-bundle"));
+        let serialized = serde_json::to_value(evidence).expect("UI evidence should serialize");
+
+        for field in [
+            "error_code",
+            "error_severity",
+            "error_message",
+            "error_reason",
+            "error_next_action",
+            "error_location",
+        ] {
+            assert_ne!(json_string(&serialized, field), "Not available");
+        }
+
+        let serialized_text = serialized.to_string().to_lowercase();
+        assert!(!serialized_text.contains("panic"));
+        assert!(!serialized_text.contains("stack backtrace"));
+        assert!(!serialized_text.contains("serde_json::"));
+    }
+
+    #[test]
+    fn serialized_ui_evidence_contains_no_secret_like_values() {
+        let serialized = serde_json::to_string(&get_health_check_evidence())
+            .expect("UI evidence should serialize");
+        let serialized = serialized.to_lowercase();
+
+        for forbidden in [
+            "password",
+            "token",
+            "secret",
+            "private_key",
+            "api_key",
+            "credential_value",
+            "authorization_token",
+            "begin private key",
+        ] {
+            assert!(
+                !serialized.contains(forbidden),
+                "live UI evidence must not contain {forbidden}"
+            );
+        }
+    }
+
+    fn evidence_shape(evidence: UiEvidence) -> Vec<String> {
+        serde_json::to_value(evidence)
+            .expect("UI evidence should serialize")
+            .as_object()
+            .expect("UI evidence should serialize as an object")
+            .keys()
+            .cloned()
+            .collect()
+    }
+
+    fn json_string<'a>(json: &'a Value, field: &str) -> &'a str {
+        json.get(field)
+            .and_then(Value::as_str)
+            .expect("UI evidence field should be a string")
     }
 }

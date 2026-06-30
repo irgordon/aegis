@@ -22,7 +22,7 @@ No other status values should be used unless this document is updated.
 
 Phase 4 work renders backend evidence in a non-authoritative graphical operator surface.
 
-The UI must render fixture evidence before live IPC or live runtime calls.
+The UI must keep live IPC read-only, fixed-scope, backend-authoritative, and clearly separated from sample fallback evidence.
 
 Every new task before `v0.4.0` should identify which release criterion it satisfies.
 
@@ -51,6 +51,7 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Verify minimum usable local release commands | planned |
 | Define minimal IPC data bridge | complete |
 | Render live read-only runtime evidence | complete |
+| Harden read-only IPC evidence boundary | complete |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |
 
 Recommended next task:
@@ -232,6 +233,7 @@ Status: started.
 | Verify minimum usable local release commands | planned |
 | Define minimal IPC data bridge | complete |
 | Render live read-only runtime evidence | complete |
+| Harden read-only IPC evidence boundary | complete |
 | Render audit, state, recovery inspection, and recovery plan views read-only | planned |
 
 ## Phase 5: Recovery and Replay Execution

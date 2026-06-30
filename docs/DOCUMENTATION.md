@@ -291,6 +291,7 @@ When a feature changes behavior, update the narrowest relevant document instead 
 | Write or review code | `docs/CODING_STYLE.md` |
 | Find current work | `docs/TASKS.md` |
 | Understand release rules | `docs/RELEASE_PROCESS.md` |
+| Understand the minimum usable local release path | `docs/RELEASE_PATH.md` |
 | Understand architecture decisions | `docs/ADR.md` |
 | Understand UI review requirements | `docs/UI-DESIGN.md` |
 

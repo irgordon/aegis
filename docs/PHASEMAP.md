@@ -26,7 +26,7 @@ A version is valid only when its documented exit criteria are satisfied.
 | 2 | v0.2.0 | Local Gateway MVP | Complete | Prove local governed request-to-response behavior. | None. | None. |
 | 3 | v0.3.0 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
 | 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
-| 4 | v0.4.0 | Graphical Operator Surface | Started | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI. | Minimal IPC data bridge. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
+| 4 | v0.4.0 | Graphical Operator Surface | Started | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | Minimum usable local release path verification. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
 | 5 | v0.5.0 | Recovery and Replay Execution | Not started | Add constrained recovery and replay behavior after read-only inspection and planning. | None. | Approval workflow and production credential providers. |
 | 6 | v0.6.0 | Approval and Production Credential Providers | Not started | Add human approval workflow and real credential provider boundaries. | None. | Platform and production hardening. |
 | 7 | v0.7.0 | Platform and Production Hardening | Not started | Add service, deployment, observability, extension, security, release, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
@@ -36,7 +36,7 @@ A version is valid only when its documented exit criteria are satisfied.
 | Version | Entry Criteria | Exit Criteria |
 | --- | --- | --- |
 | v0.3.0 | Phase 2 local Gateway MVP complete. | Local built-in wrapper execution, authorization, credential boundaries, lifecycle, audit, state, recovery inspection, and recovery planning are validated. |
-| v0.4.0 | UI-ready backend evidence exists and Tauri plus Slint direction is documented. | The UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. |
+| v0.4.0 | UI-ready backend evidence exists, local gateway execution works, and Tauri plus Slint direction is documented. | Minimum usable local release checklist passes; the UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. |
 | v0.5.0 | Recovery inspection and planning evidence exists. | Replay and recovery execution are constrained, auditable, and fail closed. |
 | v0.6.0 | Local execution and recovery boundaries are stable. | Approval and production credential providers are scoped, attributable, secret-safe, and fail closed. |
 | v0.7.0 | Core runtime, UI, recovery, approval, and credential provider boundaries are stable. | Platform and production controls are tested, documented, and reproducible. |
@@ -209,7 +209,7 @@ Complete.
 ## v0.4.0: Graphical Operator Surface
 
 ### Purpose
-Render governed execution evidence in a non-authoritative graphical desktop operator surface.
+Render governed execution evidence in a non-authoritative graphical desktop operator surface and establish the minimum usable local release.
 
 ### Status
 Started.
@@ -221,11 +221,15 @@ Started.
 - Slint-rendered sample status cards from fixture evidence
 - Slint-rendered normalized error cards from fixture evidence
 - Slint-rendered sample recovery inspection and recovery planning cards from fixture evidence
+- documented minimum usable local release path
 - minimal IPC data bridge
 - live read-only runtime evidence rendering
 - read-only audit, state, recovery inspection, and recovery plan views
 
 ### Exit Criteria
+- minimum usable local release checklist passes
+- local gateway commands for `health.check`, `sandbox.note.write`, audit evidence, state evidence, recovery inspection, and recovery planning are documented and verified
+- desktop app launch command is documented and verified
 - UI displays runtime state without owning policy decisions
 - UI consumes backend evidence and cannot bypass gateway execution logic
 - UI renders sample evidence before live IPC

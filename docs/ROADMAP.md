@@ -28,7 +28,9 @@ The Phase 3 local governed execution foundation is complete after reclassificati
 
 It does not yet execute real external actions, replay execution, approval workflow, production credential providers, HTTP service behavior, or live UI evidence. Those concerns now belong to later phases instead of the completed local execution foundation.
 
-Phase 4 has begun with a static Tauri shell and Slint landing window. The CLI remains a support surface for validation, inspection, testing, and automation. The initial UI scaffold does not render live backend evidence, call gateway execution, define IPC commands, or provide authority.
+Phase 4 has begun with a static Tauri shell and Slint landing window. The CLI remains a support surface for validation, inspection, testing, and automation. The UI scaffold renders fixture-backed sample evidence, but it does not render live backend evidence, call gateway execution, define IPC commands, or provide authority.
+
+The next release boundary is a minimum usable local release. It should be small enough to ship and safe enough to explain: local gateway execution, local evidence generation, read-only recovery inspection and planning, and a launchable sample-evidence desktop UI. Features not required for that local release should not block it.
 
 For contributors, the backlog has been reorganized around the shortest path from local execution evidence to a useful operator surface. Completed Phase 2 and Phase 3 foundation work is no longer an active task list. Active work now starts with Phase 4 evidence-first graphical rendering.
 
@@ -223,9 +225,10 @@ Completed Phase 4 foundation:
 
 Next sequence:
 
-1. Define the minimal IPC data bridge.
-2. Render live read-only runtime evidence.
-3. Render audit, state, recovery inspection, and recovery plan views read-only.
+1. Verify the minimum usable local release path.
+2. Define the minimal IPC data bridge.
+3. Render live read-only runtime evidence.
+4. Render audit, state, recovery inspection, and recovery plan views read-only.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions
@@ -234,6 +237,38 @@ Next sequence:
 - live evidence rendering is read-only
 - graphical timelines, status cards, and error cards preserve backend meaning
 - audit, state, recovery inspection, and recovery plan views do not execute recovery or replay
+
+## Release Track: Minimum Usable Local Release
+
+### Status
+Planned.
+
+### Objective
+Create the smallest local-only AEGIS release that a user can build, launch, understand, and use safely.
+
+### Scope
+- launch the Tauri plus Slint desktop app
+- run the local gateway with the included policy bundle
+- execute `health.check`
+- execute `sandbox.note.write` against a local sandbox directory
+- write local audit and state JSONL evidence
+- inspect state evidence
+- generate read-only recovery plans
+- explain limitations plainly
+
+### Deferred
+- replay execution
+- approval workflow
+- production credential providers
+- HTTP or service deployment
+- enterprise packaging
+- installer generation
+- signing
+- auto-update
+- external integrations
+
+### Reference
+See `docs/RELEASE_PATH.md`.
 
 ## Phase 5: Recovery and Replay Execution
 

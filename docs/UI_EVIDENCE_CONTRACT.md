@@ -548,6 +548,8 @@ Tauri integration must preserve the backend evidence model rather than creating 
 
 UI components should be built around evidence cards and execution timelines.
 
+The current Tauri + Slint scaffold is static. It proves the graphical shell can launch, but it does not render live backend evidence yet.
+
 Do not define IPC commands here.
 
 Do not scaffold Tauri here.

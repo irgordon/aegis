@@ -4,6 +4,18 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.25] - 2026-06-30
+
+### Added
+
+- Added the initial Tauri desktop shell with a Slint graphical UI scaffold.
+- Added a static AEGIS pre-alpha landing window.
+- Added UI scaffold smoke tests for static assets and backend boundary separation.
+
+### Changed
+
+- Updated Phase 4 task tracking and UI documentation for the first graphical shell scaffold.
+
 ## [0.2.24] - 2026-06-30
 
 ### Changed

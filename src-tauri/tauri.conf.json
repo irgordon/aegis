@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AEGIS",
+  "version": "0.2.0",
+  "identifier": "com.irgordon.aegis",
+  "app": {
+    "windows": [
+      {
+        "label": "aegis-shell",
+        "title": "AEGIS",
+        "width": 960,
+        "height": 640,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": false,
+    "targets": "all"
+  }
+}

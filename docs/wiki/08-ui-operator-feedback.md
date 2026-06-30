@@ -3,9 +3,9 @@
 
 ## What Is This?
 
-This page explains how current backend evidence is intended to support a future Slint UI inside the Tauri desktop shell.
+This page explains how current backend evidence is intended to support the Slint UI inside the Tauri desktop shell.
 
-No UI is implemented here.
+The current UI implementation is a static scaffold only.
 
 The purpose is to make sure runtime evidence remains renderable by a future graphical interface.
 
@@ -83,12 +83,14 @@ This keeps Rust as the authority for execution behavior and keeps the frontend f
 
 ## Current UI Status
 
-The repository has documented the Tauri shell, Slint graphical UI direction, and UI design integrity standard.
+The repository has an initial Tauri shell with a static Slint landing window.
+
+The scaffold shows project identity, pre-alpha status, backend-evidence guidance, and the backend authority boundary.
+
+It does not render live backend evidence, call gateway execution, define IPC commands, or implement dashboard behavior.
 
 It has not implemented:
 
-- Tauri shell scaffold
-- Slint graphical UI layer
 - IPC command layer
 - timeline component
 - error card component

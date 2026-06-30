@@ -1,0 +1,199 @@
+export component AegisWindow inherits Window {
+    title: "AEGIS";
+    width: 960px;
+    height: 640px;
+    background: #f5f7fb;
+
+    HorizontalLayout {
+        spacing: 0px;
+
+        Rectangle {
+            width: 230px;
+            background: #102033;
+
+            VerticalLayout {
+                padding-top: 42px;
+                padding-right: 24px;
+                padding-bottom: 24px;
+                padding-left: 24px;
+                spacing: 22px;
+
+                Text {
+                    text: "AEGIS";
+                    color: #ffffff;
+                    font-size: 34px;
+                    font-weight: 700;
+                    horizontal-alignment: center;
+                }
+
+                Text {
+                    text: "AI Execution Governance & Interception System";
+                    color: #d9e6f7;
+                    font-size: 14px;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: #2d415c;
+                }
+
+                Text {
+                    text: "Overview";
+                    color: #ffffff;
+                    font-size: 16px;
+                }
+
+                Text {
+                    text: "Executions";
+                    color: #b8c7dc;
+                    font-size: 16px;
+                }
+
+                Text {
+                    text: "Audit";
+                    color: #b8c7dc;
+                    font-size: 16px;
+                }
+
+                Text {
+                    text: "State";
+                    color: #b8c7dc;
+                    font-size: 16px;
+                }
+
+                Text {
+                    text: "Recovery";
+                    color: #b8c7dc;
+                    font-size: 16px;
+                }
+
+                Text {
+                    text: "Policy";
+                    color: #b8c7dc;
+                    font-size: 16px;
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+                    background: #102033;
+                }
+
+                Text {
+                    text: "Static scaffold";
+                    color: #91a6c2;
+                    font-size: 13px;
+                    horizontal-alignment: center;
+                }
+            }
+        }
+
+        Rectangle {
+            background: #f5f7fb;
+
+            VerticalLayout {
+                padding-top: 48px;
+                padding-right: 48px;
+                padding-bottom: 36px;
+                padding-left: 48px;
+                spacing: 22px;
+
+                HorizontalLayout {
+                    spacing: 16px;
+                    alignment: start;
+
+                    Text {
+                        text: "AEGIS";
+                        color: #111827;
+                        font-size: 44px;
+                        font-weight: 800;
+                    }
+
+                    Rectangle {
+                        width: 100px;
+                        height: 30px;
+                        border-radius: 6px;
+                        border-width: 1px;
+                        border-color: #8fb4ee;
+                        background: #eaf2ff;
+
+                        Text {
+                            text: "PRE-ALPHA";
+                            color: #2358a6;
+                            font-size: 13px;
+                            font-weight: 700;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "Governed execution with clear operator feedback.";
+                    color: #40506a;
+                    font-size: 18px;
+                }
+
+                Rectangle {
+                    height: 150px;
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: #cfd8e6;
+                    background: #ffffff;
+
+                    VerticalLayout {
+                        padding: 24px;
+                        spacing: 12px;
+
+                        Text {
+                            text: "Backend evidence drives this UI";
+                            color: #133e75;
+                            font-size: 22px;
+                            font-weight: 700;
+                        }
+
+                        Text {
+                            text: "The graphical surface will render backend evidence when live UI work begins. This scaffold does not call the gateway, parse runtime output, or create policy decisions.";
+                            color: #40506a;
+                            font-size: 16px;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+
+                Rectangle {
+                    height: 150px;
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: #cfd8e6;
+                    background: #ffffff;
+
+                    VerticalLayout {
+                        padding: 24px;
+                        spacing: 12px;
+
+                        Text {
+                            text: "Authority boundary is in the backend";
+                            color: #14532d;
+                            font-size: 22px;
+                            font-weight: 700;
+                        }
+
+                        Text {
+                            text: "The UI is an operator surface, not an authority boundary. It does not validate requests, evaluate policy, authorize execution, issue credentials, dispatch wrappers, write audit records, or plan recovery.";
+                            color: #40506a;
+                            font-size: 16px;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+                    background: #f5f7fb;
+                }
+            }
+        }
+    }
+}

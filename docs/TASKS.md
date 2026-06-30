@@ -178,7 +178,7 @@ Objective: expose and operate the governed execution engine through platform bou
 | Add operational observability | planned |
 | Add plugin or wrapper extension architecture | planned |
 | Add orchestrator integration references | planned |
-| Add Tauri shell with Slint UI scaffold | planned |
+| Add Tauri shell with Slint UI scaffold | complete |
 | Render execution timeline from sample evidence in Slint | planned |
 | Render normalized error cards in Slint | planned |
 

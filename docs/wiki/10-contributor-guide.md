@@ -40,6 +40,7 @@ If documentation and code disagree, stop and resolve the documentation gap first
 | lifecycle and state logs | `src/state/` |
 | recovery inspection or planning | `src/state/` |
 | structured errors | `src/error.rs` |
+| desktop shell and static Slint UI scaffold | `src-tauri/` |
 | local policy fixtures | `examples/policy-bundles/local-dev/` |
 | request examples | `schemas/examples/` |
 | tests | `tests/` |
@@ -62,6 +63,12 @@ git status --short --branch
 ```
 
 For documentation-only changes, Rust validation is unnecessary unless Rust files changed.
+
+For desktop scaffold changes, also run:
+
+```bash
+cargo check --manifest-path src-tauri/Cargo.toml
+```
 
 ## Current Runtime Rules
 

@@ -165,6 +165,7 @@ Expose and operate the governed execution engine through platform boundaries aft
 - operational observability
 - plugin or wrapper extension architecture
 - Tauri desktop shell with Slint graphical UI layer
+- static Tauri + Slint landing scaffold
 - Slint-rendered graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
 - orchestrator integration references
 

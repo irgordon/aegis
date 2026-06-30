@@ -28,7 +28,7 @@ The Phase 3 foundation has also begun. The local runtime can dispatch and execut
 
 It does not yet execute real external actions. That is why the remaining Phase 3 work focuses on approval, durable execution state, replay, recovery, and broader governed execution beyond local built-in wrappers.
 
-AEGIS will use Tauri as the desktop application shell and Slint as the graphical UI layer when Phase 4 UI implementation begins. The CLI remains a support surface for validation, inspection, testing, and automation. Phase 3 preserves UI-ready backend evidence and documents the Slint with Tauri UI direction so Phase 4 can render execution feedback graphically without recreating backend decisions.
+Phase 4 has begun with a static Tauri shell and Slint landing window. The CLI remains a support surface for validation, inspection, testing, and automation. The initial UI scaffold does not render live backend evidence, call gateway execution, define IPC commands, or provide authority.
 
 For contributors, the backlog has been reorganized around the shortest path from decision evidence to safe execution. Completed Phase 2 implementation work is no longer an active task list. Active work now starts with Phase 3 runtime execution boundaries.
 
@@ -199,6 +199,11 @@ Expose and operate the governed execution engine through platform boundaries aft
 - Tauri desktop shell with Slint graphical UI layer
 - Slint-rendered graphical operator workflows for execution status, errors, evidence, state, inspection, and recovery plans
 - orchestrator integration references
+
+### Phase 4 Progression
+Completed Phase 4 foundation:
+
+- static Tauri shell with Slint landing window
 
 ### Exit Criteria
 - service API preserves ToolCallRequest and ToolCallResponse contracts

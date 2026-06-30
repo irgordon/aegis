@@ -70,7 +70,7 @@ Confirm the graphical operator surface:
 - [ ] UI states that the authority boundary is in the backend.
 - [ ] UI does not imply arbitrary live backend control.
 - [ ] UI does not imply replay or recovery execution.
-- [ ] The v0.4.0 desktop UI is visually clear enough that a first-time user can understand the screen purpose, current state, and next available information in under 10 seconds.
+- [x] The v0.4.0 desktop UI is visually clear enough that a first-time user can understand the screen purpose, current state, and next available information in under 10 seconds.
 
 Do not require installer generation, code signing, auto-update, or production packaging for `v0.4.0`.
 

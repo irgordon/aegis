@@ -6,9 +6,9 @@ Review date: 2026-06-30
 
 Recommendation: Ready after small fixes.
 
-AEGIS satisfies the implemented capability requirements for the `v0.4.0` Minimum Usable Local Release. The executable release validation gate passes on a clean worktree, the local gateway paths execute, the desktop shell launches, fixed live `health.check` evidence is available through read-only IPC, and sample fallback evidence is clearly labeled.
+AEGIS satisfies the implemented capability requirements for the `v0.4.0` Minimum Usable Local Release. The executable release validation gate passes on a clean worktree, the local gateway paths execute, the desktop shell launches, fixed live `health.check` evidence is available through read-only IPC, sample fallback evidence is clearly labeled, and the visual readability review now has screenshot evidence.
 
-The repository is not ready to tag until the final release work is complete: apply the v0.4.0 visual polish and readability review, add the explicit `v0.4.0` release notes entry, and obtain maintainer approval to tag. No runtime, UI authority, architecture, or validation blocker was found.
+The repository is not ready to tag until the final release work is complete: add the explicit `v0.4.0` release notes entry and obtain maintainer approval to tag. No runtime, UI authority, architecture, validation, or visual clarity blocker was found.
 
 ## Repository Maturity
 
@@ -42,7 +42,7 @@ The repository is not ready to tag until the final release work is complete: app
 | Recovery inspection | PASS | Release gate phase 7 runs `--inspect-state` successfully. |
 | Recovery planning | PASS | Release gate phase 8 runs `--plan-recovery` successfully. |
 | Structured errors | PASS | Error reporting tests cover request, policy, wrapper, audit, runtime, and UI-safe normalized errors. |
-| Desktop UI | PASS | UI renders backend-driven fixed live evidence and labeled sample fallback evidence without authority controls. |
+| Desktop UI | PASS | UI renders backend-driven fixed live evidence and labeled sample fallback evidence without authority controls; screenshot review passed in `docs/assets/release/v0.4.0-desktop-readability-review.md`. |
 | Documentation | PASS | Release docs are aligned after review updates. |
 | Validation script | PASS | `scripts/validate-v0.4.0-release.sh` passed and is covered by lightweight structural tests. |
 
@@ -102,7 +102,7 @@ No production or enterprise readiness overstatement was found.
 | Priority | Blocker | Status | Required action |
 | --- | --- | --- | --- |
 | P0 | Runtime, validation, or UI authority blocker | None found | None. |
-| P1 | Visual polish and readability review against the v0.4.0 UI design guidance is not yet complete | Open | Apply the documented visual guidance and verify first-time screen comprehension before tagging. |
+| P1 | Visual polish and readability review against the v0.4.0 UI design guidance | Resolved | Screenshot evidence and review notes are recorded in `docs/assets/release/v0.4.0-desktop-readability-review.md`. |
 | P1 | Explicit `v0.4.0` release notes are not yet recorded | Open | Add a `v0.4.0` changelog/release entry before tagging. |
 | P1 | Maintainer approval to tag is not recorded | Open | Obtain explicit maintainer approval before creating the tag. |
 | P2 | Broader read-only audit/state/recovery UI views remain planned | Deferred | Not a `v0.4.0` blocker under the minimum usable local release scope. |
@@ -126,18 +126,17 @@ Evidence:
 - The executable release gate passed.
 - The local gateway and desktop shell satisfy the documented minimum usable local release capabilities.
 - No P0 blocker was found.
-- Remaining P1 items are bounded release work: apply the documented visual clarity standard, write the explicit `v0.4.0` release notes entry, and obtain maintainer tagging approval.
+- Remaining P1 items are bounded release work: write the explicit `v0.4.0` release notes entry and obtain maintainer tagging approval.
 
 ## Required Work Before Tag
 
 Before tagging `v0.4.0`:
 
 1. Add the explicit `v0.4.0` release notes/changelog entry.
-2. Apply the v0.4.0 visual polish and readability review.
-3. Confirm maintainer approval to tag.
-4. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
-5. Confirm `git status --short --branch` is clean.
-6. Tag only after maintainer approval is explicit.
+2. Confirm maintainer approval to tag.
+3. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
+4. Confirm `git status --short --branch` is clean.
+5. Tag only after maintainer approval is explicit.
 
 ## Appendix
 
@@ -158,3 +157,4 @@ Manual review confirmed:
 - UI labels sample recovery evidence
 - UI states backend authority
 - UI does not expose replay, recovery execution, approval, credential issuance, arbitrary gateway execution, or mutation wrapper controls
+- screenshot-backed visual readability review passed after reducing visible text density

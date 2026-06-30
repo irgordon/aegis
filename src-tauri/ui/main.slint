@@ -76,7 +76,7 @@ component StatusCard inherits Rectangle {
     in property <color> accent;
 
     width: 128px;
-    height: 126px;
+    height: 86px;
     border-radius: 8px;
     border-width: 1px;
     border-color: AegisPalette.border;
@@ -87,7 +87,7 @@ component StatusCard inherits Rectangle {
         padding-right: 12px;
         padding-bottom: 12px;
         padding-left: 12px;
-        spacing: 4px;
+        spacing: 8px;
 
         Text {
             text: root.card_title;
@@ -106,22 +106,6 @@ component StatusCard inherits Rectangle {
             font-weight: 800;
             wrap: word-wrap;
         }
-
-        Text {
-            text: root.summary;
-            color: AegisPalette.muted_text;
-            font-family: AegisTypography.serif_first;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "source: " + root.evidence_source;
-            color: AegisPalette.primary_dark;
-            font-family: AegisTypography.serif_first;
-            font-size: 10px;
-            wrap: word-wrap;
-        }
     }
 }
 
@@ -132,11 +116,11 @@ component TimelineStep inherits Rectangle {
     in property <color> accent;
 
     width: 88px;
-    height: 92px;
+    height: 66px;
     background: AegisPalette.card;
 
     VerticalLayout {
-        spacing: 4px;
+        spacing: 3px;
         alignment: start;
 
         Rectangle {
@@ -150,7 +134,7 @@ component TimelineStep inherits Rectangle {
             text: root.stage_label;
             color: AegisPalette.primary_dark;
             font-family: AegisTypography.serif_first;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             wrap: word-wrap;
         }
@@ -159,16 +143,8 @@ component TimelineStep inherits Rectangle {
             text: root.stage_status;
             color: root.accent;
             font-family: AegisTypography.serif_first;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: root.summary;
-            color: AegisPalette.muted_text;
-            font-family: AegisTypography.serif_first;
-            font-size: 9px;
             wrap: word-wrap;
         }
     }
@@ -185,7 +161,7 @@ component ErrorDetail inherits HorizontalLayout {
         text: root.detail_label;
         color: AegisPalette.critical;
         font-family: AegisTypography.serif_first;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
     }
 
@@ -193,7 +169,7 @@ component ErrorDetail inherits HorizontalLayout {
         text: root.detail_value;
         color: AegisPalette.primary_dark;
         font-family: AegisTypography.serif_first;
-        font-size: 12px;
+        font-size: 11px;
         wrap: word-wrap;
     }
 }
@@ -209,20 +185,21 @@ component ErrorCard inherits Rectangle {
     in property <string> error_location;
 
     width: 292px;
+    height: 198px;
     border-radius: 8px;
     border-width: 1px;
     border-color: AegisPalette.critical;
     background: AegisPalette.card;
 
     VerticalLayout {
-        padding: 18px;
-        spacing: 12px;
+        padding: 14px;
+        spacing: 7px;
 
         Text {
             text: root.error_title;
             color: AegisPalette.critical;
             font-family: AegisTypography.serif_first;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
         }
 
@@ -231,6 +208,7 @@ component ErrorCard inherits Rectangle {
             color: AegisPalette.primary_dark;
             font-family: AegisTypography.serif_first;
             font-size: 11px;
+            wrap: word-wrap;
         }
 
         ErrorDetail {
@@ -291,7 +269,7 @@ component RecoveryDetail inherits HorizontalLayout {
 
 component RecoveryInspectionCard inherits Rectangle {
     width: 292px;
-    height: 188px;
+    height: 176px;
     border-radius: 8px;
     border-width: 1px;
     border-color: AegisPalette.secondary_accent;
@@ -299,7 +277,7 @@ component RecoveryInspectionCard inherits Rectangle {
 
     VerticalLayout {
         padding: 14px;
-        spacing: 8px;
+        spacing: 7px;
 
         Text {
             text: "Sample Recovery Inspection";
@@ -335,7 +313,7 @@ component RecoveryInspectionCard inherits Rectangle {
         }
 
         Text {
-            text: "No inspection errors in sample evidence. This card does not read state logs.";
+            text: "Sample only. This card does not read state logs.";
             color: AegisPalette.muted_text;
             font-family: AegisTypography.serif_first;
             font-size: 11px;
@@ -346,7 +324,7 @@ component RecoveryInspectionCard inherits Rectangle {
 
 component RecoveryPlanCard inherits Rectangle {
     width: 292px;
-    height: 214px;
+    height: 142px;
     border-radius: 8px;
     border-width: 1px;
     border-color: AegisPalette.attention;
@@ -354,7 +332,7 @@ component RecoveryPlanCard inherits Rectangle {
 
     VerticalLayout {
         padding: 14px;
-        spacing: 8px;
+        spacing: 7px;
 
         Text {
             text: "Sample Recovery Plan";
@@ -379,24 +357,11 @@ component RecoveryPlanCard inherits Rectangle {
             detail_value: "No future action";
         }
 
-        RecoveryDetail {
-            detail_label: "Reason";
-            detail_value: "Execution already reached a terminal completed state.";
-        }
-
         Text {
-            text: "Safe labels: Future evaluation only; Audit retry candidate; Audit retry only; Not recoverable: evidence corrupted; Manual review only.";
+            text: "Sample guidance only. Does not inspect live state. Future evaluation only. Audit retry candidate. Manual review only. Not replay execution.";
             color: AegisPalette.muted_text;
             font-family: AegisTypography.serif_first;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Sample guidance only. This UI does not inspect live state, approve recovery, execute audit retry, replay, or resume execution.";
-            color: AegisPalette.secondary_accent;
-            font-family: AegisTypography.serif_first;
-            font-size: 11px;
+            font-size: 10px;
             wrap: word-wrap;
         }
     }
@@ -726,7 +691,7 @@ export component AegisWindow inherits Window {
                                 }
 
                                 Text {
-                                    text: "The UI is an operator surface, not an authority boundary. This view renders fixed read-only live health.check evidence when available and labeled sample recovery evidence otherwise; it does not accept arbitrary requests, evaluate policy, authorize execution, issue credentials, dispatch mutation wrappers, write audit or state logs, inspect state logs, plan recovery, replay, or recover.";
+                                    text: "The UI is an operator surface, not an authority boundary. Fixed read-only live health.check evidence. Labeled sample recovery evidence. No arbitrary requests, credentials, mutation dispatch, replay, or recovery.";
                                     color: AegisPalette.muted_text;
                                     font-family: AegisTypography.serif_first;
                                     font-size: 13px;

@@ -55,14 +55,14 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Run v0.4.0 readiness review | complete |
 | Define v0.4.0 visual design guidance | complete |
 | Apply v0.4.0 visual design system | complete |
-| Complete v0.4.0 visual readability review | planned |
+| Complete v0.4.0 visual readability review | complete |
 | Prepare v0.4.0 release notes and tagging approval | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 Recommended next task:
 
 ```text
-test(ui): Complete v0.4.0 visual readability review
+docs(release): Prepare v0.4.0 release notes and tagging approval
 ```
 
 ## Deferred Phase Work
@@ -242,7 +242,7 @@ Status: started.
 | Run v0.4.0 readiness review | complete |
 | Define v0.4.0 visual design guidance | complete |
 | Apply v0.4.0 visual design system | complete |
-| Complete v0.4.0 visual readability review | planned |
+| Complete v0.4.0 visual readability review | complete |
 | Prepare v0.4.0 release notes and tagging approval | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 

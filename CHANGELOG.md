@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.39] - 2026-06-30
+
+### Added
+
+- Added screenshot-backed v0.4.0 desktop visual readability review evidence.
+
+### Changed
+
+- Reduced visible text density in the desktop Slint UI status cards, timeline, and recovery evidence panels.
+- Updated v0.4.0 release readiness status after completing the visual readability review.
+
 ## [0.2.38] - 2026-06-30
 
 ### Changed

@@ -211,9 +211,9 @@ Simplicity that preserves security is preferred over sophistication that increas
 
 Release Governance
 
-`v0.4.0` is the current product objective.
+AEGIS now uses the current documented release objective as the planning constraint.
 
-Until the Minimum Usable Local Release is complete, every proposed feature must identify which release criterion it satisfies.
+Every proposed feature must identify which release criterion or documented release plan it satisfies.
 
 A proposed feature must satisfy at least one of the following:
 
@@ -223,9 +223,9 @@ A proposed feature must satisfy at least one of the following:
 * improves reliability or correctness of an existing release capability
 * reduces technical debt that would otherwise delay the release
 
-If a proposal satisfies none of these criteria, defer it until after `v0.4.0`.
+If a proposal satisfies none of these criteria, defer it until the current release objective is complete.
 
-The Minimum Usable Local Release takes priority over expanding product scope. Release scope should remain intentionally small.
+The active release objective takes priority over expanding product scope. Release scope should remain intentionally small.
 
 ⸻
 

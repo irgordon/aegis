@@ -278,7 +278,7 @@ Once AEGIS enters a release cycle, documentation should favor operational clarit
 
 The release path is an authoritative planning input.
 
-Before `v0.4.0`, documentation updates should help readers verify the Minimum Usable Local Release, understand release limitations, remove release blockers, or maintain the current release checklist.
+During a release cycle, documentation updates should help readers verify the current release objective, understand release limitations, remove release blockers, or maintain the current release checklist.
 
 ## If You Are Looking For...
 

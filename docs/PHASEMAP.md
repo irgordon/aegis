@@ -26,7 +26,7 @@ A version is valid only when its documented exit criteria are satisfied.
 | 2 | v0.2.0 | Local Gateway MVP | Complete | Prove local governed request-to-response behavior. | None. | None. |
 | 3 | v0.3.0 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
 | 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
-| 4 | v0.4.0 | Graphical Operator Surface | Started | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | Release readiness review. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
+| 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | Post-v0.4.0 distribution planning. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
 | 5 | v0.5.0 | Recovery and Replay Execution | Not started | Add constrained recovery and replay behavior after read-only inspection and planning. | None. | Approval workflow and production credential providers. |
 | 6 | v0.6.0 | Approval and Production Credential Providers | Not started | Add human approval workflow and real credential provider boundaries. | None. | Platform and production hardening. |
 | 7 | v0.7.0 | Platform and Production Hardening | Not started | Add service, deployment, observability, extension, security, release, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
@@ -36,7 +36,7 @@ A version is valid only when its documented exit criteria are satisfied.
 | Version | Entry Criteria | Exit Criteria |
 | --- | --- | --- |
 | v0.3.0 | Phase 2 local Gateway MVP complete. | Local built-in wrapper execution, authorization, credential boundaries, lifecycle, audit, state, recovery inspection, and recovery planning are validated. |
-| v0.4.0 | UI-ready backend evidence exists, local gateway execution works, and Tauri plus Slint direction is documented. | Minimum usable local release checklist passes; the UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. |
+| v0.4.0 | UI-ready backend evidence exists, local gateway execution works, and Tauri plus Slint direction is documented. | Minimum usable local release checklist passes; the UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. Complete, tagged, and pushed. |
 | v0.5.0 | Recovery inspection and planning evidence exists. | Replay and recovery execution are constrained, auditable, and fail closed. |
 | v0.6.0 | Local execution and recovery boundaries are stable. | Approval and production credential providers are scoped, attributable, secret-safe, and fail closed. |
 | v0.7.0 | Core runtime, UI, recovery, approval, and credential provider boundaries are stable. | Platform and production controls are tested, documented, and reproducible. |
@@ -212,7 +212,7 @@ Complete.
 Render governed execution evidence in a non-authoritative graphical desktop operator surface and establish the minimum usable local release.
 
 ### Status
-Started.
+Complete for local-only `v0.4.0`.
 
 ### Required Capabilities
 - Tauri desktop shell with Slint graphical UI layer
@@ -226,6 +226,7 @@ Started.
 - live read-only runtime evidence rendering
 - executable release validation gate
 - formal release readiness review
+- annotated `v0.4.0` tag pushed to origin
 
 ### Exit Criteria
 - minimum usable local release checklist passes
@@ -237,6 +238,34 @@ Started.
 - live evidence rendering is read-only
 - graphical timelines, status cards, and error cards preserve backend meaning
 - sample recovery inspection and recovery plan labels do not imply recovery or replay execution
+- release remains local-only, source-oriented, and pre-alpha
+- downloadable artifacts, installers, signing, notarization, and GitHub Release publishing are deferred
+
+## v0.4.x: Post-v0.4.0 Distribution Planning
+
+### Purpose
+Plan a safe path from source-only local release to downloadable developer-preview artifacts.
+
+### Status
+Started.
+
+### Required Planning Outputs
+- release distribution plan
+- target platform candidates
+- staged artifact types
+- artifact naming convention
+- checksum and integrity requirements
+- signing and notarization sequencing
+- GitHub Release workflow outline
+- open decisions for first downloadable artifacts
+
+### Exit Criteria
+- `docs/RELEASE_DISTRIBUTION_PLAN.md` exists
+- `v0.4.0` remains source-only and unchanged in scope
+- target platforms are planned, not promised
+- future artifacts require SHA-256 checksums before publication
+- signing, notarization, installers, and auto-update remain deferred until scheduled
+- no release automation or artifact publishing is implemented by the planning task
 
 ## v0.5.0: Recovery and Replay Execution
 

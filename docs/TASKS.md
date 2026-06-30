@@ -18,13 +18,13 @@ Task status values are bounded:
 
 No other status values should be used unless this document is updated.
 
-## Active Phase 4 Work
+## Active Post-v0.4.0 Work
 
-Phase 4 work renders backend evidence in a non-authoritative graphical operator surface.
+`v0.4.0` is complete, tagged, and pushed as a local-only source release.
 
-The UI must keep live IPC read-only, fixed-scope, backend-authoritative, and clearly separated from sample fallback evidence.
+Current work plans the next distribution step without changing runtime behavior, UI behavior, release artifacts, or release automation.
 
-Every new task before `v0.4.0` should identify which release criterion it satisfies.
+Every new task after `v0.4.0` should identify whether it improves operator usability, removes a release blocker, improves release reliability, or reduces release-critical technical debt.
 
 Tasks that satisfy none should be deferred.
 
@@ -61,6 +61,11 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Create v0.4.0 tag | complete |
 | Push v0.4.0 tag | complete |
 | Finalize v0.4.0 local release | complete |
+| Define post-v0.4.0 distribution plan | complete |
+| Select first downloadable artifact targets | planned |
+| Add draft GitHub Release build workflow | planned |
+| Validate artifact naming and checksum generation | planned |
+| Publish first unsigned developer-preview build | planned |
 | GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
@@ -254,6 +259,11 @@ Status: started.
 | Create v0.4.0 tag | complete |
 | Push v0.4.0 tag | complete |
 | Finalize v0.4.0 local release | complete |
+| Define post-v0.4.0 distribution plan | complete |
+| Select first downloadable artifact targets | planned |
+| Add draft GitHub Release build workflow | planned |
+| Validate artifact naming and checksum generation | planned |
+| Publish first unsigned developer-preview build | planned |
 | GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 

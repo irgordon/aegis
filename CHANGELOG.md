@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.42] - 2026-06-30
+
+### Added
+
+- Added the post-v0.4.0 release distribution plan.
+
+### Changed
+
+- Updated release planning documents to keep v0.4.0 source-only while identifying future downloadable artifact work.
+- Reworded release governance references to target the current documented release objective after v0.4.0 completion.
+
 ## [0.2.41] - 2026-06-30
 
 ### Changed

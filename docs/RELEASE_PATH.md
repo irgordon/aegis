@@ -249,3 +249,11 @@ The final local release task creates the annotated `v0.4.0` tag after maintainer
 6. The `v0.4.0` tag is pushed to origin.
 
 GitHub Release publishing, downloadable binaries, installers, packaging, signing, notarization, auto-update, and distribution workflow remain deferred.
+
+## Post-v0.4.0 Distribution Planning
+
+After `v0.4.0`, distribution work should follow `docs/RELEASE_DISTRIBUTION_PLAN.md`.
+
+The plan keeps `v0.4.0` source-only and defines a staged path toward GitHub Release artifacts, checksums, platform builds, signing, notarization, and installers.
+
+Downloadable artifacts remain future work.

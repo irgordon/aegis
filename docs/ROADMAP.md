@@ -29,9 +29,11 @@ The Phase 3 local governed execution foundation is complete after reclassificati
 
 It does not yet execute real external actions, replay execution, approval workflow, production credential providers, or HTTP service behavior. Those concerns now belong to later phases instead of the completed local execution foundation.
 
-Phase 4 has begun with a Tauri shell and Slint operator surface. The CLI remains a support surface for validation, inspection, testing, and automation. The UI scaffold renders fixture-backed sample evidence and can request fixed live `health.check` backend evidence through a narrow read-only IPC command. It does not submit arbitrary gateway requests, execute mutation wrappers, inspect live state logs, generate live recovery plans, define broad IPC command surfaces, or provide authority.
+Phase 4 has a Tauri shell and Slint operator surface. The CLI remains a support surface for validation, inspection, testing, and automation. The UI scaffold renders fixture-backed sample evidence and can request fixed live `health.check` backend evidence through a narrow read-only IPC command. It does not submit arbitrary gateway requests, execute mutation wrappers, inspect live state logs, generate live recovery plans, define broad IPC command surfaces, or provide authority.
 
-The next release boundary is a minimum usable local release. It should be small enough to ship and safe enough to explain: local gateway execution, local evidence generation, read-only recovery inspection and planning, and a launchable sample-evidence desktop UI. Features not required for that local release should not block it.
+`v0.4.0` is complete, tagged, and pushed as a local-only, pre-alpha, source-oriented release.
+
+Post-`v0.4.0` distribution planning has begun. The next distribution work should make AEGIS easier to try through GitHub Releases without changing runtime authority, bypassing validation, or implying production readiness.
 
 For contributors, the backlog has been reorganized around the shortest path from local execution evidence to a useful operator surface. Completed Phase 2 and Phase 3 foundation work is no longer an active task list. Active work now starts with Phase 4 evidence-first graphical rendering.
 
@@ -203,7 +205,7 @@ Prepare backend evidence and documentation for a graphical operator surface with
 ## Phase 4: Graphical Operator Surface
 
 ### Status
-Started.
+Complete for `v0.4.0`.
 
 ### Objective
 Render governed execution evidence in a non-authoritative graphical desktop operator surface.
@@ -218,19 +220,21 @@ Render governed execution evidence in a non-authoritative graphical desktop oper
 - live read-only runtime evidence rendering
 
 ### Phase 4 Progression
-Completed Phase 4 foundation:
+Completed `v0.4.0` foundation:
 
 - static Tauri shell with Slint landing window
 - fixture-backed Slint execution timeline, status cards, normalized error card, and recovery inspection and planning cards
 - narrow read-only `get_health_check_evidence` IPC command
 - live backend `health.check` evidence rendering for current status cards and timeline fields
 - executable v0.4.0 release validation gate
+- v0.4.0 local-only release tag
 
-Next sequence:
+Post-`v0.4.0` sequence:
 
-1. Complete the v0.4.0 readiness review.
-2. Prepare explicit v0.4.0 release notes and maintainer tagging approval.
-3. After v0.4.0, render audit, state, recovery inspection, and recovery plan views read-only.
+1. Define the post-v0.4.0 distribution plan.
+2. Select the first downloadable artifact targets.
+3. Add draft release workflow and checksum validation only after the plan is accepted.
+4. Render audit, state, recovery inspection, and recovery plan views read-only when they satisfy release criteria.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions
@@ -243,7 +247,7 @@ Next sequence:
 ## Release Track: Minimum Usable Local Release
 
 ### Status
-Planned.
+Complete for `v0.4.0`.
 
 ### Objective
 Create the smallest local-only AEGIS release that a user can build, launch, understand, and use safely.
@@ -272,19 +276,21 @@ Create the smallest local-only AEGIS release that a user can build, launch, unde
 ### Reference
 See `docs/RELEASE_PATH.md`.
 
+Post-`v0.4.0` distribution planning is tracked in `docs/RELEASE_DISTRIBUTION_PLAN.md`.
+
 ### Release Governance
 
 Phase progression now follows release readiness rather than feature accumulation.
 
-Before `v0.4.0`, every new task should answer:
+After `v0.4.0`, every new release task should answer:
 
 ```text
-Does this move AEGIS measurably closer to the Minimum Usable Local Release?
+Does this preserve v0.4.0's safety boundaries while moving AEGIS toward a validated downloadable release?
 ```
 
 If the answer is no, defer the work.
 
-Features outside the minimum usable release are intentionally deferred.
+Downloadable artifacts, signing, notarization, installers, and GitHub Release publishing remain future work until their validation path exists.
 
 ## Phase 5: Recovery and Replay Execution
 

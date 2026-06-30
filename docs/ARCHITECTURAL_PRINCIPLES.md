@@ -173,7 +173,7 @@ A usable release creates more value than additional unfinished capability.
 
 Until the current release objective is achieved, new work should strengthen or complete release-critical functionality rather than expanding project scope.
 
-Work that does not move AEGIS measurably closer to `v0.4.0` should be deferred.
+Work that does not move AEGIS measurably closer to the current documented release objective should be deferred.
 
 ## Principle 17: Orchestrator Agnostic
 

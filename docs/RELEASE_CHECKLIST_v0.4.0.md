@@ -153,31 +153,15 @@ Do not rewrite these files unless a release-readiness contradiction is found.
 
 ## Validation Commands
 
-Run the full release validation gate:
+Run the executable release validation gate:
 
 ```bash
-python3 scripts/verify.py
-
-cargo fmt --check
-
-cargo clippy --all-targets --all-features -- -D warnings
-
-cargo test
-
-cargo fmt --manifest-path src-tauri/Cargo.toml --check
-
-cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -- -D warnings
-
-cargo test --manifest-path src-tauri/Cargo.toml
-
-cargo check --manifest-path src-tauri/Cargo.toml
-
-git diff --check
-
-git status --short --branch
+bash scripts/validate-v0.4.0-release.sh
 ```
 
-Do not claim release readiness unless these commands pass.
+This script runs repository validation, Rust validation, desktop validation, UI tests, gateway smoke tests, recovery inspection, recovery planning, desktop launch checking, and final repository cleanliness checks in order.
+
+Do not claim release readiness unless this script passes on a clean worktree.
 
 ## Manual Verification
 

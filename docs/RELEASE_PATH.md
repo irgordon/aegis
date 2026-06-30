@@ -182,40 +182,21 @@ Generated `audit.jsonl`, `state.jsonl`, and sandbox files are local development 
 
 ## Validation Gate
 
-The minimum usable release validation gate is:
+The minimum usable release validation gate is executable:
 
 ```bash
-python3 scripts/verify.py
-
-cargo fmt --check
-cargo clippy --all-targets --all-features -- -D warnings
-cargo test
-
-cargo fmt --manifest-path src-tauri/Cargo.toml --check
-cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -- -D warnings
-cargo test --manifest-path src-tauri/Cargo.toml
-cargo check --manifest-path src-tauri/Cargo.toml
-
-git diff --check
-git status --short --branch
+bash scripts/validate-v0.4.0-release.sh
 ```
 
-Do not tag the release unless the validation gate passes.
+The script runs the existing repository, Rust, desktop, UI, gateway smoke, recovery inspection, recovery planning, desktop launch, and cleanliness checks in the documented order.
+
+Do not tag the release unless the validation gate passes on a clean worktree.
 
 ## Release Candidate Checklist
 
 Use `docs/RELEASE_CHECKLIST_v0.4.0.md` as the concrete readiness checklist before tagging.
 
-- [ ] Repository verification passes.
-- [ ] Local gateway formatting, clippy, and tests pass.
-- [ ] Desktop formatting, clippy, tests, and check pass.
-- [ ] `health.check` command succeeds with local policy bundle.
-- [ ] `sandbox.note.write` command succeeds against a local sandbox directory.
-- [ ] Audit JSONL evidence is created locally.
-- [ ] State JSONL evidence is created locally.
-- [ ] Recovery inspection command returns structured JSON.
-- [ ] Recovery planning command returns structured JSON.
-- [ ] Desktop app launches locally.
+- [ ] `bash scripts/validate-v0.4.0-release.sh` passes.
 - [ ] UI distinguishes fixed live health-check evidence from sample fallback evidence.
 - [ ] README remains short and points to `docs/`.
 - [ ] Changelog records the release.

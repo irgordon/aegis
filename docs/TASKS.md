@@ -48,7 +48,7 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Render sample recovery inspection and planning cards | complete |
 | Define minimum usable local release path | complete |
 | Add v0.4.0 release readiness checklist | complete |
-| Verify minimum usable local release commands | planned |
+| Add executable v0.4.0 release validation script | complete |
 | Define minimal IPC data bridge | complete |
 | Render live read-only runtime evidence | complete |
 | Harden read-only IPC evidence boundary | complete |
@@ -57,7 +57,7 @@ If no box is checked, defer the work until after `v0.4.0`.
 Recommended next task:
 
 ```text
-docs(release): Verify minimum usable local release commands
+feat(ui): Render audit, state, recovery inspection, and recovery plan views read-only
 ```
 
 ## Deferred Phase Work
@@ -230,7 +230,7 @@ Status: started.
 | Render sample recovery inspection and planning cards | complete |
 | Define minimum usable local release path | complete |
 | Add v0.4.0 release readiness checklist | complete |
-| Verify minimum usable local release commands | planned |
+| Add executable v0.4.0 release validation script | complete |
 | Define minimal IPC data bridge | complete |
 | Render live read-only runtime evidence | complete |
 | Harden read-only IPC evidence boundary | complete |

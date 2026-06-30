@@ -8,7 +8,7 @@ Recommendation: Ready after small fixes.
 
 AEGIS satisfies the implemented capability requirements for the `v0.4.0` Minimum Usable Local Release. The executable release validation gate passes on a clean worktree, the local gateway paths execute, the desktop shell launches, fixed live `health.check` evidence is available through read-only IPC, and sample fallback evidence is clearly labeled.
 
-The repository is not ready to tag until the final release-administrative work is complete: add the explicit `v0.4.0` release notes entry and obtain maintainer approval to tag. No runtime, UI, architecture, or validation blocker was found.
+The repository is not ready to tag until the final release work is complete: apply the v0.4.0 visual polish and readability review, add the explicit `v0.4.0` release notes entry, and obtain maintainer approval to tag. No runtime, UI authority, architecture, or validation blocker was found.
 
 ## Repository Maturity
 
@@ -102,6 +102,7 @@ No production or enterprise readiness overstatement was found.
 | Priority | Blocker | Status | Required action |
 | --- | --- | --- | --- |
 | P0 | Runtime, validation, or UI authority blocker | None found | None. |
+| P1 | Visual polish and readability review against the v0.4.0 UI design guidance is not yet complete | Open | Apply the documented visual guidance and verify first-time screen comprehension before tagging. |
 | P1 | Explicit `v0.4.0` release notes are not yet recorded | Open | Add a `v0.4.0` changelog/release entry before tagging. |
 | P1 | Maintainer approval to tag is not recorded | Open | Obtain explicit maintainer approval before creating the tag. |
 | P2 | Broader read-only audit/state/recovery UI views remain planned | Deferred | Not a `v0.4.0` blocker under the minimum usable local release scope. |
@@ -125,17 +126,18 @@ Evidence:
 - The executable release gate passed.
 - The local gateway and desktop shell satisfy the documented minimum usable local release capabilities.
 - No P0 blocker was found.
-- Remaining P1 items are release-administrative: write the explicit `v0.4.0` release notes entry and obtain maintainer tagging approval.
+- Remaining P1 items are bounded release work: apply the documented visual clarity standard, write the explicit `v0.4.0` release notes entry, and obtain maintainer tagging approval.
 
 ## Required Work Before Tag
 
 Before tagging `v0.4.0`:
 
 1. Add the explicit `v0.4.0` release notes/changelog entry.
-2. Confirm maintainer approval to tag.
-3. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
-4. Confirm `git status --short --branch` is clean.
-5. Tag only after maintainer approval is explicit.
+2. Apply the v0.4.0 visual polish and readability review.
+3. Confirm maintainer approval to tag.
+4. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
+5. Confirm `git status --short --branch` is clean.
+6. Tag only after maintainer approval is explicit.
 
 ## Appendix
 

@@ -27,6 +27,117 @@ A good AEGIS interface makes state, risk, action, and consequence obvious. It mu
 
 The UI must be visual, understandable, and operator-friendly. It must use backend evidence as its source of truth. It must not become raw-log-first, and it must not become a terminal UI.
 
+## v0.4.0 Visual Direction
+
+The AEGIS desktop UI should be light, warm, and professional rather than dark-mode-first.
+
+Use `#FAF0CA` as the dominant surface color and `#0D3B66` as the stabilizing authority color.
+
+The interface should look intentional enough to build trust, but restrained enough that evidence remains more important than decoration.
+
+The UI should not look like a raw terminal, debug console, generic admin template, or unfinished demo.
+
+## v0.4.0 UI Palette
+
+| Role | Color |
+| --- | --- |
+| Primary dark / navigation / high-emphasis | `#0D3B66` |
+| Primary surface / main background / soft control grouping | `#FAF0CA` |
+| Attention / warning / highlight | `#F4D35E` |
+| Secondary accent / status emphasis | `#EE964B` |
+| Critical / denied / error | `#F95738` |
+
+## Palette Usage
+
+`#FAF0CA`
+
+Use for the dominant application surface, grouped panels, card backgrounds, calm reading areas, and non-hostile control groupings.
+
+This should be the main visual base. It should make the application feel warmer than a sterile white interface without turning into dark mode.
+
+`#0D3B66`
+
+Use for the app header, navigation, primary labels, strong section titles, high-emphasis borders, and stable authority framing.
+
+This is the main anchoring color. It should communicate structure, trust, and control.
+
+`#F4D35E`
+
+Use for warning states, pending states, pre-alpha notices, attention markers, and soft highlights.
+
+Do not overuse it as a background color. It should guide attention, not dominate the interface.
+
+`#EE964B`
+
+Use for secondary status indicators, recovery/planning emphasis, non-critical operator attention, and transitional states.
+
+Use where the user needs to notice something but the condition is not critical.
+
+`#F95738`
+
+Use only for errors, denied execution, failed-closed states, corrupted evidence, destructive warnings, or critical operator attention.
+
+Do not use it for decoration.
+
+## Typography
+
+Typography must support operator comprehension before brand expression.
+
+The selected font should prioritize:
+
+- clear readability
+- simple letter shapes
+- distinct characters
+- multiple weights and styles
+- accessibility support
+- consistent appearance across sizes
+
+Do not hardcode a font name in documentation unless the repository bundles it or the implementation explicitly depends on it. Do not add font files, link proprietary font files, or claim a font is bundled unless it is actually bundled.
+
+### Font Selection Criteria
+
+Clear readability
+
+The font must be easy to read on both large and small screens. Letters should not look too close together, too thin, or overly decorative.
+
+Simple letter shapes
+
+The font should use clean and simple shapes that reduce confusion. Characters such as uppercase I, lowercase l, and the number 1 should remain visually distinct.
+
+Different weights and styles
+
+The font family should support multiple weights, such as regular, medium, and bold. This allows the same font family to support titles, section headers, menus, labels, and body text.
+
+Accessibility support
+
+The font should have enough spacing and clear forms to support users with low vision or visual fatigue. The UI should remain readable at smaller sizes and under normal desktop scaling.
+
+Consistent look
+
+The font should remain balanced across sizes. A font that works well in headings must also remain readable in smaller controls, labels, and buttons.
+
+### Serif Font Guidance
+
+A serif font may be used for the AEGIS desktop UI if it remains highly legible in a software interface.
+
+The selected serif should be restrained, readable, and modern. It should not feel ornamental, academic, old-fashioned, or print-first.
+
+If the serif font reduces legibility in controls, status cards, or small labels, use it only for headings or replace it with a more readable UI-safe font.
+
+## Evidence Color Semantics
+
+Color must never be the only indicator of state.
+
+| Evidence state | Color guidance |
+| --- | --- |
+| Allowed / healthy / completed | Use `#0D3B66` or neutral text treatment. |
+| Warning / pending / pre-alpha | Use `#F4D35E` with clear labels. |
+| Recovery / planning / operator attention | Use `#EE964B` with clear labels. |
+| Denied / failed-closed / corrupted / error | Use `#F95738` with clear labels. |
+| Surface / grouping | Use `#FAF0CA` or derived light variants. |
+
+Status cards should combine color, text labels, and clear grouping. Color should support the label, not replace it.
+
 ## UI Integrity Review
 
 Every UI change must complete a UI Integrity Review before implementation.
@@ -91,6 +202,20 @@ Every UI change must answer:
 
 Color may support meaning, but it must not be the only way meaning is conveyed. Icons that affect decisions must have visible labels or adjacent explanatory text. Text must remain readable at normal desktop and mobile sizes.
 
+Text must maintain readable contrast against the selected surface color.
+
+Critical states must not rely on color alone.
+
+Status cards should combine color, text labels, and clear grouping.
+
+Small labels must remain readable.
+
+The UI should avoid thin text on warm backgrounds.
+
+Spacing should reduce visual fatigue.
+
+Evidence type labels such as `Live backend evidence` and `Sample evidence` must remain clear.
+
 ## UI Invariants
 
 These UI invariants are hard requirements for future UI work.
@@ -119,6 +244,19 @@ Frontend-to-runtime communication must use narrow, explicit request and response
 
 The UI must not reach around the gateway boundary or create hidden execution paths.
 
+## v0.4.0 Design Constraints
+
+The v0.4.0 UI design must preserve these constraints:
+
+- UI is not an authority boundary.
+- UI does not authorize execution.
+- UI does not issue credentials.
+- UI does not perform replay.
+- UI does not perform recovery execution.
+- UI does not hide sample fallback.
+- UI does not make sample evidence look live.
+- UI does not imply production readiness.
+
 ## Rust and Frontend Boundary
 
 Rust owns governed execution behavior, policy decisions, gateway state, audit evidence construction, and security-sensitive validation.
@@ -142,6 +280,9 @@ Before implementing any UI change, confirm:
 - Information does not rely only on color.
 - Icons that affect decisions are paired with text.
 - Typography is readable.
+- The v0.4.0 palette supports evidence clarity before decoration.
+- Text remains readable on warm surfaces.
+- Live and sample evidence labels remain clear.
 - Rust owns business logic.
 - The frontend only presents state and captures intent.
 - IPC contracts are narrow and explicit.

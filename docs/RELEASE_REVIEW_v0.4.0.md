@@ -4,11 +4,11 @@
 
 Review date: 2026-06-30
 
-Recommendation: Ready after small fixes.
+Recommendation: Ready for maintainer approval.
 
-AEGIS satisfies the implemented capability requirements for the `v0.4.0` Minimum Usable Local Release. The executable release validation gate passes on a clean worktree, the local gateway paths execute, the desktop shell launches, fixed live `health.check` evidence is available through read-only IPC, sample fallback evidence is clearly labeled, and the visual readability review now has screenshot evidence.
+AEGIS satisfies the implemented capability requirements for the `v0.4.0` Minimum Usable Local Release. The executable release validation gate passes on a clean worktree, the local gateway paths execute, the desktop shell launches, fixed live `health.check` evidence is available through read-only IPC, sample fallback evidence is clearly labeled, and the visual readability review has screenshot evidence.
 
-The repository is not ready to tag until the final release work is complete: add the explicit `v0.4.0` release notes entry and obtain maintainer approval to tag. No runtime, UI authority, architecture, validation, or visual clarity blocker was found.
+The release candidate is prepared. The repository is not approved to tag until maintainer approval is explicit. No runtime, UI authority, architecture, validation, documentation, or visual clarity blocker was found.
 
 ## Repository Maturity
 
@@ -92,8 +92,9 @@ Result: PASS.
 | `docs/RELEASE_CHECKLIST_v0.4.0.md` | PASS | Matches the executable release gate and avoids production readiness claims. |
 | `docs/UI_EVIDENCE_CONTRACT.md` | PASS | Updated stale "future UI" wording; preserves UI authority boundary. |
 | `docs/wiki/README.md` | PASS | Explains wiki role and points to authoritative documents. |
-| `docs/TASKS.md` | PASS | Updated readiness review and next release task tracking. |
-| `CHANGELOG.md` | PASS | Review entry added as `0.2.36`. |
+| `docs/TASKS.md` | PASS | Updated release candidate and remaining approval/tagging task tracking. |
+| `CHANGELOG.md` | PASS | Explicit `v0.4.0` release section and `0.2.40` release-candidate entry are present. |
+| `docs/releases/v0.4.0.md` | PASS | Release notes describe local-only pre-alpha scope, validation status, limitations, and pending approval. |
 
 No production or enterprise readiness overstatement was found.
 
@@ -103,7 +104,7 @@ No production or enterprise readiness overstatement was found.
 | --- | --- | --- | --- |
 | P0 | Runtime, validation, or UI authority blocker | None found | None. |
 | P1 | Visual polish and readability review against the v0.4.0 UI design guidance | Resolved | Screenshot evidence and review notes are recorded in `docs/assets/release/v0.4.0-desktop-readability-review.md`. |
-| P1 | Explicit `v0.4.0` release notes are not yet recorded | Open | Add a `v0.4.0` changelog/release entry before tagging. |
+| P1 | Explicit `v0.4.0` release notes | Resolved | Release notes are recorded in `docs/releases/v0.4.0.md`, and `CHANGELOG.md` contains an explicit `v0.4.0` section. |
 | P1 | Maintainer approval to tag is not recorded | Open | Obtain explicit maintainer approval before creating the tag. |
 | P2 | Broader read-only audit/state/recovery UI views remain planned | Deferred | Not a `v0.4.0` blocker under the minimum usable local release scope. |
 
@@ -119,24 +120,23 @@ No production or enterprise readiness overstatement was found.
 
 ## Recommendation
 
-Ready after small fixes.
+Ready for maintainer approval.
 
 Evidence:
 
 - The executable release gate passed.
 - The local gateway and desktop shell satisfy the documented minimum usable local release capabilities.
 - No P0 blocker was found.
-- Remaining P1 items are bounded release work: write the explicit `v0.4.0` release notes entry and obtain maintainer tagging approval.
+- Remaining P1 item: obtain maintainer tagging approval.
 
 ## Required Work Before Tag
 
 Before tagging `v0.4.0`:
 
-1. Add the explicit `v0.4.0` release notes/changelog entry.
-2. Confirm maintainer approval to tag.
-3. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
-4. Confirm `git status --short --branch` is clean.
-5. Tag only after maintainer approval is explicit.
+1. Confirm maintainer approval to tag.
+2. Rerun `bash scripts/validate-v0.4.0-release.sh` on a clean worktree.
+3. Confirm `git status --short --branch` is clean.
+4. Tag only after maintainer approval is explicit.
 
 ## Appendix
 
@@ -158,3 +158,4 @@ Manual review confirmed:
 - UI states backend authority
 - UI does not expose replay, recovery execution, approval, credential issuance, arbitrary gateway execution, or mutation wrapper controls
 - screenshot-backed visual readability review passed after reducing visible text density
+- release candidate notes are recorded in `docs/releases/v0.4.0.md`

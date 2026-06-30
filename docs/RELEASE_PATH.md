@@ -232,8 +232,7 @@ Do not create the tag as part of release planning.
 
 Recommended next tasks:
 
-1. Complete the v0.4.0 readiness review.
-2. Add a short local release note for `v0.4.0`.
-3. Confirm maintainer approval for tagging.
-4. Run the full validation gate on a clean checkout immediately before tagging.
-5. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.
+1. Confirm maintainer approval for tagging.
+2. Run the full validation gate on a clean checkout immediately before tagging.
+3. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.
+4. Publish only after the tag is created and approval remains explicit.

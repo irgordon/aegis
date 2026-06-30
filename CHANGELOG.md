@@ -4,6 +4,53 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [v0.4.0] - 2026-06-30
+
+### Added
+
+- Minimum Usable Local Release.
+- Tauri + Slint desktop shell.
+- v0.4.0 visual design system and visual readability review evidence.
+- Live backend `health.check` evidence through fixed read-only IPC.
+- Fixture-backed UI evidence rendering for execution, recovery, planning, and normalized errors.
+- Local gateway execution for `health.check` and `sandbox.note.write`.
+- Verified local policy bundle loading with checksum and Ed25519 signature verification.
+- Local policy evaluation, execution authorization, credential boundary, local credential handle boundary, wrapper dispatch, audit evidence, state evidence, recovery inspection, and recovery planning.
+- Executable v0.4.0 release validation gate.
+
+### Security
+
+- UI remains an operator surface, not an authority boundary.
+- Read-only IPC is limited to fixed health-check evidence.
+- Mutation execution remains outside the UI.
+- Recovery inspection and recovery planning remain read-only.
+- No production credential providers, vault integration, cloud identity, approval workflow, replay execution, HTTP service, or external integrations are included.
+
+### Validation
+
+- v0.4.0 release validation gate passes.
+- Visual readability review passed.
+- IPC boundary tests pass.
+- Backend and desktop validation pass.
+
+### Limitations
+
+- Pre-alpha and local-only.
+- Developer-oriented.
+- Not production-ready.
+- Not enterprise-hardened.
+- No installer, signing, auto-update, release packaging, or published artifacts yet.
+
+## [0.2.40] - 2026-06-30
+
+### Added
+
+- Added v0.4.0 release candidate notes.
+
+### Changed
+
+- Updated release readiness documents to reflect v0.4.0 release-candidate status.
+
 ## [0.2.39] - 2026-06-30
 
 ### Added

@@ -56,13 +56,16 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Define v0.4.0 visual design guidance | complete |
 | Apply v0.4.0 visual design system | complete |
 | Complete v0.4.0 visual readability review | complete |
-| Prepare v0.4.0 release notes and tagging approval | planned |
+| Prepare v0.4.0 release candidate | complete |
+| Maintainer approval to tag v0.4.0 | planned |
+| Create v0.4.0 tag | planned |
+| Publish v0.4.0 release | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 Recommended next task:
 
 ```text
-docs(release): Prepare v0.4.0 release notes and tagging approval
+chore(release): Record maintainer approval before v0.4.0 tag
 ```
 
 ## Deferred Phase Work
@@ -243,7 +246,10 @@ Status: started.
 | Define v0.4.0 visual design guidance | complete |
 | Apply v0.4.0 visual design system | complete |
 | Complete v0.4.0 visual readability review | complete |
-| Prepare v0.4.0 release notes and tagging approval | planned |
+| Prepare v0.4.0 release candidate | complete |
+| Maintainer approval to tag v0.4.0 | planned |
+| Create v0.4.0 tag | planned |
+| Publish v0.4.0 release | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 ## Phase 5: Recovery and Replay Execution

@@ -26,6 +26,18 @@ Release identity:
 
 Do not tag `v0.4.0` if release notes, README text, UI text, or documentation imply production or enterprise readiness.
 
+## Release Candidate Status
+
+Release candidate prepared. Pending maintainer approval to tag `v0.4.0`.
+
+- [x] Release notes are complete.
+- [x] `CHANGELOG.md` contains an explicit `v0.4.0` section.
+- [x] Visual readability review passed.
+- [x] Release validation gate passes.
+- [ ] Maintainer explicitly approves tagging.
+- [ ] `v0.4.0` tag is created.
+- [ ] `v0.4.0` release is published.
+
 ## Required Capability Checks
 
 Before tagging, confirm these capabilities work or are accurately represented:

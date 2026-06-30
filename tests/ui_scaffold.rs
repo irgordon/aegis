@@ -31,6 +31,98 @@ fn slint_landing_screen_states_ui_boundary() {
 }
 
 #[test]
+fn slint_ui_uses_v040_palette_tokens() {
+    let slint_ui = read(SLINT_UI);
+
+    assert!(slint_ui.contains("export global AegisPalette"));
+
+    for color in ["#0D3B66", "#FAF0CA", "#F4D35E", "#EE964B", "#F95738"] {
+        assert!(
+            slint_ui.contains(color),
+            "Slint UI must include documented v0.4.0 palette color {color}"
+        );
+    }
+
+    for token in [
+        "AegisPalette.primary_dark",
+        "AegisPalette.surface",
+        "AegisPalette.attention",
+        "AegisPalette.secondary_accent",
+        "AegisPalette.critical",
+    ] {
+        assert!(
+            slint_ui.contains(token),
+            "Slint UI must reuse palette token {token}"
+        );
+    }
+}
+
+#[test]
+fn slint_ui_uses_serif_first_typography_without_font_assets() {
+    let slint_ui = read(SLINT_UI);
+    let slint_ui_lower = slint_ui.to_lowercase();
+
+    assert!(slint_ui.contains("export global AegisTypography"));
+    assert!(slint_ui.contains("serif_first"));
+    assert!(slint_ui.contains("font-family: AegisTypography.serif_first"));
+    assert_absent(
+        &slint_ui_lower,
+        [
+            "@font-face",
+            ".ttf",
+            ".otf",
+            "download font",
+            "bundled font",
+        ],
+    );
+}
+
+#[test]
+fn slint_ui_preserves_release_posture_labels() {
+    let slint_ui = read(SLINT_UI);
+    let slint_ui_lower = slint_ui.to_lowercase();
+
+    for label in ["PRE-ALPHA", "LOCAL-ONLY", "v0.4.0"] {
+        assert!(
+            slint_ui.contains(label),
+            "Slint UI must preserve release posture label {label}"
+        );
+    }
+
+    for label in [
+        "developer-oriented",
+        "pre-alpha",
+        "local-only",
+        "not production-ready",
+    ] {
+        assert!(
+            slint_ui_lower.contains(label),
+            "Slint UI must preserve release posture wording {label}"
+        );
+    }
+}
+
+#[test]
+fn slint_ui_preserves_visual_evidence_labels() {
+    let combined = format!("{}\n{}", read(SLINT_UI), read(DESKTOP_ENTRYPOINT));
+    let combined_lower = combined.to_lowercase();
+
+    for label in [
+        "live backend health.check evidence",
+        "sample evidence",
+        "error evidence",
+        "not available",
+    ] {
+        assert!(
+            combined_lower.contains(label),
+            "UI evidence labels must include {label}"
+        );
+    }
+
+    assert!(combined.contains("Sample evidence remains labeled"));
+}
+
+#[test]
 fn desktop_entrypoint_imports_only_local_runtime_bridge() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
     let forbidden_imports = [

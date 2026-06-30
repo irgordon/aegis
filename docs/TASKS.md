@@ -54,14 +54,15 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Harden read-only IPC evidence boundary | complete |
 | Run v0.4.0 readiness review | complete |
 | Define v0.4.0 visual design guidance | complete |
-| Apply v0.4.0 visual polish and readability review | planned |
+| Apply v0.4.0 visual design system | complete |
+| Complete v0.4.0 visual readability review | planned |
 | Prepare v0.4.0 release notes and tagging approval | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
 Recommended next task:
 
 ```text
-feat(ui): Apply v0.4.0 visual polish and readability review
+test(ui): Complete v0.4.0 visual readability review
 ```
 
 ## Deferred Phase Work
@@ -240,7 +241,8 @@ Status: started.
 | Harden read-only IPC evidence boundary | complete |
 | Run v0.4.0 readiness review | complete |
 | Define v0.4.0 visual design guidance | complete |
-| Apply v0.4.0 visual polish and readability review | planned |
+| Apply v0.4.0 visual design system | complete |
+| Complete v0.4.0 visual readability review | planned |
 | Prepare v0.4.0 release notes and tagging approval | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 

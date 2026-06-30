@@ -1,14 +1,65 @@
+export global AegisPalette {
+    out property <color> primary_dark: #0D3B66;
+    out property <color> surface: #FAF0CA;
+    out property <color> attention: #F4D35E;
+    out property <color> secondary_accent: #EE964B;
+    out property <color> critical: #F95738;
+    out property <color> panel: #fff8dc;
+    out property <color> card: #fffdf4;
+    out property <color> border: #d8c98e;
+    out property <color> muted_text: #4b6074;
+}
+
+export global AegisTypography {
+    out property <string> serif_first: "Georgia";
+}
+
+component EvidenceBadge inherits Rectangle {
+    in property <string> badge_text;
+    in property <color> tone;
+    in property <color> text_tone: AegisPalette.primary_dark;
+    in property <length> badge_width: 154px;
+
+    width: badge_width;
+    height: 28px;
+    border-radius: 14px;
+    border-width: 1px;
+    border-color: tone;
+    background: tone;
+
+    Text {
+        text: root.badge_text;
+        color: root.text_tone;
+        font-family: AegisTypography.serif_first;
+        font-size: 11px;
+        font-weight: 800;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+}
+
+component SectionTitle inherits Text {
+    in property <string> title_text;
+
+    text: root.title_text;
+    color: AegisPalette.primary_dark;
+    font-family: AegisTypography.serif_first;
+    font-size: 17px;
+    font-weight: 800;
+}
+
 component NavLabel inherits Rectangle {
     in property <string> label_text;
     in property <bool> selected;
 
     height: 38px;
     border-radius: 6px;
-    background: selected ? #294d7c : #102033;
+    background: selected ? AegisPalette.secondary_accent : AegisPalette.primary_dark;
 
     Text {
         text: root.label_text;
-        color: selected ? #ffffff : #b8c7dc;
+        color: selected ? AegisPalette.primary_dark : AegisPalette.surface;
+        font-family: AegisTypography.serif_first;
         font-size: 15px;
         font-weight: selected ? 700 : 500;
         vertical-alignment: center;
@@ -24,12 +75,12 @@ component StatusCard inherits Rectangle {
     in property <string> evidence_source;
     in property <color> accent;
 
-    width: 142px;
-    height: 114px;
+    width: 128px;
+    height: 126px;
     border-radius: 8px;
     border-width: 1px;
-    border-color: #d6deea;
-    background: #ffffff;
+    border-color: AegisPalette.border;
+    background: AegisPalette.card;
 
     VerticalLayout {
         padding-top: 12px;
@@ -40,7 +91,8 @@ component StatusCard inherits Rectangle {
 
         Text {
             text: root.card_title;
-            color: #1f2937;
+            color: AegisPalette.primary_dark;
+            font-family: AegisTypography.serif_first;
             font-size: 12px;
             font-weight: 700;
             wrap: word-wrap;
@@ -49,6 +101,7 @@ component StatusCard inherits Rectangle {
         Text {
             text: root.card_status;
             color: root.accent;
+            font-family: AegisTypography.serif_first;
             font-size: 17px;
             font-weight: 800;
             wrap: word-wrap;
@@ -56,14 +109,16 @@ component StatusCard inherits Rectangle {
 
         Text {
             text: root.summary;
-            color: #4b5c75;
+            color: AegisPalette.muted_text;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
             wrap: word-wrap;
         }
 
         Text {
             text: "source: " + root.evidence_source;
-            color: #6b7c93;
+            color: AegisPalette.primary_dark;
+            font-family: AegisTypography.serif_first;
             font-size: 10px;
             wrap: word-wrap;
         }
@@ -76,9 +131,9 @@ component TimelineStep inherits Rectangle {
     in property <string> summary;
     in property <color> accent;
 
-    width: 96px;
-    height: 86px;
-    background: #ffffff;
+    width: 88px;
+    height: 92px;
+    background: AegisPalette.card;
 
     VerticalLayout {
         spacing: 4px;
@@ -93,7 +148,8 @@ component TimelineStep inherits Rectangle {
 
         Text {
             text: root.stage_label;
-            color: #111827;
+            color: AegisPalette.primary_dark;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
             font-weight: 700;
             wrap: word-wrap;
@@ -102,6 +158,7 @@ component TimelineStep inherits Rectangle {
         Text {
             text: root.stage_status;
             color: root.accent;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
             font-weight: 700;
             wrap: word-wrap;
@@ -109,7 +166,8 @@ component TimelineStep inherits Rectangle {
 
         Text {
             text: root.summary;
-            color: #52637a;
+            color: AegisPalette.muted_text;
+            font-family: AegisTypography.serif_first;
             font-size: 9px;
             wrap: word-wrap;
         }
@@ -125,14 +183,16 @@ component ErrorDetail inherits HorizontalLayout {
     Text {
         width: 82px;
         text: root.detail_label;
-        color: #6b1d1d;
+        color: AegisPalette.critical;
+        font-family: AegisTypography.serif_first;
         font-size: 11px;
         font-weight: 700;
     }
 
     Text {
         text: root.detail_value;
-        color: #2b2f38;
+        color: AegisPalette.primary_dark;
+        font-family: AegisTypography.serif_first;
         font-size: 12px;
         wrap: word-wrap;
     }
@@ -151,8 +211,8 @@ component ErrorCard inherits Rectangle {
     width: 292px;
     border-radius: 8px;
     border-width: 1px;
-    border-color: #ef9a9a;
-    background: #fff8f8;
+    border-color: AegisPalette.critical;
+    background: AegisPalette.card;
 
     VerticalLayout {
         padding: 18px;
@@ -160,14 +220,16 @@ component ErrorCard inherits Rectangle {
 
         Text {
             text: root.error_title;
-            color: #8f1d1d;
+            color: AegisPalette.critical;
+            font-family: AegisTypography.serif_first;
             font-size: 16px;
             font-weight: 800;
         }
 
         Text {
             text: root.error_source;
-            color: #7f3b3b;
+            color: AegisPalette.primary_dark;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
         }
 
@@ -212,14 +274,16 @@ component RecoveryDetail inherits HorizontalLayout {
     Text {
         width: 108px;
         text: root.detail_label;
-        color: #3b3667;
+        color: AegisPalette.primary_dark;
+        font-family: AegisTypography.serif_first;
         font-size: 11px;
         font-weight: 700;
     }
 
     Text {
         text: root.detail_value;
-        color: #2b2f38;
+        color: AegisPalette.primary_dark;
+        font-family: AegisTypography.serif_first;
         font-size: 12px;
         wrap: word-wrap;
     }
@@ -230,8 +294,8 @@ component RecoveryInspectionCard inherits Rectangle {
     height: 188px;
     border-radius: 8px;
     border-width: 1px;
-    border-color: #c4b5fd;
-    background: #fbfaff;
+    border-color: AegisPalette.secondary_accent;
+    background: AegisPalette.card;
 
     VerticalLayout {
         padding: 14px;
@@ -239,7 +303,8 @@ component RecoveryInspectionCard inherits Rectangle {
 
         Text {
             text: "Sample Recovery Inspection";
-            color: #4c1d95;
+            color: AegisPalette.secondary_accent;
+            font-family: AegisTypography.serif_first;
             font-size: 15px;
             font-weight: 800;
         }
@@ -271,7 +336,8 @@ component RecoveryInspectionCard inherits Rectangle {
 
         Text {
             text: "No inspection errors in sample evidence. This card does not read state logs.";
-            color: #4b5563;
+            color: AegisPalette.muted_text;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
             wrap: word-wrap;
         }
@@ -283,8 +349,8 @@ component RecoveryPlanCard inherits Rectangle {
     height: 214px;
     border-radius: 8px;
     border-width: 1px;
-    border-color: #fdba74;
-    background: #fffaf3;
+    border-color: AegisPalette.attention;
+    background: AegisPalette.card;
 
     VerticalLayout {
         padding: 14px;
@@ -292,7 +358,8 @@ component RecoveryPlanCard inherits Rectangle {
 
         Text {
             text: "Sample Recovery Plan";
-            color: #9a3412;
+            color: AegisPalette.secondary_accent;
+            font-family: AegisTypography.serif_first;
             font-size: 15px;
             font-weight: 800;
         }
@@ -319,14 +386,16 @@ component RecoveryPlanCard inherits Rectangle {
 
         Text {
             text: "Safe labels: Future evaluation only; Audit retry candidate; Audit retry only; Not recoverable: evidence corrupted; Manual review only.";
-            color: #4b5563;
+            color: AegisPalette.muted_text;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
             wrap: word-wrap;
         }
 
         Text {
             text: "Sample guidance only. This UI does not inspect live state, approve recovery, execute audit retry, replay, or resume execution.";
-            color: #7c2d12;
+            color: AegisPalette.secondary_accent;
+            font-family: AegisTypography.serif_first;
             font-size: 11px;
             wrap: word-wrap;
         }
@@ -385,15 +454,15 @@ export component AegisWindow inherits Window {
 
     title: "AEGIS";
     width: 1280px;
-    height: 820px;
-    background: #f5f7fb;
+    height: 860px;
+    background: AegisPalette.surface;
 
     HorizontalLayout {
         spacing: 0px;
 
         Rectangle {
             width: 220px;
-            background: #102033;
+            background: AegisPalette.primary_dark;
 
             VerticalLayout {
                 padding-top: 30px;
@@ -404,7 +473,8 @@ export component AegisWindow inherits Window {
 
                 Text {
                     text: "AEGIS";
-                    color: #ffffff;
+                    color: AegisPalette.surface;
+                    font-family: AegisTypography.serif_first;
                     font-size: 32px;
                     font-weight: 800;
                     horizontal-alignment: center;
@@ -412,7 +482,8 @@ export component AegisWindow inherits Window {
 
                 Text {
                     text: "AI Execution Governance & Interception System";
-                    color: #d9e6f7;
+                    color: AegisPalette.surface;
+                    font-family: AegisTypography.serif_first;
                     font-size: 13px;
                     horizontal-alignment: center;
                     wrap: word-wrap;
@@ -420,7 +491,7 @@ export component AegisWindow inherits Window {
 
                 Rectangle {
                     height: 1px;
-                    background: #2d415c;
+                    background: AegisPalette.secondary_accent;
                 }
 
                 NavLabel { label_text: "Overview"; selected: true; }
@@ -433,20 +504,31 @@ export component AegisWindow inherits Window {
 
                 Rectangle {
                     vertical-stretch: 1;
-                    background: #102033;
+                    background: AegisPalette.primary_dark;
                 }
 
                 Text {
                     text: root.evidence_mode_label;
-                    color: #91a6c2;
+                    color: AegisPalette.attention;
+                    font-family: AegisTypography.serif_first;
                     font-size: 12px;
                     horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "v0.4.0 pre-alpha local-only";
+                    color: AegisPalette.surface;
+                    font-family: AegisTypography.serif_first;
+                    font-size: 11px;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
                 }
             }
         }
 
         Rectangle {
-            background: #f5f7fb;
+            background: AegisPalette.surface;
 
             VerticalLayout {
                 padding-top: 28px;
@@ -461,7 +543,8 @@ export component AegisWindow inherits Window {
 
                     Text {
                         text: "AEGIS";
-                        color: #111827;
+                        color: AegisPalette.primary_dark;
+                        font-family: AegisTypography.serif_first;
                         font-size: 40px;
                         font-weight: 800;
                     }
@@ -471,12 +554,13 @@ export component AegisWindow inherits Window {
                         height: 28px;
                         border-radius: 6px;
                         border-width: 1px;
-                        border-color: #8fb4ee;
-                        background: #eaf2ff;
+                        border-color: AegisPalette.attention;
+                        background: AegisPalette.attention;
 
                         Text {
                             text: "PRE-ALPHA";
-                            color: #2358a6;
+                            color: AegisPalette.primary_dark;
+                            font-family: AegisTypography.serif_first;
                             font-size: 12px;
                             font-weight: 800;
                             horizontal-alignment: center;
@@ -484,11 +568,70 @@ export component AegisWindow inherits Window {
                         }
                     }
 
+                    EvidenceBadge {
+                        badge_text: "LOCAL-ONLY";
+                        tone: AegisPalette.secondary_accent;
+                        badge_width: 110px;
+                    }
+
+                    EvidenceBadge {
+                        badge_text: "v0.4.0";
+                        tone: AegisPalette.primary_dark;
+                        text_tone: AegisPalette.surface;
+                        badge_width: 86px;
+                    }
+
                     Text {
                         text: root.header_summary;
-                        color: #40506a;
+                        color: AegisPalette.muted_text;
+                        font-family: AegisTypography.serif_first;
                         font-size: 17px;
                         vertical-alignment: center;
+                    }
+                }
+
+                Rectangle {
+                    height: 56px;
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: AegisPalette.border;
+                    background: AegisPalette.panel;
+
+                    HorizontalLayout {
+                        padding: 12px;
+                        spacing: 12px;
+
+                        Text {
+                            width: 118px;
+                            text: "Evidence source";
+                            color: AegisPalette.primary_dark;
+                            font-family: AegisTypography.serif_first;
+                            font-size: 14px;
+                            font-weight: 800;
+                            vertical-alignment: center;
+                        }
+
+                        EvidenceBadge {
+                            badge_text: root.evidence_mode_label;
+                            tone: AegisPalette.primary_dark;
+                            text_tone: AegisPalette.surface;
+                            badge_width: 238px;
+                        }
+
+                        EvidenceBadge {
+                            badge_text: "Sample evidence remains labeled";
+                            tone: AegisPalette.attention;
+                            badge_width: 230px;
+                        }
+
+                        Text {
+                            text: "Local-only developer-oriented pre-alpha. Not production-ready.";
+                            color: AegisPalette.muted_text;
+                            font-family: AegisTypography.serif_first;
+                            font-size: 13px;
+                            vertical-alignment: center;
+                            wrap: word-wrap;
+                        }
                     }
                 }
 
@@ -498,74 +641,65 @@ export component AegisWindow inherits Window {
                     VerticalLayout {
                         spacing: 12px;
 
-                        Text {
-                            text: "Status Cards";
-                            color: #1f2937;
-                            font-size: 17px;
-                            font-weight: 800;
+                        SectionTitle { title_text: "Current Execution Status"; }
+
+                        HorizontalLayout {
+                            spacing: 10px;
+                            StatusCard { card_title: "Policy Bundle"; card_status: root.policy_bundle_status; summary: root.policy_bundle_summary; evidence_source: "policy_bundle"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "Policy Decision"; card_status: root.policy_decision_status; summary: root.policy_decision_summary; evidence_source: "policy_evaluation"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "Authorization"; card_status: root.authorization_status; summary: root.authorization_summary; evidence_source: "execution_authorization"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "Credential Boundary"; card_status: root.credential_boundary_status; summary: root.credential_boundary_summary; evidence_source: "credential_boundary"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "Credential Injection"; card_status: root.credential_injection_status; summary: root.credential_injection_summary; evidence_source: "credential_injection"; accent: AegisPalette.secondary_accent; }
                         }
 
                         HorizontalLayout {
                             spacing: 10px;
-                            StatusCard { card_title: "Policy Bundle"; card_status: root.policy_bundle_status; summary: root.policy_bundle_summary; evidence_source: "policy_bundle"; accent: #157a33; }
-                            StatusCard { card_title: "Policy Decision"; card_status: root.policy_decision_status; summary: root.policy_decision_summary; evidence_source: "policy_evaluation"; accent: #157a33; }
-                            StatusCard { card_title: "Authorization"; card_status: root.authorization_status; summary: root.authorization_summary; evidence_source: "execution_authorization"; accent: #157a33; }
-                            StatusCard { card_title: "Credential Boundary"; card_status: root.credential_boundary_status; summary: root.credential_boundary_summary; evidence_source: "credential_boundary"; accent: #157a33; }
-                            StatusCard { card_title: "Credential Injection"; card_status: root.credential_injection_status; summary: root.credential_injection_summary; evidence_source: "credential_injection"; accent: #2f65c7; }
-                        }
-
-                        HorizontalLayout {
-                            spacing: 10px;
-                            StatusCard { card_title: "Wrapper Execution"; card_status: root.wrapper_execution_status; summary: root.wrapper_execution_summary; evidence_source: "wrapper_execution"; accent: #157a33; }
-                            StatusCard { card_title: "Audit Log"; card_status: root.audit_status; summary: root.audit_summary; evidence_source: "audit_record"; accent: #157a33; }
-                            StatusCard { card_title: "State Log"; card_status: root.state_status; summary: root.state_summary; evidence_source: "execution_lifecycle"; accent: #2f65c7; }
-                            StatusCard { card_title: "Recovery Inspection"; card_status: "Sample only"; summary: "Live health.check does not inspect state logs."; evidence_source: "sample recovery_inspection_report"; accent: #6b46c1; }
-                            StatusCard { card_title: "Recovery Plan"; card_status: "Sample only"; summary: "Live health.check does not plan recovery."; evidence_source: "sample recovery_plan_report"; accent: #c46210; }
+                            StatusCard { card_title: "Wrapper Execution"; card_status: root.wrapper_execution_status; summary: root.wrapper_execution_summary; evidence_source: "wrapper_execution"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "Audit Log"; card_status: root.audit_status; summary: root.audit_summary; evidence_source: "audit_record"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "State Log"; card_status: root.state_status; summary: root.state_summary; evidence_source: "execution_lifecycle"; accent: AegisPalette.primary_dark; }
+                            StatusCard { card_title: "Recovery Inspection"; card_status: "Sample only"; summary: "Live health.check does not inspect state logs."; evidence_source: "sample recovery_inspection_report"; accent: AegisPalette.secondary_accent; }
+                            StatusCard { card_title: "Recovery Plan"; card_status: "Sample only"; summary: "Live health.check does not plan recovery."; evidence_source: "sample recovery_plan_report"; accent: AegisPalette.attention; }
                         }
 
                         Rectangle {
-                            height: 238px;
+                            height: 252px;
                             border-radius: 8px;
                             border-width: 1px;
-                            border-color: #d6deea;
-                            background: #ffffff;
+                            border-color: AegisPalette.border;
+                            background: AegisPalette.card;
 
                             VerticalLayout {
                                 padding: 16px;
                                 spacing: 10px;
 
-                                Text {
-                                    text: "Execution Timeline";
-                                    color: #1f2937;
-                                    font-size: 17px;
-                                    font-weight: 800;
-                                }
+                                SectionTitle { title_text: "Execution Timeline"; }
 
                                 Text {
                                     text: "Display labels derive from live health.check backend evidence when available; recovery stages remain sample-only.";
-                                    color: #52637a;
+                                    color: AegisPalette.muted_text;
+                                    font-family: AegisTypography.serif_first;
                                     font-size: 12px;
                                 }
 
                                 HorizontalLayout {
                                     spacing: 10px;
-                                    TimelineStep { stage_label: "Request"; stage_status: root.request_status; summary: root.request_summary; accent: #2f65c7; }
-                                    TimelineStep { stage_label: "Validation"; stage_status: root.validation_status; summary: root.validation_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Policy Bundle"; stage_status: root.bundle_timeline_status; summary: root.bundle_timeline_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Policy Decision"; stage_status: root.policy_timeline_status; summary: root.policy_timeline_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Authorization"; stage_status: root.authorization_timeline_status; summary: root.authorization_timeline_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Credential Boundary"; stage_status: root.credential_boundary_timeline_status; summary: root.credential_boundary_timeline_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Credential Injection"; stage_status: root.credential_injection_timeline_status; summary: root.credential_injection_timeline_summary; accent: #2f65c7; }
+                                    TimelineStep { stage_label: "Request"; stage_status: root.request_status; summary: root.request_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Validation"; stage_status: root.validation_status; summary: root.validation_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Policy Bundle"; stage_status: root.bundle_timeline_status; summary: root.bundle_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Policy Decision"; stage_status: root.policy_timeline_status; summary: root.policy_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Authorization"; stage_status: root.authorization_timeline_status; summary: root.authorization_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Credential Boundary"; stage_status: root.credential_boundary_timeline_status; summary: root.credential_boundary_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Credential Injection"; stage_status: root.credential_injection_timeline_status; summary: root.credential_injection_timeline_summary; accent: AegisPalette.secondary_accent; }
                                 }
 
                                 HorizontalLayout {
                                     spacing: 10px;
-                                    TimelineStep { stage_label: "Wrapper Dispatch"; stage_status: root.dispatch_status; summary: root.dispatch_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Wrapper Execution"; stage_status: root.wrapper_timeline_status; summary: root.wrapper_timeline_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "Audit"; stage_status: root.audit_timeline_status; summary: root.audit_timeline_summary; accent: #157a33; }
-                                    TimelineStep { stage_label: "State"; stage_status: root.state_timeline_status; summary: root.state_timeline_summary; accent: #2f65c7; }
-                                    TimelineStep { stage_label: "Recovery Inspection"; stage_status: "Sample only"; summary: "No live state inspection."; accent: #6b46c1; }
-                                    TimelineStep { stage_label: "Recovery Plan"; stage_status: "Sample only"; summary: "No live recovery plan."; accent: #c46210; }
+                                    TimelineStep { stage_label: "Wrapper Dispatch"; stage_status: root.dispatch_status; summary: root.dispatch_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Wrapper Execution"; stage_status: root.wrapper_timeline_status; summary: root.wrapper_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Audit"; stage_status: root.audit_timeline_status; summary: root.audit_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "State"; stage_status: root.state_timeline_status; summary: root.state_timeline_summary; accent: AegisPalette.primary_dark; }
+                                    TimelineStep { stage_label: "Recovery Inspection"; stage_status: "Sample only"; summary: "No live state inspection."; accent: AegisPalette.secondary_accent; }
+                                    TimelineStep { stage_label: "Recovery Plan"; stage_status: "Sample only"; summary: "No live recovery plan."; accent: AegisPalette.attention; }
                                 }
                             }
                         }
@@ -574,8 +708,8 @@ export component AegisWindow inherits Window {
                             height: 84px;
                             border-radius: 8px;
                             border-width: 1px;
-                            border-color: #b7cae9;
-                            background: #edf5ff;
+                            border-color: AegisPalette.primary_dark;
+                            background: AegisPalette.panel;
 
                             HorizontalLayout {
                                 padding: 16px;
@@ -584,7 +718,8 @@ export component AegisWindow inherits Window {
                                 Text {
                                     width: 124px;
                                     text: "Backend evidence drives this UI";
-                                    color: #133e75;
+                                    color: AegisPalette.primary_dark;
+                                    font-family: AegisTypography.serif_first;
                                     font-size: 14px;
                                     font-weight: 800;
                                     wrap: word-wrap;
@@ -592,7 +727,8 @@ export component AegisWindow inherits Window {
 
                                 Text {
                                     text: "The UI is an operator surface, not an authority boundary. This view renders fixed read-only live health.check evidence when available and labeled sample recovery evidence otherwise; it does not accept arbitrary requests, evaluate policy, authorize execution, issue credentials, dispatch mutation wrappers, write audit or state logs, inspect state logs, plan recovery, replay, or recover.";
-                                    color: #2e4b70;
+                                    color: AegisPalette.muted_text;
+                                    font-family: AegisTypography.serif_first;
                                     font-size: 13px;
                                     wrap: word-wrap;
                                 }

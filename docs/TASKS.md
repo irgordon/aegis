@@ -33,6 +33,7 @@ The UI must render fixture evidence before live IPC or live runtime calls.
 | Harden sample evidence rendering invariants | complete |
 | Render sample recovery inspection and planning cards | complete |
 | Define minimum usable local release path | complete |
+| Add v0.4.0 release readiness checklist | complete |
 | Verify minimum usable local release commands | planned |
 | Define minimal IPC data bridge | planned |
 | Render live read-only runtime evidence | planned |
@@ -213,6 +214,7 @@ Status: started.
 | Harden sample evidence rendering invariants | complete |
 | Render sample recovery inspection and planning cards | complete |
 | Define minimum usable local release path | complete |
+| Add v0.4.0 release readiness checklist | complete |
 | Verify minimum usable local release commands | planned |
 | Define minimal IPC data bridge | planned |
 | Render live read-only runtime evidence | planned |

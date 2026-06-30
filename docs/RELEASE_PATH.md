@@ -203,6 +203,8 @@ Do not tag the release unless the validation gate passes.
 
 ## Release Candidate Checklist
 
+Use `docs/RELEASE_CHECKLIST_v0.4.0.md` as the concrete readiness checklist before tagging.
+
 - [ ] Repository verification passes.
 - [ ] Local gateway formatting, clippy, and tests pass.
 - [ ] Desktop formatting, clippy, tests, and check pass.
@@ -248,8 +250,9 @@ Do not create the tag as part of release planning.
 
 Recommended next tasks:
 
-1. Verify the release commands end to end and record any command corrections.
-2. Add a short local release note for `v0.4.0`.
-3. Run the full validation gate on a clean checkout.
-4. Launch the desktop app locally and confirm sample-only UI behavior.
-5. Tag `v0.4.0` only after the release candidate checklist passes.
+1. Complete `docs/RELEASE_CHECKLIST_v0.4.0.md`.
+2. Verify the release commands end to end and record any command corrections.
+3. Add a short local release note for `v0.4.0`.
+4. Run the full validation gate on a clean checkout.
+5. Launch the desktop app locally and confirm sample-only UI behavior.
+6. Tag `v0.4.0` only after the release candidate checklist passes and maintainer approval is explicit.

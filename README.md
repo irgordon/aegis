@@ -11,6 +11,8 @@
 [![GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=flat&logo=github-actions&logoColor=white)](https://github.com/features/actions)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 
+<img src="docs/assets/aegis-desktop-gui.png" alt="AEGIS desktop GUI preview" width="900">
+
 </div>
 
 ## Why?

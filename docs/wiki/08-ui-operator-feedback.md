@@ -97,6 +97,8 @@ Those belong to later platform work.
 
 This page describes how future UI work should consume existing evidence. It does not describe implemented UI behavior.
 
+For the formal evidence rendering contract, see `docs/UI_EVIDENCE_CONTRACT.md`.
+
 ## Documentation Boundary
 
 Backend docs should describe evidence fields clearly enough for UI contributors to render them without guessing.

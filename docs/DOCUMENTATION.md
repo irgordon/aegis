@@ -287,6 +287,7 @@ When a feature changes behavior, update the narrowest relevant document instead 
 | Understand audit evidence | `docs/AUDIT_LOGGING.md` |
 | Understand test expectations | `docs/TEST_STRATEGY.md` |
 | Understand AEGIS step by step | `docs/wiki/README.md` |
+| Understand future UI evidence rendering | `docs/UI_EVIDENCE_CONTRACT.md` |
 | Write or review code | `docs/CODING_STYLE.md` |
 | Find current work | `docs/TASKS.md` |
 | Understand release rules | `docs/RELEASE_PROCESS.md` |
@@ -526,6 +527,7 @@ User interface documents define review standards for the Tauri graphical desktop
 Examples:
 
 - `UI-DESIGN.md`
+- `UI_EVIDENCE_CONTRACT.md`
 
 ### Knowledge Base
 

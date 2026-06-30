@@ -56,7 +56,7 @@ Phase 3 work is grouped by the purpose it serves.
 | Harden recovery plan invariants | complete |
 | Formalize docs/wiki knowledge base | complete |
 | Review docs/wiki language and accuracy | complete |
-| Define UI-renderable evidence contract | planned |
+| Define UI-renderable evidence contract | complete |
 | Add execution evidence | planned |
 | Add replay evidence | planned |
 | Add governed execution integration tests | planned |
@@ -162,6 +162,7 @@ Completed foundation work:
 | Harden recovery plan invariants | complete |
 | Formalize docs/wiki knowledge base | complete |
 | Review docs/wiki language and accuracy | complete |
+| Define UI-renderable evidence contract | complete |
 
 ## Phase 4: Platform Capabilities
 

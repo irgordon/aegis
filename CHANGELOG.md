@@ -4,6 +4,16 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.23] - 2026-06-29
+
+### Added
+
+- Added UI evidence contract for future Tauri operator feedback, status cards, timelines, recovery planning display, and normalized error rendering.
+
+### Changed
+
+- Updated documentation maps and Phase 3 task tracking for UI-renderable backend evidence.
+
 ## [0.2.22] - 2026-06-29
 
 ### Changed

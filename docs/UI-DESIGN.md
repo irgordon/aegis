@@ -157,3 +157,5 @@ This document does not define:
 - gateway execution behavior
 
 Those decisions require separate tasks and must preserve this standard.
+
+For the backend evidence that future UI components must render, see `UI_EVIDENCE_CONTRACT.md`.

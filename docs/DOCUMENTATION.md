@@ -270,6 +270,16 @@ Stable documents should change only when the work changes what that document gov
 
 When a feature changes behavior, update the narrowest relevant document instead of editing multiple high-level documents.
 
+## Release Readiness Documentation
+
+Documentation should increasingly support shipping the product rather than expanding conceptual coverage.
+
+Once AEGIS enters a release cycle, documentation should favor operational clarity over additional concepts.
+
+The release path is an authoritative planning input.
+
+Before `v0.4.0`, documentation updates should help readers verify the Minimum Usable Local Release, understand release limitations, remove release blockers, or maintain the current release checklist.
+
 ## If You Are Looking For...
 
 | Goal | Read |
@@ -292,6 +302,7 @@ When a feature changes behavior, update the narrowest relevant document instead 
 | Find current work | `docs/TASKS.md` |
 | Understand release rules | `docs/RELEASE_PROCESS.md` |
 | Understand the minimum usable local release path | `docs/RELEASE_PATH.md` |
+| Check v0.4.0 release readiness | `docs/RELEASE_CHECKLIST_v0.4.0.md` |
 | Understand architecture decisions | `docs/ADR.md` |
 | Understand UI review requirements | `docs/UI-DESIGN.md` |
 

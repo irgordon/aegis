@@ -42,6 +42,10 @@ Remove unused code rather than preserving it for later.
 
 Keep implementation proportional to the current roadmap phase.
 
+Before introducing a new abstraction, feature, or dependency, confirm that it advances the current release objective.
+
+If it does not materially improve the current release, defer it.
+
 ## Reading Order
 
 Files should read top down.

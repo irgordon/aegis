@@ -167,7 +167,15 @@ Every implementation task should satisfy at least one of:
 
 If it satisfies none of these, it likely belongs in a later phase or should not exist.
 
-## Principle 16: Orchestrator Agnostic
+## Principle 16: Release Before Expansion
+
+A usable release creates more value than additional unfinished capability.
+
+Until the current release objective is achieved, new work should strengthen or complete release-critical functionality rather than expanding project scope.
+
+Work that does not move AEGIS measurably closer to `v0.4.0` should be deferred.
+
+## Principle 17: Orchestrator Agnostic
 
 AEGIS should not depend on one AI framework.
 
@@ -175,7 +183,7 @@ The architecture should work with different orchestrators as long as they can su
 
 Framework-specific integrations should be adapters, not architectural dependencies.
 
-## Principle 17: Cloud Agnostic
+## Principle 18: Cloud Agnostic
 
 AEGIS should not require one cloud provider.
 
@@ -183,7 +191,7 @@ It should be deployable in cloud, hybrid, and on-premises environments.
 
 Provider-specific implementations should live behind clear interfaces.
 
-## Principle 18: Human Authority for High-Risk Actions
+## Principle 19: Human Authority for High-Risk Actions
 
 High-risk or irreversible actions require human governance.
 
@@ -191,7 +199,7 @@ Human approval should be explicit, attributable, auditable, and bound to a speci
 
 Approval should not become a generic permission token.
 
-## Principle 19: Replay is Mechanical
+## Principle 20: Replay is Mechanical
 
 Replay should execute stored intent.
 
@@ -199,13 +207,13 @@ Replay should not re-enter the planning layer.
 
 An approved action should be replayed exactly as approved, against the policy and state that governed the approval.
 
-## Principle 20: Compatibility is a Safety Boundary
+## Principle 21: Compatibility is a Safety Boundary
 
 Policy bundles, schemas, wrappers, and runtime versions must be compatible before activation.
 
 The system should reject unknown or unsupported combinations rather than attempting best-effort execution.
 
-## Principle 21: Documentation Governs Implementation
+## Principle 22: Documentation Governs Implementation
 
 Documentation should define what the system must do before code is written.
 
@@ -213,7 +221,7 @@ Code that contradicts documentation is suspect.
 
 Documentation should be updated deliberately when the architecture changes.
 
-## Principle 22: Test the Negative Path
+## Principle 23: Test the Negative Path
 
 The most important behavior in AEGIS is often what does not happen.
 
@@ -221,7 +229,7 @@ Tests must prove that unauthorized, malformed, stale, duplicate, or unsafe actio
 
 Successful execution tests are not enough.
 
-## Principle 23: Build for Investigation
+## Principle 24: Build for Investigation
 
 AEGIS should assume that future reviewers will need to reconstruct events.
 
@@ -242,6 +250,7 @@ When evaluating a design, ask:
 - Does it avoid unnecessary complexity?
 - Does the abstraction solve today's problem or the next planned milestone?
 - Does the task execute, govern, recover, or prove?
+- Does the work move AEGIS measurably closer to the current release objective?
 - Can it be tested through negative paths?
 
 ## Final Rule

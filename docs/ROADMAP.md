@@ -17,6 +17,7 @@ AEGIS development follows these principles:
 - security before convenience
 - evidence before claims
 - small verifiable phases before broad expansion
+- release readiness before scope expansion
 
 ## Current Repository State
 
@@ -269,6 +270,20 @@ Create the smallest local-only AEGIS release that a user can build, launch, unde
 
 ### Reference
 See `docs/RELEASE_PATH.md`.
+
+### Release Governance
+
+Phase progression now follows release readiness rather than feature accumulation.
+
+Before `v0.4.0`, every new task should answer:
+
+```text
+Does this move AEGIS measurably closer to the Minimum Usable Local Release?
+```
+
+If the answer is no, defer the work.
+
+Features outside the minimum usable release are intentionally deferred.
 
 ## Phase 5: Recovery and Replay Execution
 

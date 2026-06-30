@@ -24,6 +24,20 @@ Phase 4 work renders backend evidence in a non-authoritative graphical operator 
 
 The UI must render fixture evidence before live IPC or live runtime calls.
 
+Every new task before `v0.4.0` should identify which release criterion it satisfies.
+
+Tasks that satisfy none should be deferred.
+
+Release impact:
+
+- [ ] Completes a required release capability
+- [ ] Improves operator usability
+- [ ] Removes a release blocker
+- [ ] Improves reliability of an existing capability
+- [ ] Reduces release-critical technical debt
+
+If no box is checked, defer the work until after `v0.4.0`.
+
 | Task | Status |
 | --- | --- |
 | Add Tauri shell with Slint UI scaffold | complete |

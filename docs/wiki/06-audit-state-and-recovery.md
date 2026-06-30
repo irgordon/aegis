@@ -91,7 +91,9 @@ It can classify executions into outcomes such as:
 
 The planner does not execute recovery.
 
-It only explains what a future recovery system might be allowed to consider.
+It only explains what a future recovery system may be allowed to consider.
+
+The `candidate_for_future_replay` label means future replay evaluation only. Replay execution is not implemented.
 
 ## Why Audit and State Stay Separate
 
@@ -113,4 +115,3 @@ A future Tauri UI can render:
 - recovery plans as bounded operator guidance
 
 The UI must display backend evidence. It must not invent recovery actions or execution state.
-

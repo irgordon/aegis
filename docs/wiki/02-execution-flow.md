@@ -19,7 +19,9 @@ CLI or future Tauri UI
   -> policy decision
   -> execution authorization
   -> credential boundary
+  -> local credential injection boundary when required
   -> wrapper dispatch
+  -> wrapper execution
   -> audit record
   -> state transition log
   -> structured JSON output
@@ -45,7 +47,9 @@ flowchart TD
     G -- "Allow" --> H["Execution authorization"]
     H --> I{"Credential boundary satisfied?"}
     I -- "No" --> X
-    I -- "Yes" --> J["Wrapper dispatch"]
+    I -- "Yes" --> Q{"Credential handle issued or not required?"}
+    Q -- "No" --> X
+    Q -- "Yes" --> J["Wrapper dispatch"]
     J --> K{"Wrapper executed?"}
     K -- "No" --> X
     K -- "Yes" --> L["Audit evidence"]
@@ -57,8 +61,8 @@ flowchart TD
     Z --> T["Structured JSON output"]
     S --> T
     T --> U["Future UI visual feedback"]
-    V["State log"] --> W["Recovery inspection"]
-    W --> N["Recovery plan"]
+    V["Optional state log evidence"] --> W["Read-only recovery inspection"]
+    W --> N["Read-only recovery plan classification"]
     N --> U
     C --> V
 ```
@@ -113,14 +117,14 @@ When an audit log path is supplied, AEGIS must append the audit record and flush
 
 Recovery inspection reads local execution state logs.
 
-Recovery planning uses inspection output to classify what future recovery might do. It does not replay work, resume execution, or mutate state.
+Recovery planning uses inspection output to classify what a future recovery system may be allowed to consider. It does not replay work, resume execution, or mutate state.
 
 The current planner can classify records into bounded outcomes such as:
 
 - not recoverable because the execution already reached a terminal state
 - not recoverable because the state evidence is corrupted
 - candidate for future audit retry
-- candidate for future replay
+- candidate for future replay evaluation
 - inspection failed
 
 ## Future UI Output
@@ -138,4 +142,3 @@ The future Tauri UI should render the same evidence that the CLI emits today:
 - structured error message, reason, next action, and location
 
 The UI must not decide policy, authorize execution, or invent lifecycle state.
-

@@ -19,7 +19,7 @@ AEGIS exists so execution is not trusted just because an AI requested it. AEGIS 
 
 AEGIS is pre-alpha.
 
-The repository currently contains a local Rust gateway MVP and early Governed Execution Engine work. It can validate structured requests, verify a local policy bundle, evaluate local policy, authorize governed execution, dispatch built-in local wrappers, persist audit and state evidence, inspect local execution state, and generate bounded recovery plans.
+The repository currently contains a local Rust gateway MVP and early Governed Execution Engine work. It can validate structured requests, verify a local policy bundle, evaluate local policy, authorize governed execution, dispatch built-in local wrappers, optionally append local audit and state evidence, inspect local execution state, and generate read-only recovery plan reports.
 
 AEGIS is not ready for production use.
 
@@ -35,12 +35,12 @@ At a high level, AEGIS can:
 - evaluate local policy and risk matrix data
 - return a bounded decision: allow, deny, or pending approval
 - authorize execution only after policy allows it
-- enforce credential class and local credential handle boundaries
+- enforce the credential class boundary and local credential handle validation
 - dispatch safe built-in local wrappers
 - record audit evidence
 - record execution lifecycle transitions
 - inspect local state logs
-- generate bounded recovery plans
+- generate read-only bounded recovery plan reports
 - return structured JSON output
 
 ## What It Does Not Do Yet
@@ -64,4 +64,3 @@ New readers should start here.
 Contributors should read this page, then continue through the wiki before changing runtime behavior.
 
 Engineers and architects should use this page for orientation, then rely on `docs/ARCHITECTURE.md`, `docs/INVARIANTS.md`, and `docs/TRUST_BOUNDARIES.md` for authoritative contracts.
-

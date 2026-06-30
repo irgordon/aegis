@@ -27,6 +27,8 @@ The local development bundle includes:
 
 The loader checks required files, version alignment, SHA-256 checksums, and Ed25519 signature verification over the checksum manifest.
 
+This is local development signature verification. It is not production PKI or remote trust distribution.
+
 If verification fails, AEGIS fails closed and does not evaluate policy.
 
 ## Policy Evaluation
@@ -111,5 +113,4 @@ AEGIS does not yet implement:
 - approval workflow execution
 - break-glass execution
 - wrapper self-authorization
-- external action execution beyond current built-in local wrappers
-
+- external system action execution beyond current built-in local wrappers

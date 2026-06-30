@@ -9,6 +9,20 @@ It does not replace `docs/ADR.md`, `docs/ARCHITECTURE.md`, or `docs/INVARIANTS.m
 
 Use it as an orientation guide before reading the authoritative documents.
 
+## Decision: Rust Backend Owns Runtime Authority
+
+The current governed runtime is implemented in Rust.
+
+The backend owns request validation, policy bundle verification, policy evaluation, execution authorization, credential boundaries, wrapper dispatch, audit evidence, state evidence, recovery inspection, and recovery planning.
+
+Future UI work must consume backend evidence instead of recreating these decisions.
+
+## Decision: Deterministic Execution
+
+AEGIS must produce repeatable behavior when given the same request, explicit context, policy bundle, and state evidence.
+
+No wiki page should describe hidden randomness, implicit recovery, or best-effort execution as acceptable runtime behavior.
+
 ## Decision: Fail Closed
 
 AEGIS denies or stops execution when it cannot prove the request should continue.
@@ -25,7 +39,7 @@ This prevents execution code from becoming a hidden policy engine.
 
 ## Decision: Verified Bundle Before Policy Evaluation
 
-Policy is evaluated only after local bundle structure, versions, checksums, and signature metadata verify.
+Policy is evaluated only after local bundle structure, versions, checksums, and the checksum manifest signature verify.
 
 This prevents AEGIS from making decisions from untrusted or modified policy files.
 
@@ -68,11 +82,21 @@ They do not replay, repair, resume, or mutate execution.
 
 This keeps recovery work bounded until replay and recovery behavior are explicitly implemented.
 
+The `candidate_for_future_replay` outcome is a future evaluation classification, not implemented replay.
+
 ## Decision: UI Is Presentation, Not Authority
 
 The future Tauri UI may render status, errors, timelines, and evidence.
 
-It must not decide policy, authorize execution, inject credentials, dispatch wrappers, or invent lifecycle state.
+The CLI remains a support surface for validation, inspection, testing, and automation.
+
+The UI must not decide policy, authorize execution, inject credentials, dispatch wrappers, make recovery decisions, or invent lifecycle state.
+
+## Decision: Abstractions Must Earn Their Place
+
+AEGIS should not add new top-level concepts just because they might be useful later.
+
+Every module, trait, document, state, and boundary should solve today's problem or directly enable the next planned milestone.
 
 ## Decision: Documentation Stability
 
@@ -81,4 +105,3 @@ Routine implementation progress belongs in `CHANGELOG.md` and `docs/TASKS.md`.
 Stable documents change only when their governed scope changes.
 
 The README is a stable public orientation page, not a status page.
-

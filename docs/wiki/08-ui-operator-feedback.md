@@ -22,7 +22,7 @@ It may:
 - show wrapper execution status
 - show audit and state evidence
 - show structured errors
-- capture user intent in future workflows
+- capture user intent in future workflows after those workflows are implemented
 
 It must not:
 
@@ -31,6 +31,7 @@ It must not:
 - decide credential class
 - dispatch wrappers directly
 - invent lifecycle states
+- make recovery decisions
 - bypass the gateway
 - create hidden execution paths
 
@@ -72,7 +73,7 @@ If AEGIS denies or stops execution, the operator should see the structured reaso
 ```text
 runtime evidence
   -> structured JSON
-  -> future Tauri command boundary
+  -> future Tauri presentation layer
   -> operator timeline, cards, badges, and panels
 ```
 
@@ -94,6 +95,8 @@ It has not implemented:
 
 Those belong to later platform work.
 
+This page describes how future UI work should consume existing evidence. It does not describe implemented UI behavior.
+
 ## Documentation Boundary
 
 Backend docs should describe evidence fields clearly enough for UI contributors to render them without guessing.
@@ -101,4 +104,3 @@ Backend docs should describe evidence fields clearly enough for UI contributors 
 UI docs should describe presentation and feedback rules without duplicating policy logic.
 
 If a UI needs a field that the backend does not emit, the runtime contract should be changed deliberately in the appropriate phase.
-

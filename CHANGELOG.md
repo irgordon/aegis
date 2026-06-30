@@ -4,6 +4,14 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.22] - 2026-06-29
+
+### Changed
+
+- Reviewed `/docs/wiki/` for language, tone, voice, grammar, accuracy, invariant alignment, and cognitive load.
+- Clarified wiki wording for credential injection, future UI evidence consumption, fail-closed error conditions, and read-only recovery planning.
+- Updated Phase 3 task tracking for wiki language and accuracy review.
+
 ## [0.2.21] - 2026-06-29
 
 ### Added

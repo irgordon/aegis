@@ -46,7 +46,9 @@ When AEGIS cannot prove the request is safe to continue, it denies or stops exec
 
 Failing closed is not an exceptional edge case. It is a core safety rule.
 
-## Error and State Table
+## Common Conditions and States
+
+This table explains common operator-facing conditions and state classifications. It is not a promise that every row maps one-to-one to a separate exported error code.
 
 | Error or state | What happened | Runtime behavior | Operator next action |
 | --- | --- | --- | --- |
@@ -68,11 +70,11 @@ Failing closed is not an exceptional edge case. It is a core safety rule.
 | recovery planning failed | Recovery plan could not be produced from inspection evidence | Return inspection failed or planning failure evidence | Fix inspection input before planning |
 | `failed_closed` | Runtime stopped because a safety gate failed | No execution continues | Use structured error evidence to correct the cause |
 | `audit_failed` | Execution happened but required audit persistence failed | Do not report normal completion | Fix audit persistence before treating execution as complete |
-| `inspection_failed` | Recovery inspection could not produce trustworthy findings | No recovery plan should be trusted | Repair or quarantine corrupted state evidence |
+| `inspection_failed` | Recovery inspection could not produce trustworthy findings | No recovery plan should be trusted | Preserve or quarantine corrupted state evidence for review |
 | `not_recoverable_terminal` | Execution reached a terminal state | Do not recover or replay | Treat execution as closed |
 | `not_recoverable_corrupted` | State evidence is corrupted or inconsistent | Do not recover automatically | Preserve evidence and investigate manually |
-| `candidate_for_audit_retry` | Execution may only need future audit persistence handling | No retry is executed today | Wait for future recovery implementation |
-| `candidate_for_future_replay` | Execution may be a future replay candidate | No replay is executed today | Wait for future replay implementation |
+| `candidate_for_audit_retry` | Execution may only need future audit persistence handling | No audit retry is executed today | Preserve evidence for a future audit-specific recovery feature |
+| `candidate_for_future_replay` | Execution may be eligible for future replay evaluation | No replay is executed today | Preserve evidence for a future replay evaluation feature |
 
 ## Plain-Language Standard
 
@@ -103,4 +105,3 @@ Useful visual forms include:
 - evidence drill-down
 
 The UI must not translate errors into new policy decisions.
-

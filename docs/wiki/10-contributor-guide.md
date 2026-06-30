@@ -7,6 +7,8 @@ This page gives contributors a practical path through the repository.
 
 It does not replace `AGENTS.md`, `docs/CODING_STYLE.md`, or `docs/TASKS.md`.
 
+The wiki is explanatory. `docs/OPERATING_DOCTRINE.md`, `docs/INVARIANTS.md`, `docs/ARCHITECTURE.md`, and task-specific technical documents remain authoritative.
+
 ## Before Changing Files
 
 Read the current task prompt and then follow the repository reading order in `AGENTS.md`.
@@ -70,11 +72,13 @@ Contributors should preserve these rules:
 - policy evaluation happens before authorization
 - denied and pending policy decisions do not authorize execution
 - every wrapper execution passes through the credential boundary
+- credential injection runs only when a wrapper requires and is allowed to receive a safe local handle reference
 - wrappers do not self-authorize
 - local credential handles are safe references, not secrets
 - mutation wrappers require stronger gates than read-only wrappers
 - audit and state logs remain separate
 - recovery inspection and planning are read-only
+- state logs are lifecycle evidence, not replay state
 - future UI uses backend evidence and does not invent authority
 
 ## Adding or Changing Wrappers
@@ -121,6 +125,6 @@ Check:
 - no secrets or secret-looking values were introduced
 - fail-closed behavior is tested
 - UI-renderable evidence remains structured
+- recovery and replay wording does not imply execution exists before it is implemented
 - validation passes
 - changelog and task tracking are updated when required
-

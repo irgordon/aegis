@@ -11,7 +11,7 @@ AEGIS can execute built-in local wrappers, but it does not expose real secrets.
 
 Credential classes authorize categories, not secrets.
 
-Credential injection currently provides safe local handle references only. It does not retrieve, generate, store, or expose real credentials.
+Credential injection currently provides safe local credential handle references only. It does not retrieve, generate, store, or expose real credentials.
 
 ## Credential Class Boundary
 
@@ -31,7 +31,7 @@ Every wrapper execution path must pass through the credential boundary, includin
 
 The local credential injection boundary can return a safe local development credential handle reference when a wrapper requires `LocalRuntime` and the authorization allows it.
 
-The handle is evidence, not a secret.
+The handle is an evidence reference, not a secret.
 
 It may appear in runtime, audit, or state evidence only as a safe reference.
 
@@ -101,7 +101,7 @@ Wrappers must not:
 - request arbitrary credential classes
 - widen authority
 - expose secret values
-- execute shell commands unless a future phase explicitly adds that capability
+- execute shell commands in the current local wrapper paths
 - bypass audit or lifecycle evidence
 
 ## Future Work
@@ -115,4 +115,3 @@ authorized credential class -> safe credential handle -> wrapper execution conte
 ```
 
 No future provider should make wrappers responsible for finding or authorizing their own secrets.
-

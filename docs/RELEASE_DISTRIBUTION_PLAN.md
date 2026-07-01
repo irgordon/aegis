@@ -175,7 +175,7 @@ The workflow is manually triggered. It builds macOS draft archives, generates on
 
 The draft archives stage the local development policy bundle needed by fixed desktop health-check evidence. This avoids depending on the build machine source checkout for the UI evidence path.
 
-Combined checksum support is implemented in the workflow source. Artifact-level verification is pending a new workflow run.
+Combined checksum support is verified in workflow artifacts. The combined `SHA256SUMS` manifest covers both macOS draft archives from the latest review run.
 
 It does not create a GitHub Release, upload release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 

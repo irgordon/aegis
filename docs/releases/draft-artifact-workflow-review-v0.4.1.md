@@ -14,7 +14,7 @@ One issue was found before publishing work begins: checksum manifests were gener
 
 Follow-up portability status: the rerun documented in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms the desktop policy bundle source-path blocker is resolved at the artifact level.
 
-Follow-up checksum status: combined checksum support is implemented in workflow source. Artifact-level verification is pending a new workflow run.
+Follow-up checksum status: the combined checksum manifest is artifact-verified in `docs/releases/draft-artifact-checksum-review-v0.4.1.md`.
 
 ## Workflow Run
 
@@ -86,7 +86,7 @@ bb51755b870d8b749c71e485ea97495662ceb2001b7980a735f58f56619d0f97  aegis-v0.4.1-m
 c701b48f3667b22d15a861db8c8fd857eb40c9397c668f70a7cfe5a90486c682  aegis-v0.4.1-macos-x64.tar.gz
 ```
 
-Issue from this run: each matrix artifact had its own `SHA256SUMS`. The workflow source now implements one combined `SHA256SUMS` manifest for all produced archives. A new workflow run must verify that artifact output before publishing work begins.
+Issue from this run: each matrix artifact had its own `SHA256SUMS`. A later workflow run verified one combined `SHA256SUMS` manifest for all produced archives. See `docs/releases/draft-artifact-checksum-review-v0.4.1.md`.
 
 ## Release Boundary Verification
 
@@ -104,7 +104,7 @@ Verified:
 
 | Issue | Severity | Notes |
 | --- | --- | --- |
-| Per-platform checksum manifests | Low | Workflow source now implements one combined `SHA256SUMS` manifest. Artifact-level verification is pending. |
+| Per-platform checksum manifests | Low | Resolved by the later combined-checksum workflow run. |
 
 No release-boundary violation was found.
 
@@ -114,10 +114,9 @@ PASS WITH FIXES.
 
 The workflow proves that AEGIS can build draft macOS developer-preview artifact candidates without publishing a GitHub Release.
 
-Before publishing work begins, re-run the draft workflow and verify the combined `SHA256SUMS` manifest covers every produced archive.
+The combined `SHA256SUMS` follow-up is now verified. Publishing work still requires a separate approved task.
 
 ## Next Steps
 
-1. Re-run the draft workflow review after the checksum manifest shape is fixed.
-2. Verify the combined `SHA256SUMS` manifest covers both macOS draft archives.
-3. Continue to keep GitHub Release publishing, tags, signing, notarization, installers, and auto-update out of scope until a separate publishing task is approved.
+1. Continue to keep GitHub Release publishing, tags, signing, notarization, installers, and auto-update out of scope until a separate publishing task is approved.
+2. Strip or remap source/debug paths where practical.

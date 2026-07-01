@@ -145,7 +145,7 @@ It:
 - generates one combined `SHA256SUMS` manifest for produced archives
 - uploads GitHub Actions workflow artifacts only
 
-Combined checksum support is implemented in workflow source. It still needs artifact-level verification from a new workflow run before publishing work begins.
+Combined checksum support is verified in workflow artifacts. The combined `SHA256SUMS` manifest covers both macOS draft archives from the latest review run.
 
 It does not create a GitHub Release, publish release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 

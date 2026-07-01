@@ -24,7 +24,7 @@ No other status values should be used unless this document is updated.
 
 Current work plans and validates the next distribution step without changing runtime behavior, UI behavior, public release assets, or release publishing.
 
-The draft artifact workflow is on `origin/main`. Its first manual run completed successfully and produced inspectable macOS workflow artifacts. Review found one follow-up before publishing work: produce a combined `SHA256SUMS` manifest for all draft archives. Workflow source now implements the combined manifest. Artifact-level verification is pending a new workflow run.
+The draft artifact workflow is on `origin/main`. Manual workflow reviews produced inspectable macOS workflow artifacts. The combined `SHA256SUMS` manifest now covers both macOS draft archives and verifies successfully in workflow artifacts.
 
 The environment-coupling audit found a release-blocking desktop artifact issue: live evidence resolved the policy bundle through a GitHub runner source path embedded at build time. Source changes now prefer an artifact-relative bundled policy bundle. Artifact-level verification confirmed the blocker is resolved in the rerun artifacts.
 
@@ -76,7 +76,7 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Rerun draft artifact workflow and repeat environment-coupling audit | complete |
 | Strip or remap source paths in developer-preview binaries | planned |
 | Consolidate draft artifact checksum manifest | complete |
-| Rerun draft artifact workflow and verify combined checksum manifest | planned |
+| Rerun draft artifact workflow and verify combined checksum manifest | complete |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |
@@ -279,7 +279,8 @@ Status: started.
 | Refresh wiki for post-v0.4.0 distribution work | complete |
 | Push local draft artifact workflow commit after workflow-scope authentication | complete |
 | Review draft artifact workflow run | complete |
-| Consolidate draft artifact checksum manifest | planned |
+| Consolidate draft artifact checksum manifest | complete |
+| Rerun draft artifact workflow and verify combined checksum manifest | complete |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |

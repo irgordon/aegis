@@ -10,10 +10,9 @@ The new macOS arm64 and macOS x64 draft artifacts include the local development 
 
 DA-ECA-001 is resolved at the artifact level. The desktop health-check evidence path no longer requires the GitHub runner source checkout as the primary policy bundle location.
 
-Two follow-ups remain before publishing work:
+One artifact portability follow-up remains before publishing work:
 
 - Strip or remap source/debug paths in developer-preview binaries where practical.
-- Verify the new combined `SHA256SUMS` manifest in workflow artifacts.
 
 These workflow artifacts are inspection evidence only. They are not GitHub Release assets.
 
@@ -100,7 +99,7 @@ aegis-v0.4.1-macos-arm64.tar.gz: OK
 aegis-v0.4.1-macos-x64.tar.gz: OK
 ```
 
-The known combined-checksum issue remains pending verification. The workflow source now generates one combined manifest across produced archives. A new workflow run must confirm the artifact output.
+The combined-checksum issue was verified in a later workflow run. See `docs/releases/draft-artifact-checksum-review-v0.4.1.md`.
 
 ## Local Path and Secret Marker Review
 
@@ -155,19 +154,17 @@ Verified:
 | DA-ECA-001 | Resolved | Artifact evidence confirms the policy bundle is packaged and preferred through artifact-relative resolution. |
 | DA-ECA-002 | Deferred | Runner/source debug paths remain in binaries. They do not appear to control runtime policy bundle resolution. |
 | DA-ECA-003 | Resolved | Artifact README and content manifest now state that the bundled policy bundle is included. |
-| Combined `SHA256SUMS` | Implemented, pending verification | Workflow source now generates one combined manifest. A new artifact run must verify it. |
+| Combined `SHA256SUMS` | Resolved | A later artifact run verified one combined manifest covering both macOS draft archives. |
 
 ## Recommendation
 
 PASS WITH FIXES.
 
-The source-path runtime blocker is resolved. Do not start GitHub Release publishing until the remaining release-facing follow-ups are addressed or explicitly accepted:
+The source-path runtime blocker is resolved. Do not start GitHub Release publishing until the remaining release-facing follow-up is addressed or explicitly accepted:
 
 - strip or remap source/debug paths where practical
-- verify the combined draft artifact checksum manifest
 
 ## Required Follow-Up
 
-1. Re-run the draft artifact workflow and verify the combined checksum manifest.
-2. `ci(release): Strip or remap draft binary source paths`
-3. Re-run artifact review before promoting workflow artifacts into GitHub Release assets.
+1. `ci(release): Strip or remap draft binary source paths`
+2. Re-run artifact review before promoting workflow artifacts into GitHub Release assets.

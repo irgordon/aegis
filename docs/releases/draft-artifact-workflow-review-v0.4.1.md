@@ -12,6 +12,8 @@ No GitHub Release, release asset, `v0.4.1` tag, signing, notarization, installer
 
 One issue should be fixed before publishing work begins: checksum manifests are generated per platform artifact. A future release-facing workflow should produce one `SHA256SUMS` manifest that lists every produced archive.
 
+Follow-up portability status: the rerun documented in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms the desktop policy bundle source-path blocker is resolved at the artifact level. The combined checksum follow-up remains open.
+
 ## Workflow Run
 
 | Field | Value |

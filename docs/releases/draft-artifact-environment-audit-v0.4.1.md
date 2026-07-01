@@ -14,7 +14,7 @@ Recommendation: FAIL.
 
 This failure does not mean a GitHub Release was published. It means the current draft artifacts should not be promoted into release assets until the path dependency is removed.
 
-Post-audit fix status: source changes now prefer an artifact-relative bundled policy bundle and stage the local development policy bundle into draft artifacts. Artifact-level verification is pending the next workflow run.
+Post-audit fix status: source changes now prefer an artifact-relative bundled policy bundle and stage the local development policy bundle into draft artifacts. The artifact-level re-run in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms DA-ECA-001 is resolved.
 
 ## Artifact Source
 
@@ -202,7 +202,7 @@ Resolve the policy bundle from a packaged resource path or include the required 
 
 Fix status:
 
-Implemented in source. Artifact-level verification pending next workflow run.
+Resolved by artifact-level evidence in workflow run `28548645224`.
 
 ### DA-ECA-002
 
@@ -237,6 +237,10 @@ Location:
 Evidence:
 
 The inspected archive README did not state that the archive contains binary output only and does not include policy bundles or request fixtures.
+
+Status:
+
+Resolved for the rerun artifacts. The archive README and content manifest now state that the bundled local development policy bundle is included.
 
 Impact:
 

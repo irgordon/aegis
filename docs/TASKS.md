@@ -26,6 +26,8 @@ Current work plans and validates the next distribution step without changing run
 
 The draft artifact workflow is on `origin/main`. Its first manual run completed successfully and produced inspectable macOS workflow artifacts. Review found one follow-up before publishing work: produce a combined `SHA256SUMS` manifest for all draft archives.
 
+The environment-coupling audit found a release-blocking desktop artifact issue: live evidence currently resolves the policy bundle through a GitHub runner source path embedded at build time. Fix that before draft GitHub Release publishing.
+
 Every new task after `v0.4.0` should identify whether it improves operator usability, removes a release blocker, improves release reliability, or reduces release-critical technical debt.
 
 Tasks that satisfy none should be deferred.
@@ -69,6 +71,9 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Refresh wiki for post-v0.4.0 distribution work | complete |
 | Push local draft artifact workflow commit after workflow-scope authentication | complete |
 | Review draft artifact workflow run | complete |
+| Audit draft artifacts for environment coupling | complete |
+| Fix desktop artifact policy bundle path coupling | planned |
+| Strip or remap source paths in developer-preview binaries | planned |
 | Consolidate draft artifact checksum manifest | planned |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |

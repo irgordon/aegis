@@ -71,13 +71,48 @@ fn draft_artifact_workflow_references_expected_artifacts() {
 }
 
 #[test]
+fn draft_artifact_workflow_generates_combined_checksum_manifest() {
+    let workflow = read_workflow();
+    let required = [
+        "combined-draft-artifacts:",
+        "needs: macos-draft-artifacts",
+        "actions/download-artifact@v4",
+        "merge-multiple: true",
+        "Generate combined SHA256SUMS",
+        "find . -maxdepth 1 -name 'aegis-v0.4.1-*.tar.gz' -print | sort",
+        "shasum -a 256 -c SHA256SUMS",
+        "Upload combined draft workflow artifact",
+        "name: draft-artifacts-v0.4.1",
+    ];
+
+    assert_present(&workflow, &required);
+}
+
+#[test]
+fn draft_artifact_workflow_checksums_final_archives_only() {
+    let workflow = read_workflow();
+    let blocked = [
+        "shasum -a 256 \"${archive}\" > SHA256SUMS",
+        "dist/SHA256SUMS",
+        "dist/combined/SHA256SUMS.sig",
+        "gpg --sign",
+        "gpg --detach-sign",
+    ];
+
+    assert_absent(&workflow, &blocked);
+    assert!(workflow.contains("dist/combined/aegis-v0.4.1-*.tar.gz"));
+    assert!(workflow.contains("dist/combined/SHA256SUMS"));
+}
+
+#[test]
 fn draft_artifact_workflow_uploads_only_workflow_artifacts() {
     let workflow = read_workflow();
 
     assert!(workflow.contains("actions/upload-artifact@v4"));
     assert!(workflow.contains("Upload draft workflow artifact"));
+    assert!(workflow.contains("Upload combined draft workflow artifact"));
     assert!(workflow.contains("dist/${{ matrix.archive_name }}"));
-    assert!(workflow.contains("dist/SHA256SUMS"));
+    assert!(workflow.contains("dist/combined/SHA256SUMS"));
 }
 
 #[test]

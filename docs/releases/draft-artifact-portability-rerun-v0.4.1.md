@@ -13,7 +13,7 @@ DA-ECA-001 is resolved at the artifact level. The desktop health-check evidence 
 Two follow-ups remain before publishing work:
 
 - Strip or remap source/debug paths in developer-preview binaries where practical.
-- Produce one combined `SHA256SUMS` manifest across all produced draft archives.
+- Verify the new combined `SHA256SUMS` manifest in workflow artifacts.
 
 These workflow artifacts are inspection evidence only. They are not GitHub Release assets.
 
@@ -100,7 +100,7 @@ aegis-v0.4.1-macos-arm64.tar.gz: OK
 aegis-v0.4.1-macos-x64.tar.gz: OK
 ```
 
-The known combined-checksum issue remains open. Each matrix artifact still has its own `SHA256SUMS`; a future release-facing workflow should produce one combined manifest across all produced archives.
+The known combined-checksum issue remains pending verification. The workflow source now generates one combined manifest across produced archives. A new workflow run must confirm the artifact output.
 
 ## Local Path and Secret Marker Review
 
@@ -155,7 +155,7 @@ Verified:
 | DA-ECA-001 | Resolved | Artifact evidence confirms the policy bundle is packaged and preferred through artifact-relative resolution. |
 | DA-ECA-002 | Deferred | Runner/source debug paths remain in binaries. They do not appear to control runtime policy bundle resolution. |
 | DA-ECA-003 | Resolved | Artifact README and content manifest now state that the bundled policy bundle is included. |
-| Combined `SHA256SUMS` | Open follow-up | Per-platform checksum manifests still exist. A combined manifest remains future work. |
+| Combined `SHA256SUMS` | Implemented, pending verification | Workflow source now generates one combined manifest. A new artifact run must verify it. |
 
 ## Recommendation
 
@@ -164,10 +164,10 @@ PASS WITH FIXES.
 The source-path runtime blocker is resolved. Do not start GitHub Release publishing until the remaining release-facing follow-ups are addressed or explicitly accepted:
 
 - strip or remap source/debug paths where practical
-- consolidate draft artifact checksums into one manifest
+- verify the combined draft artifact checksum manifest
 
 ## Required Follow-Up
 
-1. `ci(release): Consolidate draft artifact checksums`
+1. Re-run the draft artifact workflow and verify the combined checksum manifest.
 2. `ci(release): Strip or remap draft binary source paths`
 3. Re-run artifact review before promoting workflow artifacts into GitHub Release assets.

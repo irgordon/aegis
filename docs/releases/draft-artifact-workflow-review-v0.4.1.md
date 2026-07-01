@@ -10,9 +10,11 @@ It produced macOS arm64 and macOS x64 draft archives as GitHub Actions workflow 
 
 No GitHub Release, release asset, `v0.4.1` tag, signing, notarization, installer, or auto-update behavior was created.
 
-One issue should be fixed before publishing work begins: checksum manifests are generated per platform artifact. A future release-facing workflow should produce one `SHA256SUMS` manifest that lists every produced archive.
+One issue was found before publishing work begins: checksum manifests were generated per platform artifact. A release-facing workflow needs one `SHA256SUMS` manifest that lists every produced archive.
 
-Follow-up portability status: the rerun documented in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms the desktop policy bundle source-path blocker is resolved at the artifact level. The combined checksum follow-up remains open.
+Follow-up portability status: the rerun documented in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms the desktop policy bundle source-path blocker is resolved at the artifact level.
+
+Follow-up checksum status: combined checksum support is implemented in workflow source. Artifact-level verification is pending a new workflow run.
 
 ## Workflow Run
 
@@ -84,7 +86,7 @@ bb51755b870d8b749c71e485ea97495662ceb2001b7980a735f58f56619d0f97  aegis-v0.4.1-m
 c701b48f3667b22d15a861db8c8fd857eb40c9397c668f70a7cfe5a90486c682  aegis-v0.4.1-macos-x64.tar.gz
 ```
 
-Issue: each matrix artifact has its own `SHA256SUMS`. Before release publishing work, the workflow should produce one combined `SHA256SUMS` manifest for all produced archives.
+Issue from this run: each matrix artifact had its own `SHA256SUMS`. The workflow source now implements one combined `SHA256SUMS` manifest for all produced archives. A new workflow run must verify that artifact output before publishing work begins.
 
 ## Release Boundary Verification
 
@@ -102,7 +104,7 @@ Verified:
 
 | Issue | Severity | Notes |
 | --- | --- | --- |
-| Per-platform checksum manifests | Low | Useful for inspection, but a future release-facing workflow should generate one combined `SHA256SUMS` manifest covering all produced archives. |
+| Per-platform checksum manifests | Low | Workflow source now implements one combined `SHA256SUMS` manifest. Artifact-level verification is pending. |
 
 No release-boundary violation was found.
 
@@ -112,10 +114,10 @@ PASS WITH FIXES.
 
 The workflow proves that AEGIS can build draft macOS developer-preview artifact candidates without publishing a GitHub Release.
 
-Before publishing work begins, add a small workflow follow-up to produce and verify one combined `SHA256SUMS` manifest across all produced archives.
+Before publishing work begins, re-run the draft workflow and verify the combined `SHA256SUMS` manifest covers every produced archive.
 
 ## Next Steps
 
-1. Add a focused follow-up: `ci(release): Consolidate draft artifact checksums`.
-2. Re-run the draft workflow review after the checksum manifest shape is fixed.
+1. Re-run the draft workflow review after the checksum manifest shape is fixed.
+2. Verify the combined `SHA256SUMS` manifest covers both macOS draft archives.
 3. Continue to keep GitHub Release publishing, tags, signing, notarization, installers, and auto-update out of scope until a separate publishing task is approved.

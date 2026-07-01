@@ -173,7 +173,7 @@ Existing distribution documents still correctly state:
 - no public downloads exist
 - no installers exist
 - no signing or notarization exists
-- the combined `SHA256SUMS` follow-up remains open
+- the combined `SHA256SUMS` follow-up is implemented in workflow source and pending artifact-level verification
 
 After this audit, the checked-in artifact README and draft workflow were updated to include the local development policy bundle needed for fixed health-check evidence. The inspected workflow run did not contain that fix.
 
@@ -262,7 +262,7 @@ Before any draft GitHub Release publishing task:
 
 1. Re-run the draft artifact workflow and verify the desktop binary uses the bundled policy bundle path.
 2. Confirm the staged `policy-bundles/local-dev` directory contains only runtime policy verification files.
-3. Generate one combined `SHA256SUMS` manifest across all produced archives.
+3. Verify the implemented combined `SHA256SUMS` manifest in new workflow artifacts.
 4. Decide whether to strip or remap source paths in developer-preview binaries.
 5. Repeat this audit on the new workflow artifacts.
 

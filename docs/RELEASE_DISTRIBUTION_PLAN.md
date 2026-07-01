@@ -171,9 +171,11 @@ Do not store signing keys, certificates, or secrets in this repository.
 
 A draft artifact build workflow now exists at `.github/workflows/draft-artifacts.yml`.
 
-The workflow is manually triggered. It builds macOS draft archives, generates `SHA256SUMS`, and uploads GitHub Actions workflow artifacts only.
+The workflow is manually triggered. It builds macOS draft archives, generates one combined `SHA256SUMS` manifest from the produced archives, and uploads GitHub Actions workflow artifacts only.
 
 The draft archives stage the local development policy bundle needed by fixed desktop health-check evidence. This avoids depending on the build machine source checkout for the UI evidence path.
+
+Combined checksum support is implemented in the workflow source. Artifact-level verification is pending a new workflow run.
 
 It does not create a GitHub Release, upload release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 

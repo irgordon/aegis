@@ -106,25 +106,72 @@ jobs:
 
           tar -czf "dist/${archive}" -C dist "${base}"
 
-          (
-            cd dist
-            shasum -a 256 "${archive}" > SHA256SUMS
-            grep -F "${archive}" SHA256SUMS
-          )
-
       - name: Verify draft artifact names
         shell: bash
         run: |
           set -euo pipefail
           test -s "dist/${{ matrix.archive_name }}"
-          test -s "dist/SHA256SUMS"
-          grep -F "${{ matrix.archive_name }}" "dist/SHA256SUMS"
 
       - name: Upload draft workflow artifact
         uses: actions/upload-artifact@v4
         with:
           name: draft-${{ matrix.platform }}-v0.4.1
           if-no-files-found: error
+          path: dist/${{ matrix.archive_name }}
+
+  combined-draft-artifacts:
+    name: Combined draft artifact checksums
+    runs-on: macos-latest
+    needs: macos-draft-artifacts
+
+    steps:
+      - name: Download draft archive artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: draft-macos-*-v0.4.1
+          path: dist/combined
+          merge-multiple: true
+
+      - name: Generate combined SHA256SUMS
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cd dist/combined
+
+          expected_archives=(
+            "aegis-v0.4.1-macos-arm64.tar.gz"
+            "aegis-v0.4.1-macos-x64.tar.gz"
+          )
+
+          for archive in "${expected_archives[@]}"; do
+            test -s "${archive}"
+          done
+
+          find . -maxdepth 1 -name 'aegis-v0.4.1-*.tar.gz' -print | sort > archives.txt
+
+          expected_count="${#expected_archives[@]}"
+          actual_count="$(wc -l < archives.txt | tr -d ' ')"
+          test "${actual_count}" -eq "${expected_count}"
+
+          : > SHA256SUMS
+          while IFS= read -r archive_path; do
+            archive="${archive_path#./}"
+            shasum -a 256 "${archive}" >> SHA256SUMS
+          done < archives.txt
+
+          shasum -a 256 -c SHA256SUMS
+
+          while IFS= read -r archive_path; do
+            archive="${archive_path#./}"
+            grep -F "  ${archive}" SHA256SUMS
+          done < archives.txt
+
+      - name: Upload combined draft workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: draft-artifacts-v0.4.1
+          if-no-files-found: error
           path: |
-            dist/${{ matrix.archive_name }}
-            dist/SHA256SUMS
+            dist/combined/aegis-v0.4.1-*.tar.gz
+            dist/combined/SHA256SUMS

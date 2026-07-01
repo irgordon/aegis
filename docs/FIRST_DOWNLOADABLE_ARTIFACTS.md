@@ -142,8 +142,10 @@ It:
 - targets macOS arm64 and macOS x64 archives
 - includes the gateway binary and desktop binary output when the build succeeds
 - stages the local development policy bundle needed for fixed health-check evidence
-- generates `SHA256SUMS` for produced archives
+- generates one combined `SHA256SUMS` manifest for produced archives
 - uploads GitHub Actions workflow artifacts only
+
+Combined checksum support is implemented in workflow source. It still needs artifact-level verification from a new workflow run before publishing work begins.
 
 It does not create a GitHub Release, publish release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 

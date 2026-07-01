@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.50] - 2026-07-01
+
+### Changed
+
+- Updated the draft artifact workflow to generate one combined `SHA256SUMS` manifest for produced archives.
+- Added static workflow checks for combined checksum generation and verification.
+
+### Documentation
+
+- Recorded that combined checksum support is implemented in workflow source and pending artifact-level verification.
+
 ## [0.2.49] - 2026-07-01
 
 ### Added

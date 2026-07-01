@@ -24,7 +24,7 @@ No other status values should be used unless this document is updated.
 
 Current work plans and validates the next distribution step without changing runtime behavior, UI behavior, public release assets, or release publishing.
 
-The draft artifact workflow is on `origin/main`. Its first manual run completed successfully and produced inspectable macOS workflow artifacts. Review found one follow-up before publishing work: produce a combined `SHA256SUMS` manifest for all draft archives.
+The draft artifact workflow is on `origin/main`. Its first manual run completed successfully and produced inspectable macOS workflow artifacts. Review found one follow-up before publishing work: produce a combined `SHA256SUMS` manifest for all draft archives. Workflow source now implements the combined manifest. Artifact-level verification is pending a new workflow run.
 
 The environment-coupling audit found a release-blocking desktop artifact issue: live evidence resolved the policy bundle through a GitHub runner source path embedded at build time. Source changes now prefer an artifact-relative bundled policy bundle. Artifact-level verification confirmed the blocker is resolved in the rerun artifacts.
 
@@ -75,7 +75,8 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Fix desktop artifact policy bundle path coupling | complete |
 | Rerun draft artifact workflow and repeat environment-coupling audit | complete |
 | Strip or remap source paths in developer-preview binaries | planned |
-| Consolidate draft artifact checksum manifest | planned |
+| Consolidate draft artifact checksum manifest | complete |
+| Rerun draft artifact workflow and verify combined checksum manifest | planned |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |

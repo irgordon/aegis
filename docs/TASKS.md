@@ -24,7 +24,7 @@ No other status values should be used unless this document is updated.
 
 Current work plans and validates the next distribution step without changing runtime behavior, UI behavior, public release assets, or release publishing.
 
-The draft artifact workflow exists in local commit `3ab2874`. Pushing that commit is currently blocked until GitHub authentication has `workflow` scope.
+The draft artifact workflow is on `origin/main`. Its first manual run completed successfully and produced inspectable macOS workflow artifacts. Review found one follow-up before publishing work: produce a combined `SHA256SUMS` manifest for all draft archives.
 
 Every new task after `v0.4.0` should identify whether it improves operator usability, removes a release blocker, improves release reliability, or reduces release-critical technical debt.
 
@@ -67,7 +67,9 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Select first downloadable artifact targets | complete |
 | Add draft artifact build workflow | complete |
 | Refresh wiki for post-v0.4.0 distribution work | complete |
-| Push local draft artifact workflow commit after workflow-scope authentication | blocked |
+| Push local draft artifact workflow commit after workflow-scope authentication | complete |
+| Review draft artifact workflow run | complete |
+| Consolidate draft artifact checksum manifest | planned |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |
@@ -268,7 +270,9 @@ Status: started.
 | Select first downloadable artifact targets | complete |
 | Add draft artifact build workflow | complete |
 | Refresh wiki for post-v0.4.0 distribution work | complete |
-| Push local draft artifact workflow commit after workflow-scope authentication | blocked |
+| Push local draft artifact workflow commit after workflow-scope authentication | complete |
+| Review draft artifact workflow run | complete |
+| Consolidate draft artifact checksum manifest | planned |
 | Validate artifact naming and checksum generation | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
 | Publish first unsigned developer-preview build | planned |

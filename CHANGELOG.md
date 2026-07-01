@@ -4,6 +4,16 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.46] - 2026-07-01
+
+### Added
+
+- Added review evidence for the v0.4.1 draft artifact workflow run.
+
+### Changed
+
+- Updated task tracking with the draft artifact workflow review result and checksum follow-up.
+
 ## [0.2.45] - 2026-06-30
 
 ### Changed

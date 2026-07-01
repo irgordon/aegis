@@ -85,11 +85,13 @@ Initial planned platforms are macOS arm64 and macOS x64.
 
 Draft artifacts should remain GitHub Actions workflow artifacts only until GitHub Release publishing is deliberately added.
 
-Commit `3ab2874` adds the draft artifact workflow locally. It is not on `origin/main` until a push succeeds with workflow-scope authentication.
+Commit `3ab2874` added the draft artifact workflow and is now on `origin/main`.
+
+The first manual workflow run passed and produced macOS workflow artifacts for inspection. Review found one follow-up before publishing work: produce one combined `SHA256SUMS` manifest for all draft archives.
 
 ## GitHub Workflow Scope
 
-Changes under `.github/workflows` require a GitHub token with `workflow` scope. If a push is rejected because the token lacks workflow scope, do not rewrite the release work to avoid the workflow file. Refresh authentication with workflow scope, then push the existing commit.
+Changes under `.github/workflows` require a GitHub token with `workflow` scope. If a push is rejected because the token lacks workflow scope, do not rewrite release work to avoid the workflow file. Refresh authentication with workflow scope, then push the existing commit.
 
 ## Current Runtime Rules
 

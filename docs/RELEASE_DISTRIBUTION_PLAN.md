@@ -173,6 +173,8 @@ A draft artifact build workflow now exists at `.github/workflows/draft-artifacts
 
 The workflow is manually triggered. It builds macOS draft archives, generates `SHA256SUMS`, and uploads GitHub Actions workflow artifacts only.
 
+The draft archives stage the local development policy bundle needed by fixed desktop health-check evidence. This avoids depending on the build machine source checkout for the UI evidence path.
+
 It does not create a GitHub Release, upload release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
 A future GitHub Release workflow should:

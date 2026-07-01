@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.48] - 2026-07-01
+
+### Fixed
+
+- Removed desktop policy bundle source-path coupling from the draft artifact health-check evidence path.
+
+### Changed
+
+- Updated the draft artifact workflow to stage the local development policy bundle required by fixed desktop health-check evidence.
+- Updated release documentation to record that artifact-level verification is pending the next workflow run.
+
 ## [0.2.47] - 2026-07-01
 
 ### Added

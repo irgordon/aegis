@@ -81,6 +81,37 @@ fn draft_artifact_workflow_uploads_only_workflow_artifacts() {
 }
 
 #[test]
+fn draft_artifact_workflow_stages_local_policy_bundle() {
+    let workflow = read_workflow();
+    let required = [
+        "policy-bundles/local-dev",
+        "examples/policy-bundles/local-dev/manifest.yaml",
+        "examples/policy-bundles/local-dev/gateway_policy.yaml",
+        "examples/policy-bundles/local-dev/risk_matrix.yaml",
+        "examples/policy-bundles/local-dev/checksums/SHA256SUMS",
+        "examples/policy-bundles/local-dev/signatures/public.pem",
+        "examples/policy-bundles/local-dev/signatures/SHA256SUMS.sig",
+        "verified local development policy bundle",
+    ];
+
+    assert_present(&workflow, &required);
+}
+
+#[test]
+fn draft_artifact_workflow_does_not_stage_private_policy_material() {
+    let workflow = read_workflow().to_lowercase();
+    let blocked = [
+        "private.pem",
+        "private.key",
+        "secret",
+        "regenerate",
+        "scripts/sign",
+    ];
+
+    assert_absent(&workflow, &blocked);
+}
+
+#[test]
 fn artifact_readme_contains_required_warnings() {
     let readme = read_artifact_readme();
     let required = [
@@ -89,6 +120,7 @@ fn artifact_readme_contains_required_warnings() {
         "local-only, pre-alpha, and developer-oriented",
         "not production-ready or enterprise-hardened",
         "archive, not an installer",
+        "bundled local development policy bundle",
         "Validate the SHA-256 checksum before use",
         "Do not treat this artifact as a trusted production distribution",
     ];

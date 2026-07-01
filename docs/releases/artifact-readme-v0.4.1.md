@@ -8,9 +8,9 @@ It is not production-ready or enterprise-hardened.
 
 It is provided as an archive, not an installer.
 
-It is a draft inspection artifact. It contains binary build output only.
+It is a draft inspection artifact. It contains binary build output and the bundled local development policy bundle used for fixed health-check evidence.
 
-It does not include policy bundles, request fixtures, installer packaging, app bundle packaging, or production configuration.
+It does not include request fixture files, installer packaging, app bundle packaging, or production configuration.
 
 Validate the SHA-256 checksum before use.
 

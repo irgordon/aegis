@@ -219,11 +219,42 @@ fn ipc_command_uses_fixed_health_check_evidence_source() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
 
     assert!(entrypoint.contains("HealthCheckRequest.json"));
-    assert!(entrypoint.contains("../examples/policy-bundles/local-dev"));
+    assert!(entrypoint.contains("policy-bundles/local-dev"));
+    assert!(entrypoint.contains("artifact_policy_bundle_path()"));
+    assert!(entrypoint.contains("development_policy_bundle_path()"));
     assert!(entrypoint.contains("process_local_gateway_request"));
     assert!(!entrypoint.contains("SandboxNoteWriteRequest.json"));
     assert!(!entrypoint.contains("sandbox.note.write"));
     assert!(!entrypoint.contains("--sandbox-dir"));
+}
+
+#[test]
+fn desktop_policy_bundle_resolution_prefers_artifact_path() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT);
+    let resolver = function_body(&entrypoint, "resolve_policy_bundle_path");
+
+    assert!(entrypoint.contains("std::env::current_exe()"));
+    assert!(entrypoint.contains("artifact_policy_bundle_path_for_executable"));
+    assert!(resolver.contains("if artifact_path.is_dir()"));
+    assert!(resolver.contains("} else if development_path.is_dir()"));
+    assert!(
+        resolver.find("artifact_path.is_dir()") < resolver.find("development_path.is_dir()"),
+        "artifact-relative policy bundle path must be checked before source fallback"
+    );
+    assert!(!resolver.contains("CARGO_MANIFEST_DIR"));
+}
+
+#[test]
+fn desktop_source_policy_bundle_path_is_development_fallback_only() {
+    let entrypoint = read(DESKTOP_ENTRYPOINT);
+    let command = function_body(&entrypoint, "get_health_check_evidence");
+    let artifact_path = function_body(&entrypoint, "artifact_policy_bundle_path");
+    let development_path = function_body(&entrypoint, "development_policy_bundle_path");
+
+    assert!(!command.contains("CARGO_MANIFEST_DIR"));
+    assert!(!artifact_path.contains("CARGO_MANIFEST_DIR"));
+    assert!(development_path.contains("CARGO_MANIFEST_DIR"));
+    assert!(development_path.contains("../examples/policy-bundles/local-dev"));
 }
 
 #[test]
@@ -981,6 +1012,20 @@ fn tauri_generate_handler_line(entrypoint: &str) -> String {
         .find(|line| line.contains("tauri::generate_handler!"))
         .map(|line| line.trim().to_string())
         .expect("tauri generate_handler line should exist")
+}
+
+fn function_body(content: &str, function_name: &str) -> String {
+    let marker = format!("fn {function_name}");
+    let start = content
+        .find(&marker)
+        .unwrap_or_else(|| panic!("{function_name} should exist"));
+    let rest = &content[start..];
+    let end = rest
+        .find("\nfn ")
+        .or_else(|| rest.find("\n#[cfg(test)]"))
+        .unwrap_or(rest.len());
+
+    rest[..end].to_string()
 }
 
 fn json_string<'a>(json: &'a Value, pointer: &str) -> &'a str {

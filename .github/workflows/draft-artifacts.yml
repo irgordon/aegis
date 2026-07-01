@@ -79,16 +79,26 @@ jobs:
           staging="dist/${base}"
 
           rm -rf dist
+          policy_bundle="${staging}/policy-bundles/local-dev"
+
           mkdir -p "${staging}/bin" "${staging}/desktop"
+          mkdir -p "${policy_bundle}/checksums" "${policy_bundle}/signatures"
 
           cp "target/${{ matrix.rust_target }}/release/aegis-gateway" "${staging}/bin/aegis-gateway"
           cp "src-tauri/target/${{ matrix.rust_target }}/release/aegis-desktop" "${staging}/desktop/aegis-desktop"
           cp "docs/releases/artifact-readme-v0.4.1.md" "${staging}/README.md"
+          cp "examples/policy-bundles/local-dev/manifest.yaml" "${policy_bundle}/manifest.yaml"
+          cp "examples/policy-bundles/local-dev/gateway_policy.yaml" "${policy_bundle}/gateway_policy.yaml"
+          cp "examples/policy-bundles/local-dev/risk_matrix.yaml" "${policy_bundle}/risk_matrix.yaml"
+          cp "examples/policy-bundles/local-dev/checksums/SHA256SUMS" "${policy_bundle}/checksums/SHA256SUMS"
+          cp "examples/policy-bundles/local-dev/signatures/public.pem" "${policy_bundle}/signatures/public.pem"
+          cp "examples/policy-bundles/local-dev/signatures/SHA256SUMS.sig" "${policy_bundle}/signatures/SHA256SUMS.sig"
 
           cat > "${staging}/ARTIFACT-CONTENTS.md" <<'CONTENTS'
           # Artifact Contents
 
           This draft archive contains the AEGIS gateway binary and the desktop binary build output.
+          It also contains the verified local development policy bundle used by fixed health-check evidence.
 
           This workflow produces GitHub Actions workflow artifacts for inspection only.
           It does not publish a GitHub Release.

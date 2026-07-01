@@ -12,6 +12,8 @@ Stage 1 should target macOS arm64 and macOS x64.
 
 The preferred artifact scope is one archive per platform containing the desktop app and the gateway binary when practical.
 
+The archive should also include the local development policy bundle required by fixed desktop health-check evidence.
+
 The release remains pre-alpha, local-only, unsigned, and not production-ready.
 
 ## Baseline
@@ -61,6 +63,7 @@ This matches the `v0.4.0` minimum usable local release:
 
 - the desktop app is the operator surface
 - the gateway binary supports local validation and smoke testing
+- the bundled local development policy bundle lets fixed health-check evidence run without a source checkout
 - both are useful for a developer preview
 
 If bundling both is not practical in the first implementation pass, use desktop app first and document the gateway binary as a source-build fallback.
@@ -138,6 +141,7 @@ It:
 - runs manually through GitHub Actions
 - targets macOS arm64 and macOS x64 archives
 - includes the gateway binary and desktop binary output when the build succeeds
+- stages the local development policy bundle needed for fixed health-check evidence
 - generates `SHA256SUMS` for produced archives
 - uploads GitHub Actions workflow artifacts only
 

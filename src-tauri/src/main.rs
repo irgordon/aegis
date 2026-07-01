@@ -42,6 +42,37 @@ fn fixed_health_check_request() -> &'static str {
 }
 
 fn fixed_policy_bundle_path() -> PathBuf {
+    resolve_policy_bundle_path(
+        artifact_policy_bundle_path(),
+        development_policy_bundle_path(),
+    )
+}
+
+fn resolve_policy_bundle_path(artifact_path: PathBuf, development_path: PathBuf) -> PathBuf {
+    if artifact_path.is_dir() {
+        artifact_path
+    } else if development_path.is_dir() {
+        development_path
+    } else {
+        artifact_path
+    }
+}
+
+fn artifact_policy_bundle_path() -> PathBuf {
+    std::env::current_exe()
+        .ok()
+        .and_then(|path| artifact_policy_bundle_path_for_executable(&path))
+        .unwrap_or_else(|| PathBuf::from("policy-bundles/local-dev"))
+}
+
+fn artifact_policy_bundle_path_for_executable(executable_path: &Path) -> Option<PathBuf> {
+    executable_path
+        .parent()
+        .and_then(Path::parent)
+        .map(|root| root.join("policy-bundles/local-dev"))
+}
+
+fn development_policy_bundle_path() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../examples/policy-bundles/local-dev")
 }
 
@@ -465,6 +496,18 @@ mod tests {
         assert_ne!(evidence.error_reason, "Not available");
         assert_ne!(evidence.error_next_action, "Not available");
         assert_ne!(evidence.error_location, "Not available");
+    }
+
+    #[test]
+    fn artifact_relative_policy_bundle_path_uses_archive_root() {
+        let executable = Path::new("/artifact/aegis-v0.4.1-macos-arm64/desktop/aegis-desktop");
+        let resolved = artifact_policy_bundle_path_for_executable(executable)
+            .expect("artifact executable should resolve policy bundle path");
+
+        assert_eq!(
+            resolved,
+            PathBuf::from("/artifact/aegis-v0.4.1-macos-arm64/policy-bundles/local-dev")
+        );
     }
 
     #[test]

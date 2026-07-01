@@ -14,6 +14,8 @@ Recommendation: FAIL.
 
 This failure does not mean a GitHub Release was published. It means the current draft artifacts should not be promoted into release assets until the path dependency is removed.
 
+Post-audit fix status: source changes now prefer an artifact-relative bundled policy bundle and stage the local development policy bundle into draft artifacts. Artifact-level verification is pending the next workflow run.
+
 ## Artifact Source
 
 | Field | Value |
@@ -173,6 +175,8 @@ Existing distribution documents still correctly state:
 - no signing or notarization exists
 - the combined `SHA256SUMS` follow-up remains open
 
+After this audit, the checked-in artifact README and draft workflow were updated to include the local development policy bundle needed for fixed health-check evidence. The inspected workflow run did not contain that fix.
+
 ## Findings
 
 ### DA-ECA-001
@@ -195,6 +199,10 @@ The desktop artifact can depend on the GitHub runner source path for live backen
 Recommended fix:
 
 Resolve the policy bundle from a packaged resource path or include the required local development policy bundle as an explicit artifact resource. The runtime must not depend on the build machine source directory.
+
+Fix status:
+
+Implemented in source. Artifact-level verification pending next workflow run.
 
 ### DA-ECA-002
 
@@ -248,11 +256,11 @@ The archive contents are clean and inspectable, but the desktop binary embeds a 
 
 Before any draft GitHub Release publishing task:
 
-1. Remove the desktop binary dependency on the GitHub runner source path.
-2. Package or safely resolve the local policy bundle needed for live health-check evidence.
+1. Re-run the draft artifact workflow and verify the desktop binary uses the bundled policy bundle path.
+2. Confirm the staged `policy-bundles/local-dev` directory contains only runtime policy verification files.
 3. Generate one combined `SHA256SUMS` manifest across all produced archives.
 4. Decide whether to strip or remap source paths in developer-preview binaries.
-5. Re-run the draft artifact workflow and repeat this audit.
+5. Repeat this audit on the new workflow artifacts.
 
 ## Recommendation
 

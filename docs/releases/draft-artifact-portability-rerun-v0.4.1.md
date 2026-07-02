@@ -10,9 +10,9 @@ The new macOS arm64 and macOS x64 draft artifacts include the local development 
 
 DA-ECA-001 is resolved at the artifact level. The desktop health-check evidence path no longer requires the GitHub runner source checkout as the primary policy bundle location.
 
-One artifact portability follow-up remains before publishing work:
+One artifact portability follow-up was implemented after this review and still needs a fresh artifact-level check before publishing work:
 
-- Strip or remap source/debug paths in developer-preview binaries where practical.
+- Verify the new release path-remapping build output in workflow artifacts.
 
 These workflow artifacts are inspection evidence only. They are not GitHub Release assets.
 
@@ -152,7 +152,7 @@ Verified:
 | Issue | Status | Notes |
 | --- | --- | --- |
 | DA-ECA-001 | Resolved | Artifact evidence confirms the policy bundle is packaged and preferred through artifact-relative resolution. |
-| DA-ECA-002 | Deferred | Runner/source debug paths remain in binaries. They do not appear to control runtime policy bundle resolution. |
+| DA-ECA-002 | Pending verification | Source and workflow fixes now remove the desktop source fallback from release builds and enable draft release path remapping. A new workflow artifact audit must verify the result. |
 | DA-ECA-003 | Resolved | Artifact README and content manifest now state that the bundled policy bundle is included. |
 | Combined `SHA256SUMS` | Resolved | A later artifact run verified one combined manifest covering both macOS draft archives. |
 
@@ -160,11 +160,11 @@ Verified:
 
 PASS WITH FIXES.
 
-The source-path runtime blocker is resolved. Do not start GitHub Release publishing until the remaining release-facing follow-up is addressed or explicitly accepted:
+The source-path runtime blocker is resolved. Do not start GitHub Release publishing until the remaining release-facing follow-up is verified or explicitly accepted:
 
-- strip or remap source/debug paths where practical
+- verify source/debug path remapping in new workflow artifacts
 
 ## Required Follow-Up
 
-1. `ci(release): Strip or remap draft binary source paths`
-2. Re-run artifact review before promoting workflow artifacts into GitHub Release assets.
+1. Re-run artifact review before promoting workflow artifacts into GitHub Release assets.
+2. Confirm DA-ECA-002 status from the new workflow artifacts.

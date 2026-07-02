@@ -236,9 +236,10 @@ fn desktop_policy_bundle_resolution_prefers_artifact_path() {
     assert!(entrypoint.contains("std::env::current_exe()"));
     assert!(entrypoint.contains("artifact_policy_bundle_path_for_executable"));
     assert!(resolver.contains("if artifact_path.is_dir()"));
-    assert!(resolver.contains("} else if development_path.is_dir()"));
+    assert!(resolver.contains("existing_development_policy_bundle(development_path)"));
     assert!(
-        resolver.find("artifact_path.is_dir()") < resolver.find("development_path.is_dir()"),
+        resolver.find("artifact_path.is_dir()")
+            < resolver.find("existing_development_policy_bundle(development_path)"),
         "artifact-relative policy bundle path must be checked before source fallback"
     );
     assert!(!resolver.contains("CARGO_MANIFEST_DIR"));
@@ -249,12 +250,24 @@ fn desktop_source_policy_bundle_path_is_development_fallback_only() {
     let entrypoint = read(DESKTOP_ENTRYPOINT);
     let command = function_body(&entrypoint, "get_health_check_evidence");
     let artifact_path = function_body(&entrypoint, "artifact_policy_bundle_path");
-    let development_path = function_body(&entrypoint, "development_policy_bundle_path");
+    let development_path = cfg_function_body(
+        &entrypoint,
+        "#[cfg(debug_assertions)]",
+        "development_policy_bundle_path",
+    );
+    let release_path = cfg_function_body(
+        &entrypoint,
+        "#[cfg(not(debug_assertions))]",
+        "development_policy_bundle_path",
+    );
 
     assert!(!command.contains("CARGO_MANIFEST_DIR"));
     assert!(!artifact_path.contains("CARGO_MANIFEST_DIR"));
+    assert!(entrypoint.contains("#[cfg(debug_assertions)]"));
+    assert!(entrypoint.contains("#[cfg(not(debug_assertions))]"));
     assert!(development_path.contains("CARGO_MANIFEST_DIR"));
     assert!(development_path.contains("../examples/policy-bundles/local-dev"));
+    assert!(release_path.contains("None"));
 }
 
 #[test]
@@ -1026,6 +1039,15 @@ fn function_body(content: &str, function_name: &str) -> String {
         .unwrap_or(rest.len());
 
     rest[..end].to_string()
+}
+
+fn cfg_function_body(content: &str, cfg_attr: &str, function_name: &str) -> String {
+    let cfg_start = content
+        .find(cfg_attr)
+        .unwrap_or_else(|| panic!("{cfg_attr} should exist"));
+    let scoped = &content[cfg_start..];
+
+    function_body(scoped, function_name)
 }
 
 fn json_string<'a>(json: &'a Value, pointer: &str) -> &'a str {

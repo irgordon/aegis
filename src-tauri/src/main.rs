@@ -48,14 +48,21 @@ fn fixed_policy_bundle_path() -> PathBuf {
     )
 }
 
-fn resolve_policy_bundle_path(artifact_path: PathBuf, development_path: PathBuf) -> PathBuf {
+fn resolve_policy_bundle_path(
+    artifact_path: PathBuf,
+    development_path: Option<PathBuf>,
+) -> PathBuf {
     if artifact_path.is_dir() {
         artifact_path
-    } else if development_path.is_dir() {
+    } else if let Some(development_path) = existing_development_policy_bundle(development_path) {
         development_path
     } else {
         artifact_path
     }
+}
+
+fn existing_development_policy_bundle(development_path: Option<PathBuf>) -> Option<PathBuf> {
+    development_path.filter(|path| path.is_dir())
 }
 
 fn artifact_policy_bundle_path() -> PathBuf {
@@ -72,8 +79,14 @@ fn artifact_policy_bundle_path_for_executable(executable_path: &Path) -> Option<
         .map(|root| root.join("policy-bundles/local-dev"))
 }
 
-fn development_policy_bundle_path() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../examples/policy-bundles/local-dev")
+#[cfg(debug_assertions)]
+fn development_policy_bundle_path() -> Option<PathBuf> {
+    Some(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../examples/policy-bundles/local-dev"))
+}
+
+#[cfg(not(debug_assertions))]
+fn development_policy_bundle_path() -> Option<PathBuf> {
+    None
 }
 
 fn apply_evidence_to_window(window: &AegisWindow, evidence: UiEvidence) {

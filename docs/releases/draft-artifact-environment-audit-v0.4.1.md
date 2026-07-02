@@ -16,6 +16,8 @@ This failure does not mean a GitHub Release was published. It means the current 
 
 Post-audit fix status: source changes now prefer an artifact-relative bundled policy bundle and stage the local development policy bundle into draft artifacts. The artifact-level re-run in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms DA-ECA-001 is resolved.
 
+DA-ECA-002 fix status: source and workflow changes now keep the source-tree policy fallback out of release desktop builds and configure draft release builds with Rust path remapping plus debuginfo stripping. Local verification shows the gateway binary has no scanned local path markers and the desktop binary no longer contains `CARGO_MANIFEST_DIR` or `../examples/policy-bundles/local-dev`. One Tauri-generated desktop context string still contains the local `src-tauri` manifest path. Artifact-level verification from a new workflow run is still required before closing DA-ECA-002.
+
 ## Artifact Source
 
 | Field | Value |
@@ -225,6 +227,10 @@ Recommended fix:
 
 Use a release build configuration that strips or remaps source paths in binaries where practical.
 
+Fix status:
+
+Implemented in source and workflow configuration. Release desktop builds now omit the source-tree development fallback. The draft artifact workflow also sets release-only path remapping and strips debuginfo before building the gateway and desktop binaries. Local verification materially reduced path leakage, but DA-ECA-002 remains pending artifact-level verification from a new workflow run.
+
 ### DA-ECA-003
 
 Severity: P2
@@ -263,8 +269,7 @@ Before any draft GitHub Release publishing task:
 1. Re-run the draft artifact workflow and verify the desktop binary uses the bundled policy bundle path.
 2. Confirm the staged `policy-bundles/local-dev` directory contains only runtime policy verification files.
 3. Verify the implemented combined `SHA256SUMS` manifest in new workflow artifacts.
-4. Decide whether to strip or remap source paths in developer-preview binaries.
-5. Repeat this audit on the new workflow artifacts.
+4. Re-run artifact inspection and confirm the source path remapping result for DA-ECA-002.
 
 ## Recommendation
 

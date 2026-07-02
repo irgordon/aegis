@@ -71,6 +71,39 @@ fn draft_artifact_workflow_references_expected_artifacts() {
 }
 
 #[test]
+fn draft_artifact_workflow_remaps_release_build_paths() {
+    let workflow = read_workflow();
+    let required = [
+        "Configure draft release path remapping",
+        "RUSTFLAGS=--remap-path-prefix=${GITHUB_WORKSPACE}=.",
+        "--remap-path-prefix=${HOME}=~",
+        "--remap-path-prefix=${RUNNER_TEMP}=.",
+        "CARGO_PROFILE_RELEASE_DEBUG=false",
+        "CARGO_PROFILE_RELEASE_STRIP=debuginfo",
+    ];
+
+    assert_present(&workflow, &required);
+    let remapping_step = workflow
+        .find("Configure draft release path remapping")
+        .expect("path remapping step should exist");
+    let gateway_build = workflow
+        .find("Build gateway binary")
+        .expect("gateway release build step should exist");
+    let desktop_build = workflow
+        .find("Build desktop binary")
+        .expect("desktop release build step should exist");
+
+    assert!(
+        remapping_step < gateway_build,
+        "draft release path remapping must be configured before gateway release build"
+    );
+    assert!(
+        remapping_step < desktop_build,
+        "draft release path remapping must be configured before desktop release build"
+    );
+}
+
+#[test]
 fn draft_artifact_workflow_generates_combined_checksum_manifest() {
     let workflow = read_workflow();
     let required = [

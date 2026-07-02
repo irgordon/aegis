@@ -63,6 +63,17 @@ jobs:
       - name: Check desktop crate
         run: cargo check --manifest-path src-tauri/Cargo.toml
 
+      - name: Configure draft release path remapping
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          {
+            echo "RUSTFLAGS=--remap-path-prefix=${GITHUB_WORKSPACE}=. --remap-path-prefix=${HOME}=~ --remap-path-prefix=${RUNNER_TEMP}=."
+            echo "CARGO_PROFILE_RELEASE_DEBUG=false"
+            echo "CARGO_PROFILE_RELEASE_STRIP=debuginfo"
+          } >> "${GITHUB_ENV}"
+
       - name: Build gateway binary
         run: cargo build --release --bin aegis-gateway --target "${{ matrix.rust_target }}"
 

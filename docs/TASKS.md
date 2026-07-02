@@ -50,39 +50,7 @@ If no box is checked, defer the work until Phase 6 or later.
 
 | Task | Status |
 | --- | --- |
-| Add Tauri shell with Slint UI scaffold | complete |
-| Render execution timeline from sample evidence | complete |
-| Render sample status cards from fixture evidence | complete |
-| Render normalized error cards from sample evidence | complete |
-| Harden sample evidence rendering invariants | complete |
-| Render sample recovery inspection and planning cards | complete |
-| Define minimum usable local release path | complete |
-| Add v0.4.0 release readiness checklist | complete |
-| Add executable v0.4.0 release validation script | complete |
-| Define minimal IPC data bridge | complete |
-| Render live read-only runtime evidence | complete |
-| Harden read-only IPC evidence boundary | complete |
-| Run v0.4.0 readiness review | complete |
-| Define v0.4.0 visual design guidance | complete |
-| Apply v0.4.0 visual design system | complete |
-| Complete v0.4.0 visual readability review | complete |
-| Prepare v0.4.0 release candidate | complete |
-| Maintainer approval to tag v0.4.0 | complete |
-| Create v0.4.0 tag | complete |
-| Push v0.4.0 tag | complete |
-| Finalize v0.4.0 local release | complete |
-| Define post-v0.4.0 distribution plan | complete |
-| Select first downloadable artifact targets | complete |
-| Add draft artifact build workflow | complete |
-| Refresh wiki for post-v0.4.0 distribution work | complete |
-| Push local draft artifact workflow commit after workflow-scope authentication | complete |
-| Review draft artifact workflow run | complete |
-| Audit draft artifacts for environment coupling | complete |
-| Fix desktop artifact policy bundle path coupling | complete |
-| Rerun draft artifact workflow and repeat environment-coupling audit | complete |
 | Strip or remap source paths in developer-preview binaries | planned |
-| Consolidate draft artifact checksum manifest | complete |
-| Rerun draft artifact workflow and verify combined checksum manifest | complete |
 | Validate artifact naming and checksum generation | planned |
 | Add draft GitHub Release workflow | planned |
 | Verify draft GitHub Release | planned |
@@ -92,7 +60,17 @@ If no box is checked, defer the work until Phase 6 or later.
 | Draft v0.4.1 developer-preview release notes | planned |
 | GitHub Release publishing | planned |
 | Publish first unsigned developer-preview build | planned |
-| Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
+
+Completed inputs for Phase 5:
+
+- `v0.4.0` local source release
+- post-`v0.4.0` distribution plan
+- first downloadable artifact target decision
+- draft artifact workflow
+- artifact portability audit
+- desktop artifact policy bundle path fix
+- combined `SHA256SUMS` manifest
+- artifact-level checksum verification
 
 Deferred from Phase 5:
 
@@ -104,7 +82,27 @@ plugin ecosystem, and database backends remain deferred.
 
 ## Deferred Phase Work
 
-### Phase 6: Recovery and Replay Execution
+### Phase 6: Developer Experience
+
+| Task | Status |
+| --- | --- |
+| Improve first-run and launch guidance | planned |
+| Add read-only audit and state evidence views | planned |
+| Add read-only recovery inspection and recovery plan views | planned |
+| Add developer troubleshooting notes | planned |
+| Add local evaluation walkthroughs | planned |
+
+### Phase 7: Production Distribution
+
+| Task | Status |
+| --- | --- |
+| Plan signed checksum manifests | planned |
+| Add code signing when scheduled | planned |
+| Add macOS notarization when scheduled | planned |
+| Add installer or app bundle packaging when scheduled | planned |
+| Decide whether auto-update belongs in a later release | planned |
+
+### Phase 8: Runtime and Platform Expansion
 
 | Task | Status |
 | --- | --- |
@@ -113,20 +111,10 @@ plugin ecosystem, and database backends remain deferred.
 | Add constrained replay execution | planned |
 | Add audit retry path | planned |
 | Add recovery execution guardrails | planned |
-
-### Phase 7: Approval and Production Credential Providers
-
-| Task | Status |
-| --- | --- |
 | Add approval workflow boundary | planned |
 | Add approval evidence and state persistence | planned |
 | Add production credential provider boundary | planned |
 | Add provider compatibility checks | planned |
-
-### Phase 8: Platform and Production Hardening
-
-| Task | Status |
-| --- | --- |
 | Add HTTP API boundary | planned |
 | Add service deployment model | planned |
 | Add runtime configuration model | planned |
@@ -314,9 +302,33 @@ Status: active.
 | GitHub Release publishing | planned |
 | Publish first unsigned developer-preview build | planned |
 
-## Phase 6: Recovery and Replay Execution
+## Phase 6: Developer Experience
 
-Objective: add constrained recovery and replay behavior after read-only inspection and planning.
+Objective: improve evaluation, launch, troubleshooting, and read-only evidence review after downloadable developer-preview artifacts exist.
+
+| Task | Status |
+| --- | --- |
+| Improve first-run and launch guidance | planned |
+| Add read-only audit and state evidence views | planned |
+| Add read-only recovery inspection and recovery plan views | planned |
+| Add developer troubleshooting notes | planned |
+| Add local evaluation walkthroughs | planned |
+
+## Phase 7: Production Distribution
+
+Objective: move from unsigned developer-preview archives toward normal platform distribution.
+
+| Task | Status |
+| --- | --- |
+| Plan signed checksum manifests | planned |
+| Add code signing when scheduled | planned |
+| Add macOS notarization when scheduled | planned |
+| Add installer or app bundle packaging when scheduled | planned |
+| Decide whether auto-update belongs in a later release | planned |
+
+## Phase 8: Runtime and Platform Expansion
+
+Objective: add runtime governance and platform capabilities after developer and production distribution boundaries are stable.
 
 | Task | Status |
 | --- | --- |
@@ -325,24 +337,10 @@ Objective: add constrained recovery and replay behavior after read-only inspecti
 | Add constrained replay execution | planned |
 | Add audit retry path | planned |
 | Add recovery execution guardrails | planned |
-
-## Phase 7: Approval and Production Credential Providers
-
-Objective: add human approval workflow and production credential provider boundaries.
-
-| Task | Status |
-| --- | --- |
 | Add approval workflow boundary | planned |
 | Add approval evidence and state persistence | planned |
 | Add production credential provider boundary | planned |
 | Add provider compatibility checks | planned |
-
-## Phase 8: Platform and Production Hardening
-
-Objective: prepare AEGIS for production-oriented evaluation.
-
-| Task | Status |
-| --- | --- |
 | Add HTTP API boundary | planned |
 | Add service deployment model | planned |
 | Add runtime configuration model | planned |

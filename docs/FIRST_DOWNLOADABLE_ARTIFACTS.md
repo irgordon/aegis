@@ -239,9 +239,12 @@ It gives the next implementation task enough detail to create a draft build work
 
 ## Next Implementation Tasks
 
-1. `ci(release): Add draft artifact build workflow` - complete
+1. `ci(release): Strip or remap draft binary source paths`
 2. `test(release): Validate artifact naming and checksum generation`
-3. `docs(release): Draft v0.4.1 developer-preview release notes`
-4. `chore(release): Publish first unsigned developer-preview build`
+3. `ci(release): Add draft GitHub Release workflow`
+4. `test(release): Verify draft GitHub Release`
+5. `docs(release): Draft v0.4.1 developer-preview release notes`
+6. `test(release): Verify developer download and portable launch`
+7. `chore(release): Publish first unsigned developer-preview build`
 
-Do not begin implementation until maintainers approve the workflow scope.
+Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

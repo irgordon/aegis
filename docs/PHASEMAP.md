@@ -28,9 +28,9 @@ A version is valid only when its documented exit criteria are satisfied.
 | 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
 | 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | None. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
 | 5 | v0.4.1 | Developer Distribution | Active | Deliver the first downloadable developer-preview artifacts without requiring the maintainer machine or source checkout. | Strip source paths, add draft GitHub Release workflow, verify download and launch behavior. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
-| 6 | v0.5.0 | Recovery and Replay Execution | Not started | Add constrained recovery and replay behavior after read-only inspection and planning. | None. | Approval workflow and production credential providers. |
-| 7 | v0.6.0 | Approval and Production Credential Providers | Not started | Add human approval workflow and real credential provider boundaries. | None. | Platform and production hardening. |
-| 8 | v0.7.0 | Platform and Production Hardening | Not started | Add service, deployment, observability, extension, security, release, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
+| 6 | v0.5.0 | Developer Experience | Not started | Improve evaluation, launch, troubleshooting, and read-only evidence review after downloads work. | None. | Replay execution, approval workflow, production credentials, and production distribution. |
+| 7 | v0.6.0 | Production Distribution | Not started | Add signed or clearly bounded production-style distribution after developer-preview artifacts are proven. | None. | Runtime expansion and platform hardening. |
+| 8 | v0.7.0 | Runtime and Platform Expansion | Not started | Add recovery, approval, credential provider, service, deployment, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
 
 ## Current Gate Summary
 
@@ -39,9 +39,9 @@ A version is valid only when its documented exit criteria are satisfied.
 | v0.3.0 | Phase 2 local Gateway MVP complete. | Local built-in wrapper execution, authorization, credential boundaries, lifecycle, audit, state, recovery inspection, and recovery planning are validated. |
 | v0.4.0 | UI-ready backend evidence exists, local gateway execution works, and Tauri plus Slint direction is documented. | Minimum usable local release checklist passes; the UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. Complete, tagged, and pushed. |
 | v0.4.1 | v0.4.0 is complete, distribution targets are selected, and draft artifacts are verified as workflow artifacts. | A developer can download, verify, extract, launch, and evaluate AEGIS without the maintainer machine or a source checkout. |
-| v0.5.0 | Recovery inspection and planning evidence exists, and developer distribution no longer blocks evaluation. | Replay and recovery execution are constrained, auditable, and fail closed. |
-| v0.6.0 | Local execution and recovery boundaries are stable. | Approval and production credential providers are scoped, attributable, secret-safe, and fail closed. |
-| v0.7.0 | Core runtime, UI, recovery, approval, and credential provider boundaries are stable. | Platform and production controls are tested, documented, and reproducible. |
+| v0.5.0 | Downloadable developer-preview artifacts exist and can be evaluated without a source checkout. | Developer evaluation, launch, troubleshooting, and read-only evidence review are clear without adding runtime authority. |
+| v0.6.0 | Developer-preview distribution is stable enough to plan broader distribution. | Production-style distribution controls are documented, validated, and do not alter runtime governance. |
+| v0.7.0 | Developer and production distribution boundaries are stable. | Runtime recovery, approval, credential provider, service, deployment, and operational controls are tested, documented, and reproducible. |
 
 ## v0.0.0: Initial Repository
 
@@ -321,10 +321,49 @@ Active.
 - plugin ecosystem
 - database backends
 
-## v0.5.0: Recovery and Replay Execution
+## v0.5.0: Developer Experience
 
 ### Purpose
-Move from read-only recovery inspection and planning to constrained recovery and replay behavior.
+Improve the experience of evaluating AEGIS after the first downloadable developer preview exists.
+
+### Required Capabilities
+- clearer first-run and launch guidance
+- read-only audit, state, recovery inspection, and recovery plan views where they reduce evaluation friction
+- developer-focused troubleshooting notes
+- artifact validation notes based on real download testing
+- improved local examples and evidence walkthroughs
+
+### Exit Criteria
+- a new developer can evaluate the downloaded artifact without maintainer-specific knowledge
+- UI and CLI evidence remain consistent
+- read-only views do not imply authority or execution
+- troubleshooting guidance is clear and current
+- no production deployment, replay execution, approval workflow, or credential provider work is introduced
+
+## v0.6.0: Production Distribution
+
+### Purpose
+Move from unsigned developer-preview archives toward normal platform distribution.
+
+### Required Capabilities
+- signed checksum manifests where scheduled
+- code signing plan and implementation
+- macOS notarization plan and implementation
+- installer or app bundle packaging where scheduled
+- auto-update decision and implementation only if explicitly approved
+- production distribution documentation
+
+### Exit Criteria
+- artifacts are signed or clearly documented as unsigned
+- notarization status is explicit
+- installer behavior is documented and validated if installers exist
+- release assets remain reproducible and verifiable
+- distribution changes do not alter gateway authority, policy behavior, or runtime governance
+
+## v0.7.0: Runtime and Platform Expansion
+
+### Purpose
+Expand runtime governance and platform capabilities after developer distribution and production distribution boundaries are stable.
 
 ### Required Capabilities
 - replay eligibility report
@@ -332,38 +371,10 @@ Move from read-only recovery inspection and planning to constrained recovery and
 - constrained replay execution
 - audit retry path
 - recovery execution guardrails
-
-### Exit Criteria
-- replay uses stored intent and does not call the planning layer
-- recovery actions preserve fail-closed behavior
-- audit retry is bounded and traceable
-- replay and recovery evidence is recorded
-- no UI control can create recovery authority not present in backend evidence
-
-## v0.6.0: Approval and Production Credential Providers
-
-### Purpose
-Add human approval workflow and production credential provider boundaries after local execution and UI evidence paths are coherent.
-
-### Required Capabilities
 - approval workflow boundary
 - approval evidence and state persistence
 - production credential provider boundary
 - provider compatibility checks
-- secret-safe audit and UI evidence
-
-### Exit Criteria
-- pending actions do not execute before valid approval
-- approvals are attributable, scoped, and auditable
-- credential providers do not expose secrets to agents, stdout, audit logs, state logs, or UI
-- provider failures fail closed
-
-## v0.7.0: Platform and Production Hardening
-
-### Purpose
-Prepare AEGIS for production-oriented platform evaluation.
-
-### Required Capabilities
 - HTTP API boundary
 - service deployment model
 - runtime configuration model
@@ -381,6 +392,12 @@ Prepare AEGIS for production-oriented platform evaluation.
 - operational documentation
 
 ### Exit Criteria
+- replay uses stored intent and does not call the planning layer
+- recovery actions preserve fail-closed behavior
+- audit retry is bounded and traceable
+- pending actions do not execute before valid approval
+- approvals are attributable, scoped, and auditable
+- credential providers do not expose secrets to agents, stdout, audit logs, state logs, or UI
 - service API preserves ToolCallRequest and ToolCallResponse contracts
 - deployment guidance preserves immutable policy and fail-closed behavior
 - configuration is explicit and validated

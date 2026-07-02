@@ -37,7 +37,7 @@ Post-`v0.4.0` distribution planning is complete enough to start Phase 5 implemen
 
 For contributors, the backlog has been reorganized around the shortest path from a source-only local release to a downloadable developer preview. Completed Phase 2, Phase 3, and Phase 4 foundation work is no longer an active task list. Active work now starts with Phase 5 developer distribution.
 
-For engineers and architects, execution remains the primary architectural concern, but Phase 4 must keep the UI non-authoritative. The UI renders backend evidence; it does not evaluate policy, authorize execution, inject credentials, dispatch wrappers, or invent lifecycle or recovery state.
+For engineers and architects, execution remains the primary architectural concern. The UI remains non-authoritative. It renders backend evidence; it does not evaluate policy, authorize execution, inject credentials, dispatch wrappers, or invent lifecycle or recovery state.
 
 ## Phase 0: Governance Baseline
 
@@ -342,10 +342,53 @@ This phase is about distribution engineering. It is not a new governance phase.
 - plugin ecosystem
 - database backends
 
-## Phase 6: Recovery and Replay Execution
+## Phase 6: Developer Experience
 
 ### Objective
-Move from read-only recovery inspection and planning to constrained recovery and replay behavior after developer distribution is usable.
+Improve the experience of evaluating AEGIS after the first downloadable developer preview exists.
+
+This phase should make the product easier to understand, launch, inspect, and troubleshoot without adding new execution authority.
+
+### Deliverables
+- clearer first-run and launch guidance
+- read-only audit, state, recovery inspection, and recovery plan views where they reduce evaluation friction
+- developer-focused troubleshooting notes
+- artifact validation notes based on real download testing
+- improved local examples and evidence walkthroughs
+
+### Exit Criteria
+- a new developer can evaluate the downloaded artifact without maintainer-specific knowledge
+- UI and CLI evidence remain consistent
+- read-only views do not imply authority or execution
+- troubleshooting guidance is clear and current
+- no production deployment, replay execution, approval workflow, or credential provider work is introduced
+
+## Phase 7: Production Distribution
+
+### Objective
+Move from unsigned developer-preview archives toward normal platform distribution.
+
+This phase should improve trust and installability after the developer-preview path is proven.
+
+### Deliverables
+- signed checksum manifests where scheduled
+- code signing plan and implementation
+- macOS notarization plan and implementation
+- installer or app bundle packaging where scheduled
+- auto-update decision and implementation only if explicitly approved
+- production distribution documentation
+
+### Exit Criteria
+- artifacts are signed or clearly documented as unsigned
+- notarization status is explicit
+- installer behavior is documented and validated if installers exist
+- release assets remain reproducible and verifiable
+- distribution changes do not alter gateway authority, policy behavior, or runtime governance
+
+## Phase 8: Runtime and Platform Expansion
+
+### Objective
+Expand runtime governance and platform capabilities after developer distribution and production distribution boundaries are stable.
 
 ### Deliverables
 - replay eligibility report
@@ -353,38 +396,10 @@ Move from read-only recovery inspection and planning to constrained recovery and
 - constrained replay execution
 - audit retry path
 - recovery execution guardrails
-
-### Exit Criteria
-- replay uses stored intent and does not call the planning layer
-- recovery actions preserve fail-closed behavior
-- audit retry is bounded and traceable
-- replay and recovery evidence is recorded
-- no UI control can create recovery authority not present in backend evidence
-
-## Phase 7: Approval and Production Credential Providers
-
-### Objective
-Add human approval workflow and production credential provider boundaries after local execution and UI evidence paths are coherent.
-
-### Deliverables
 - approval workflow boundary
 - approval evidence and state persistence
 - production credential provider boundary
 - provider compatibility checks
-- secret-safe audit and UI evidence
-
-### Exit Criteria
-- pending actions do not execute before valid approval
-- approvals are attributable, scoped, and auditable
-- credential providers do not expose secrets to agents, stdout, audit logs, state logs, or UI
-- provider failures fail closed
-
-## Phase 8: Platform and Production Hardening
-
-### Objective
-Prepare AEGIS for production-oriented platform evaluation.
-
-### Deliverables
 - HTTP API boundary
 - service deployment model
 - runtime configuration model
@@ -402,6 +417,12 @@ Prepare AEGIS for production-oriented platform evaluation.
 - operational documentation
 
 ### Exit Criteria
+- replay uses stored intent and does not call the planning layer
+- recovery actions preserve fail-closed behavior
+- audit retry is bounded and traceable
+- pending actions do not execute before valid approval
+- approvals are attributable, scoped, and auditable
+- credential providers do not expose secrets to agents, stdout, audit logs, state logs, or UI
 - service API preserves ToolCallRequest and ToolCallResponse contracts
 - deployment guidance preserves immutable policy and fail-closed behavior
 - configuration is explicit and validated

@@ -238,7 +238,8 @@ Recommended sequence:
 | --- | --- |
 | `v0.4.0` | Source-only local release. Complete. |
 | `v0.4.1` | Selected first downloadable developer-preview target and active Phase 5 distribution milestone. |
-| `v0.5.0` | Recovery and replay execution after developer distribution no longer blocks evaluation. |
+| `v0.5.0` | Developer experience after downloadable evaluation works. |
+| `v0.6.0` | Production distribution after developer-preview artifacts are proven. |
 | Later | Signed, notarized, installer-based, and broader user-facing artifacts. |
 
 Phase 5 now focuses on developer distribution. The first downloadable artifact target remains `v0.4.1`.
@@ -252,9 +253,12 @@ Phase 5 now focuses on developer distribution. The first downloadable artifact t
 
 ## Recommended Next Tasks
 
-1. `ci(release): Add draft artifact build workflow` - complete
+1. `ci(release): Strip or remap draft binary source paths`
 2. `test(release): Validate artifact naming and checksum generation`
-3. `docs(release): Draft v0.4.1 developer-preview release notes`
-4. `chore(release): Publish first unsigned developer-preview build`
+3. `ci(release): Add draft GitHub Release workflow`
+4. `test(release): Verify draft GitHub Release`
+5. `docs(release): Draft v0.4.1 developer-preview release notes`
+6. `test(release): Verify developer download and portable launch`
+7. `chore(release): Publish first unsigned developer-preview build`
 
-Do not begin these tasks until maintainers approve the first distribution target and version.
+Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

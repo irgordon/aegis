@@ -30,6 +30,8 @@ The environment-coupling audit found a release-blocking desktop artifact issue: 
 
 Artifact-level workflow review confirms release binary path remapping is resolved for runtime portability. One Tauri-generated desktop context string remains as deferred release hygiene.
 
+The draft GitHub Release workflow now exists. It is manual-only, requires an existing `v0.4.1` tag, requires the workflow checkout to match that tag, creates or updates a draft prerelease for maintainer review, and refuses to modify a non-draft release. It has not yet been verified by a live workflow run.
+
 Phase 5 asks:
 
 ```text
@@ -54,8 +56,8 @@ If no box is checked, defer the work until Phase 6 or later.
 | --- | --- |
 | Strip or remap source paths in developer-preview binaries | complete |
 | Verify release binary source path reduction in workflow artifacts | complete |
-| Validate artifact naming and checksum generation | planned |
-| Add draft GitHub Release workflow | planned |
+| Validate artifact naming and checksum generation | complete |
+| Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | planned |
 | Cross-platform artifact validation | planned |
 | Developer download verification | planned |
@@ -76,6 +78,8 @@ Completed inputs for Phase 5:
 - artifact-level checksum verification
 - release binary source path remapping and debuginfo stripping
 - artifact-level path-remapping verification
+- draft GitHub Release workflow and static boundary tests
+- draft release asset-name validation before release creation
 
 Deferred from Phase 5:
 
@@ -298,8 +302,8 @@ Status: active.
 | --- | --- |
 | Strip or remap source paths in developer-preview binaries | complete |
 | Verify release binary source path reduction in workflow artifacts | complete |
-| Validate artifact naming and checksum generation | planned |
-| Add draft GitHub Release workflow | planned |
+| Validate artifact naming and checksum generation | complete |
+| Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | planned |
 | Cross-platform artifact validation | planned |
 | Developer download verification | planned |

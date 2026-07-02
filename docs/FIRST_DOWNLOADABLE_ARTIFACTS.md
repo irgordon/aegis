@@ -149,6 +149,23 @@ Combined checksum support is verified in workflow artifacts. The combined `SHA25
 
 It does not create a GitHub Release, publish release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
+The draft GitHub Release workflow now exists for maintainer review.
+
+It:
+
+- runs manually through GitHub Actions
+- rebuilds the same macOS archive set
+- generates and verifies one combined `SHA256SUMS`
+- requires the existing `v0.4.1` tag
+- requires the workflow checkout to match the `v0.4.1` tag
+- creates or updates a draft prerelease only
+- refuses to modify a non-draft release
+- attaches only the two macOS archives and `SHA256SUMS`
+
+It does not publish the release, create the tag, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+
+Draft GitHub Release support is not verified until a workflow run confirms the draft release remains draft, prerelease, and correctly attached.
+
 ## Release Notes Requirements
 
 The first downloadable release notes must state:
@@ -204,7 +221,7 @@ The first downloadable developer preview does not include:
 
 ## Validation Requirements
 
-The future artifact workflow must verify:
+Current and future artifact workflows must verify:
 
 - `python3 scripts/verify.py` passes
 - release validation gate or successor gate passes
@@ -217,7 +234,7 @@ The future artifact workflow must verify:
 - release notes include required warnings
 - artifacts and logs contain no secrets
 
-Do not implement these checks in this task.
+The Stage 1 macOS draft workflows implement the checks that apply to the current archive set. Later platform workflows must preserve the same release boundary.
 
 ## Rationale
 
@@ -227,24 +244,19 @@ It keeps `v0.4.0` closed and source-only.
 
 It avoids pulling installer, signing, notarization, and auto-update work into the first artifact pass.
 
-It gives the next implementation task enough detail to create a draft build workflow without guessing.
+It gave implementation tasks enough detail to create the draft artifact and draft GitHub Release workflows without guessing.
 
 ## Open Follow-Up Decisions
 
-- Can the desktop app and gateway binary be bundled cleanly in one archive per platform?
 - Which exact macOS app bundle layout should be used inside the archive?
-- Should Stage 1 include both macOS architectures in the first workflow pass or one at a time?
 - Should checksum manifests be signed in `v0.4.1` or a later version?
 - What validation evidence should be attached to the draft GitHub Release?
 
 ## Next Implementation Tasks
 
-1. `ci(release): Strip or remap draft binary source paths`
-2. `test(release): Validate artifact naming and checksum generation`
-3. `ci(release): Add draft GitHub Release workflow`
-4. `test(release): Verify draft GitHub Release`
-5. `docs(release): Draft v0.4.1 developer-preview release notes`
-6. `test(release): Verify developer download and portable launch`
-7. `chore(release): Publish first unsigned developer-preview build`
+1. `test(release): Verify draft GitHub Release`
+2. `docs(release): Draft v0.4.1 developer-preview release notes`
+3. `test(release): Verify developer download and portable launch`
+4. `chore(release): Publish first unsigned developer-preview build`
 
 Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

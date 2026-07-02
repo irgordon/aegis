@@ -28,7 +28,7 @@ The draft artifact workflow is on `origin/main`. Manual workflow reviews produce
 
 The environment-coupling audit found a release-blocking desktop artifact issue: live evidence resolved the policy bundle through a GitHub runner source path embedded at build time. Source changes now prefer an artifact-relative bundled policy bundle. Artifact-level verification confirmed the blocker is resolved in the rerun artifacts.
 
-Source and workflow changes now reduce release binary source path leakage. A new artifact-level workflow review should verify DA-ECA-002 before GitHub Release publishing work begins.
+Artifact-level workflow review confirms release binary path remapping is resolved for runtime portability. One Tauri-generated desktop context string remains as deferred release hygiene.
 
 Phase 5 asks:
 
@@ -53,7 +53,7 @@ If no box is checked, defer the work until Phase 6 or later.
 | Task | Status |
 | --- | --- |
 | Strip or remap source paths in developer-preview binaries | complete |
-| Verify release binary source path reduction in workflow artifacts | planned |
+| Verify release binary source path reduction in workflow artifacts | complete |
 | Validate artifact naming and checksum generation | planned |
 | Add draft GitHub Release workflow | planned |
 | Verify draft GitHub Release | planned |
@@ -75,6 +75,7 @@ Completed inputs for Phase 5:
 - combined `SHA256SUMS` manifest
 - artifact-level checksum verification
 - release binary source path remapping and debuginfo stripping
+- artifact-level path-remapping verification
 
 Deferred from Phase 5:
 
@@ -296,7 +297,7 @@ Status: active.
 | Task | Status |
 | --- | --- |
 | Strip or remap source paths in developer-preview binaries | complete |
-| Verify release binary source path reduction in workflow artifacts | planned |
+| Verify release binary source path reduction in workflow artifacts | complete |
 | Validate artifact naming and checksum generation | planned |
 | Add draft GitHub Release workflow | planned |
 | Verify draft GitHub Release | planned |

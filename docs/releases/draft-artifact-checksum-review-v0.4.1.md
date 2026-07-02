@@ -90,7 +90,7 @@ No extracted archive contained:
 
 No maintainer-local path, private key, GitHub token, API key, or committed secret was found in extracted files.
 
-The desktop binaries still contain GitHub runner source paths and the source-tree development fallback string. This remains DA-ECA-002. It does not reopen DA-ECA-001 because the artifacts include `policy-bundles/local-dev`, and the desktop resolver prefers the artifact-relative policy bundle.
+A later path-remapping review confirmed the release desktop binaries no longer contain `CARGO_MANIFEST_DIR` or the source-tree development fallback string. DA-ECA-002 is resolved for runtime portability with residual Tauri-generated desktop context metadata deferred.
 
 The produced binaries have the expected architectures:
 
@@ -119,7 +119,7 @@ Verified:
 | --- | --- | --- |
 | Combined `SHA256SUMS` | Resolved | Artifact evidence confirms one combined manifest covers both macOS draft archives and verifies successfully. |
 | DA-ECA-001 | Resolved | The bundled policy bundle remains present, and artifact-relative policy resolution remains intact. |
-| DA-ECA-002 | Deferred | Runner/source debug paths remain in binaries. They do not appear to control runtime policy bundle resolution. |
+| DA-ECA-002 | Resolved for runtime portability; residual metadata deferred | Workflow run `28607528253` confirms no runtime-relevant source path leakage remains. One Tauri-generated desktop context string remains as release hygiene. |
 | DA-ECA-003 | Resolved | Artifact README and content manifest remain present in both archives. |
 
 ## Recommendation
@@ -132,5 +132,5 @@ This does not make `v0.4.1` published or release-ready. GitHub Release publishin
 
 ## Required Follow-Up
 
-1. Strip or remap source/debug paths where practical.
+1. Keep residual Tauri-generated source metadata tracked as release hygiene.
 2. Prepare publishing work only in a separate approved task.

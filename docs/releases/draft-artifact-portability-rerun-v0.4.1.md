@@ -10,9 +10,9 @@ The new macOS arm64 and macOS x64 draft artifacts include the local development 
 
 DA-ECA-001 is resolved at the artifact level. The desktop health-check evidence path no longer requires the GitHub runner source checkout as the primary policy bundle location.
 
-One artifact portability follow-up was implemented after this review and still needs a fresh artifact-level check before publishing work:
+One artifact portability follow-up was verified after this review:
 
-- Verify the new release path-remapping build output in workflow artifacts.
+- The new release path-remapping build output was checked in workflow artifacts. See `docs/releases/draft-artifact-path-remap-review-v0.4.1.md`.
 
 These workflow artifacts are inspection evidence only. They are not GitHub Release assets.
 
@@ -105,7 +105,7 @@ The combined-checksum issue was verified in a later workflow run. See `docs/rele
 
 No maintainer-local path, private key, token value, API key, or committed secret was found.
 
-The desktop binaries still contain GitHub runner source paths and `../examples/policy-bundles/local-dev` strings. These now appear as debug/build metadata and the development fallback path, not as the primary artifact policy bundle path.
+The desktop binaries in this earlier run still contained GitHub runner source paths and `../examples/policy-bundles/local-dev` strings. A later path-remapping review confirmed the source-tree fallback string is absent from release desktop binaries built at commit `b8213b4`.
 
 The gateway binaries did not show policy bundle path markers.
 
@@ -152,7 +152,7 @@ Verified:
 | Issue | Status | Notes |
 | --- | --- | --- |
 | DA-ECA-001 | Resolved | Artifact evidence confirms the policy bundle is packaged and preferred through artifact-relative resolution. |
-| DA-ECA-002 | Pending verification | Source and workflow fixes now remove the desktop source fallback from release builds and enable draft release path remapping. A new workflow artifact audit must verify the result. |
+| DA-ECA-002 | Resolved for runtime portability; residual metadata deferred | Workflow run `28607528253` confirms the source-tree policy fallback is absent from release desktop binaries. One Tauri-generated desktop context string remains as release hygiene. |
 | DA-ECA-003 | Resolved | Artifact README and content manifest now state that the bundled policy bundle is included. |
 | Combined `SHA256SUMS` | Resolved | A later artifact run verified one combined manifest covering both macOS draft archives. |
 
@@ -160,11 +160,9 @@ Verified:
 
 PASS WITH FIXES.
 
-The source-path runtime blocker is resolved. Do not start GitHub Release publishing until the remaining release-facing follow-up is verified or explicitly accepted:
-
-- verify source/debug path remapping in new workflow artifacts
+The source-path runtime blocker is resolved. A later workflow artifact audit verified source/debug path remapping for runtime portability.
 
 ## Required Follow-Up
 
-1. Re-run artifact review before promoting workflow artifacts into GitHub Release assets.
-2. Confirm DA-ECA-002 status from the new workflow artifacts.
+1. Keep residual Tauri-generated source metadata tracked as release hygiene.
+2. Continue GitHub Release publishing only in a separate approved task.

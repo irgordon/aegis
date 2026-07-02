@@ -16,7 +16,7 @@ This failure does not mean a GitHub Release was published. It means the current 
 
 Post-audit fix status: source changes now prefer an artifact-relative bundled policy bundle and stage the local development policy bundle into draft artifacts. The artifact-level re-run in `docs/releases/draft-artifact-portability-rerun-v0.4.1.md` confirms DA-ECA-001 is resolved.
 
-DA-ECA-002 fix status: source and workflow changes now keep the source-tree policy fallback out of release desktop builds and configure draft release builds with Rust path remapping plus debuginfo stripping. Local verification shows the gateway binary has no scanned local path markers and the desktop binary no longer contains `CARGO_MANIFEST_DIR` or `../examples/policy-bundles/local-dev`. One Tauri-generated desktop context string still contains the local `src-tauri` manifest path. Artifact-level verification from a new workflow run is still required before closing DA-ECA-002.
+DA-ECA-002 fix status: source and workflow changes now keep the source-tree policy fallback out of release desktop builds and configure draft release builds with Rust path remapping plus debuginfo stripping. Artifact-level verification in `docs/releases/draft-artifact-path-remap-review-v0.4.1.md` confirms the gateway binaries have no scanned high-risk path markers and the desktop binaries no longer contain `CARGO_MANIFEST_DIR` or `../examples/policy-bundles/local-dev`. One Tauri-generated desktop context string still contains `/Users/runner/work/aegis/aegis/src-tauri`. That residual metadata is deferred release hygiene, not a runtime portability blocker.
 
 ## Artifact Source
 
@@ -164,7 +164,7 @@ The checked-in artifact README gives the correct release warnings:
 - archive, not installer
 - checksum should be validated
 
-Before this audit, the artifact README did not state that the archive is binary output only and does not include policy bundles or request fixtures. The checked-in artifact README used for future draft artifacts now clarifies that limitation.
+Before this audit, the artifact README did not clearly state what runtime material was inside the archive. The checked-in artifact README used for later draft artifacts now identifies the bundled local development policy bundle and keeps request fixtures out of the archive.
 
 Existing distribution documents still correctly state:
 
@@ -175,7 +175,7 @@ Existing distribution documents still correctly state:
 - no public downloads exist
 - no installers exist
 - no signing or notarization exists
-- the combined `SHA256SUMS` follow-up is implemented in workflow source and pending artifact-level verification
+- the combined `SHA256SUMS` manifest is verified in workflow artifacts
 
 After this audit, the checked-in artifact README and draft workflow were updated to include the local development policy bundle needed for fixed health-check evidence. The inspected workflow run did not contain that fix.
 
@@ -229,7 +229,7 @@ Use a release build configuration that strips or remaps source paths in binaries
 
 Fix status:
 
-Implemented in source and workflow configuration. Release desktop builds now omit the source-tree development fallback. The draft artifact workflow also sets release-only path remapping and strips debuginfo before building the gateway and desktop binaries. Local verification materially reduced path leakage, but DA-ECA-002 remains pending artifact-level verification from a new workflow run.
+Resolved for runtime portability. Workflow run `28607528253` confirms the gateway binaries have no scanned high-risk path markers. The desktop binaries no longer contain `CARGO_MANIFEST_DIR`, `../examples/policy-bundles/local-dev`, or `examples/policy-bundles/local-dev`. One Tauri-generated desktop context string still contains `/Users/runner/work/aegis/aegis/src-tauri`; this is tracked as residual release hygiene, not a runtime policy dependency.
 
 ### DA-ECA-003
 
@@ -242,7 +242,7 @@ Location:
 
 Evidence:
 
-The inspected archive README did not state that the archive contains binary output only and does not include policy bundles or request fixtures.
+The inspected archive README did not state clearly whether the archive contained runtime policy material or request fixtures.
 
 Status:
 
@@ -254,27 +254,33 @@ Operators could mistake the draft archive for a self-contained runnable package.
 
 Recommended fix:
 
-Keep the artifact README explicit that these are inspection artifacts and do not include policy bundles, request fixtures, installers, app bundle packaging, or production configuration. This repository wording has been clarified for future draft artifact runs.
+Keep the artifact README explicit that these are inspection artifacts with a bundled local development policy bundle, no request fixtures, no installers, no signing, and no production configuration. This repository wording has been clarified for future draft artifact runs.
 
 ## Classification
 
-Environment-coupled artifact.
+Original audit classification: environment-coupled artifact.
 
-The archive contents are clean and inspectable, but the desktop binary embeds a build-environment source path that is used to find policy bundle files at runtime.
+Current follow-up classification: portable for runtime policy bundle resolution with residual toolchain metadata deferred.
+
+The original inspected artifacts depended on a build-environment source path for live desktop evidence. Later artifacts include the required `policy-bundles/local-dev` bundle and no longer contain the source-tree policy fallback in release desktop binaries.
 
 ## Required Fixes Before Publishing
 
-Before any draft GitHub Release publishing task:
+The original runtime portability blockers have follow-up artifact evidence:
 
-1. Re-run the draft artifact workflow and verify the desktop binary uses the bundled policy bundle path.
-2. Confirm the staged `policy-bundles/local-dev` directory contains only runtime policy verification files.
-3. Verify the implemented combined `SHA256SUMS` manifest in new workflow artifacts.
-4. Re-run artifact inspection and confirm the source path remapping result for DA-ECA-002.
+1. The desktop binary uses the bundled policy bundle path.
+2. The staged `policy-bundles/local-dev` directory contains only runtime policy verification files.
+3. The combined `SHA256SUMS` manifest verifies in workflow artifacts.
+4. DA-ECA-002 is resolved for runtime portability.
+
+Residual Tauri-generated source metadata remains deferred release hygiene and should not be described as perfect binary cleanliness.
 
 ## Recommendation
 
-FAIL.
+Original recommendation: FAIL.
 
 The release boundary still held. No release was published and no public assets were created.
 
-The artifact portability boundary did not hold. The desktop artifact depends on build-environment path state for live evidence, so it is not ready for GitHub Release publishing.
+Current follow-up recommendation: PASS for runtime portability.
+
+The artifact portability boundary now holds for the fixed health-check evidence path. GitHub Release publishing, public release assets, tags, signing, notarization, installers, and auto-update remain separate future work.

@@ -237,11 +237,11 @@ Recommended sequence:
 | Version | Distribution posture |
 | --- | --- |
 | `v0.4.0` | Source-only local release. Complete. |
-| `v0.4.1` | Selected first packaging-only developer-preview target. |
-| `v0.5.0` | First downloadable cross-platform developer-preview target only if maintainers reassign the next milestone from recovery to distribution. |
+| `v0.4.1` | Selected first downloadable developer-preview target and active Phase 5 distribution milestone. |
+| `v0.5.0` | Recovery and replay execution after developer distribution no longer blocks evaluation. |
 | Later | Signed, notarized, installer-based, and broader user-facing artifacts. |
 
-Because `docs/PHASEMAP.md` currently assigns `v0.5.0` to recovery and replay execution, the first downloadable artifact target is `v0.4.1` unless maintainers deliberately rebaseline the phasemap.
+Phase 5 now focuses on developer distribution. The first downloadable artifact target remains `v0.4.1`.
 
 ## Open Decisions
 

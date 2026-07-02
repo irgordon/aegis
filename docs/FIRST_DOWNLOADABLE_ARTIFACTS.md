@@ -35,7 +35,7 @@ Rationale:
 - `v0.4.0` is complete and must not be expanded.
 - The first downloadable build is packaging and distribution work, not a major runtime capability.
 - A `v0.4.1` developer preview preserves the `v0.4.0` baseline while making AEGIS easier to try.
-- `v0.5.0` should remain available for larger capability work unless maintainers deliberately rebaseline the phasemap.
+- Phase 5 now uses `v0.4.1` as the first developer distribution milestone.
 
 ## Target Platforms
 

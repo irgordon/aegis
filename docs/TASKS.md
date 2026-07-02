@@ -18,29 +18,35 @@ Task status values are bounded:
 
 No other status values should be used unless this document is updated.
 
-## Active Post-v0.4.0 Work
+## Active Phase 5 Work: Developer Distribution
 
 `v0.4.0` is complete, tagged, and pushed as a local-only source release.
 
-Current work plans and validates the next distribution step without changing runtime behavior, UI behavior, public release assets, or release publishing.
+Current work delivers the first downloadable developer-preview release without changing runtime behavior, UI behavior, gateway authority, or governance boundaries.
 
 The draft artifact workflow is on `origin/main`. Manual workflow reviews produced inspectable macOS workflow artifacts. The combined `SHA256SUMS` manifest now covers both macOS draft archives and verifies successfully in workflow artifacts.
 
 The environment-coupling audit found a release-blocking desktop artifact issue: live evidence resolved the policy bundle through a GitHub runner source path embedded at build time. Source changes now prefer an artifact-relative bundled policy bundle. Artifact-level verification confirmed the blocker is resolved in the rerun artifacts.
 
-Every new task after `v0.4.0` should identify whether it improves operator usability, removes a release blocker, improves release reliability, or reduces release-critical technical debt.
+Phase 5 asks:
 
-Tasks that satisfy none should be deferred.
+```text
+How can another developer download, verify, launch, and evaluate AEGIS without needing the maintainer's machine or source checkout?
+```
+
+Every new Phase 5 task should identify whether it completes a distribution capability, improves developer usability, removes a distribution blocker, improves artifact quality, or reduces release engineering debt.
+
+Tasks that satisfy none should be deferred until Phase 6 or later.
 
 Release impact:
 
-- [ ] Completes a required release capability
-- [ ] Improves operator usability
-- [ ] Removes a release blocker
-- [ ] Improves reliability of an existing capability
-- [ ] Reduces release-critical technical debt
+- [ ] Completes a distribution capability
+- [ ] Improves developer usability
+- [ ] Removes a distribution blocker
+- [ ] Improves artifact quality
+- [ ] Reduces release engineering debt
 
-If no box is checked, defer the work until after `v0.4.0`.
+If no box is checked, defer the work until Phase 6 or later.
 
 | Task | Status |
 | --- | --- |
@@ -78,21 +84,27 @@ If no box is checked, defer the work until after `v0.4.0`.
 | Consolidate draft artifact checksum manifest | complete |
 | Rerun draft artifact workflow and verify combined checksum manifest | complete |
 | Validate artifact naming and checksum generation | planned |
+| Add draft GitHub Release workflow | planned |
+| Verify draft GitHub Release | planned |
+| Cross-platform artifact validation | planned |
+| Developer download verification | planned |
+| Portable launch verification | planned |
 | Draft v0.4.1 developer-preview release notes | planned |
-| Publish first unsigned developer-preview build | planned |
 | GitHub Release publishing | planned |
+| Publish first unsigned developer-preview build | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
-Deferred release distribution work:
+Deferred from Phase 5:
 
 ```text
-GitHub Release publishing, downloadable binaries, installers, packaging,
-signing, notarization, auto-update, and distribution workflow remain deferred.
+Installers, signing, notarization, auto-update, production credentials,
+replay execution, approval workflow, enterprise deployment, cloud distribution,
+plugin ecosystem, and database backends remain deferred.
 ```
 
 ## Deferred Phase Work
 
-### Phase 5: Recovery and Replay Execution
+### Phase 6: Recovery and Replay Execution
 
 | Task | Status |
 | --- | --- |
@@ -102,7 +114,7 @@ signing, notarization, auto-update, and distribution workflow remain deferred.
 | Add audit retry path | planned |
 | Add recovery execution guardrails | planned |
 
-### Phase 6: Approval and Production Credential Providers
+### Phase 7: Approval and Production Credential Providers
 
 | Task | Status |
 | --- | --- |
@@ -111,7 +123,7 @@ signing, notarization, auto-update, and distribution workflow remain deferred.
 | Add production credential provider boundary | planned |
 | Add provider compatibility checks | planned |
 
-### Phase 7: Platform and Production Hardening
+### Phase 8: Platform and Production Hardening
 
 | Task | Status |
 | --- | --- |
@@ -248,7 +260,7 @@ Status: complete.
 
 Objective: render backend evidence in a non-authoritative Tauri plus Slint desktop operator surface.
 
-Status: started.
+Status: complete for `v0.4.0`.
 
 | Task | Status |
 | --- | --- |
@@ -281,13 +293,28 @@ Status: started.
 | Review draft artifact workflow run | complete |
 | Consolidate draft artifact checksum manifest | complete |
 | Rerun draft artifact workflow and verify combined checksum manifest | complete |
-| Validate artifact naming and checksum generation | planned |
-| Draft v0.4.1 developer-preview release notes | planned |
-| Publish first unsigned developer-preview build | planned |
-| GitHub Release publishing | planned |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
 
-## Phase 5: Recovery and Replay Execution
+## Phase 5: Developer Distribution
+
+Objective: deliver the first downloadable developer-preview release while preserving the governance and security boundaries established by earlier phases.
+
+Status: active.
+
+| Task | Status |
+| --- | --- |
+| Strip or remap source paths in developer-preview binaries | planned |
+| Validate artifact naming and checksum generation | planned |
+| Add draft GitHub Release workflow | planned |
+| Verify draft GitHub Release | planned |
+| Cross-platform artifact validation | planned |
+| Developer download verification | planned |
+| Portable launch verification | planned |
+| Draft v0.4.1 developer-preview release notes | planned |
+| GitHub Release publishing | planned |
+| Publish first unsigned developer-preview build | planned |
+
+## Phase 6: Recovery and Replay Execution
 
 Objective: add constrained recovery and replay behavior after read-only inspection and planning.
 
@@ -299,7 +326,7 @@ Objective: add constrained recovery and replay behavior after read-only inspecti
 | Add audit retry path | planned |
 | Add recovery execution guardrails | planned |
 
-## Phase 6: Approval and Production Credential Providers
+## Phase 7: Approval and Production Credential Providers
 
 Objective: add human approval workflow and production credential provider boundaries.
 
@@ -310,7 +337,7 @@ Objective: add human approval workflow and production credential provider bounda
 | Add production credential provider boundary | planned |
 | Add provider compatibility checks | planned |
 
-## Phase 7: Platform and Production Hardening
+## Phase 8: Platform and Production Hardening
 
 Objective: prepare AEGIS for production-oriented evaluation.
 

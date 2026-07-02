@@ -26,10 +26,11 @@ A version is valid only when its documented exit criteria are satisfied.
 | 2 | v0.2.0 | Local Gateway MVP | Complete | Prove local governed request-to-response behavior. | None. | None. |
 | 3 | v0.3.0 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
 | 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
-| 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | Draft artifact workflow validation. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
-| 5 | v0.5.0 | Recovery and Replay Execution | Not started | Add constrained recovery and replay behavior after read-only inspection and planning. | None. | Approval workflow and production credential providers. |
-| 6 | v0.6.0 | Approval and Production Credential Providers | Not started | Add human approval workflow and real credential provider boundaries. | None. | Platform and production hardening. |
-| 7 | v0.7.0 | Platform and Production Hardening | Not started | Add service, deployment, observability, extension, security, release, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
+| 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | None. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
+| 5 | v0.4.1 | Developer Distribution | Active | Deliver the first downloadable developer-preview artifacts without requiring the maintainer machine or source checkout. | Strip source paths, add draft GitHub Release workflow, verify download and launch behavior. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
+| 6 | v0.5.0 | Recovery and Replay Execution | Not started | Add constrained recovery and replay behavior after read-only inspection and planning. | None. | Approval workflow and production credential providers. |
+| 7 | v0.6.0 | Approval and Production Credential Providers | Not started | Add human approval workflow and real credential provider boundaries. | None. | Platform and production hardening. |
+| 8 | v0.7.0 | Platform and Production Hardening | Not started | Add service, deployment, observability, extension, security, release, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
 
 ## Current Gate Summary
 
@@ -37,7 +38,8 @@ A version is valid only when its documented exit criteria are satisfied.
 | --- | --- | --- |
 | v0.3.0 | Phase 2 local Gateway MVP complete. | Local built-in wrapper execution, authorization, credential boundaries, lifecycle, audit, state, recovery inspection, and recovery planning are validated. |
 | v0.4.0 | UI-ready backend evidence exists, local gateway execution works, and Tauri plus Slint direction is documented. | Minimum usable local release checklist passes; the UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. Complete, tagged, and pushed. |
-| v0.5.0 | Recovery inspection and planning evidence exists. | Replay and recovery execution are constrained, auditable, and fail closed. |
+| v0.4.1 | v0.4.0 is complete, distribution targets are selected, and draft artifacts are verified as workflow artifacts. | A developer can download, verify, extract, launch, and evaluate AEGIS without the maintainer machine or a source checkout. |
+| v0.5.0 | Recovery inspection and planning evidence exists, and developer distribution no longer blocks evaluation. | Replay and recovery execution are constrained, auditable, and fail closed. |
 | v0.6.0 | Local execution and recovery boundaries are stable. | Approval and production credential providers are scoped, attributable, secret-safe, and fail closed. |
 | v0.7.0 | Core runtime, UI, recovery, approval, and credential provider boundaries are stable. | Platform and production controls are tested, documented, and reproducible. |
 
@@ -247,7 +249,7 @@ Complete for local-only `v0.4.0`.
 Plan a safe path from source-only local release to downloadable developer-preview artifacts.
 
 ### Status
-Draft artifact workflow added.
+Complete as Phase 5 input.
 
 ### Required Planning Outputs
 - release distribution plan
@@ -272,6 +274,52 @@ Draft artifact workflow added.
 - first artifact format is archive-based, not installer-based
 - draft GitHub Release publishing mode is selected for future implementation
 - manual draft artifact workflow builds GitHub Actions workflow artifacts only
+
+## v0.4.1: Developer Distribution
+
+### Purpose
+Deliver the first downloadable developer-preview artifacts.
+
+This milestone should let another developer download, verify, launch, and evaluate AEGIS without the maintainer machine or a source checkout.
+
+### Status
+Active.
+
+### Required Capabilities
+- stripped or remapped debug/source build paths where practical
+- draft GitHub Release workflow
+- draft GitHub Release verification
+- cross-platform artifact validation
+- developer download verification
+- portable launch verification
+- first downloadable developer-preview release
+- clear unsigned developer-preview warnings
+- checksum verification instructions
+
+### Exit Criteria
+- AEGIS can be downloaded from GitHub
+- artifact SHA-256 checksums verify
+- desktop application launches from extracted artifact contents
+- gateway launches from extracted artifact contents
+- no local source checkout is required
+- no maintainer-specific environment is required
+- artifacts are portable, reproducible, explainable, verifiable, and disposable
+- artifacts are unsigned and clearly identified as developer previews
+- release validation remains deterministic
+- release governance remains intact
+
+### Non-Goals
+- installers
+- signing
+- notarization
+- auto-update
+- production credentials
+- replay execution
+- approval workflow
+- enterprise deployment
+- cloud distribution
+- plugin ecosystem
+- database backends
 
 ## v0.5.0: Recovery and Replay Execution
 

@@ -33,9 +33,9 @@ Phase 4 has a Tauri shell and Slint operator surface. The CLI remains a support 
 
 `v0.4.0` is complete, tagged, and pushed as a local-only, pre-alpha, source-oriented release.
 
-Post-`v0.4.0` distribution planning has begun. The first downloadable developer-preview target is `v0.4.1`, starting with macOS archives. A manual draft artifact workflow now builds inspection-only GitHub Actions workflow artifacts. The next implementation work should validate artifact naming, checksums, and release notes before any GitHub Release publishing exists.
+Post-`v0.4.0` distribution planning is complete enough to start Phase 5 implementation. The first downloadable developer-preview target is `v0.4.1`, starting with macOS archives. A manual draft artifact workflow now builds inspection-only GitHub Actions workflow artifacts with verified combined checksums. The next implementation work should remove remaining artifact portability friction, add draft GitHub Release publishing, and verify developer download and launch behavior before any public release is treated as complete.
 
-For contributors, the backlog has been reorganized around the shortest path from local execution evidence to a useful operator surface. Completed Phase 2 and Phase 3 foundation work is no longer an active task list. Active work now starts with Phase 4 evidence-first graphical rendering.
+For contributors, the backlog has been reorganized around the shortest path from a source-only local release to a downloadable developer preview. Completed Phase 2, Phase 3, and Phase 4 foundation work is no longer an active task list. Active work now starts with Phase 5 developer distribution.
 
 For engineers and architects, execution remains the primary architectural concern, but Phase 4 must keep the UI non-authoritative. The UI renders backend evidence; it does not evaluate policy, authorize execution, inject credentials, dispatch wrappers, or invent lifecycle or recovery state.
 
@@ -162,10 +162,10 @@ Phase 2 proved that AEGIS can decide and record. Phase 3 proved that AEGIS can e
 - integration tests for governed execution
 
 ### Deferred From Original Phase 3
-- replay and recovery execution move to Phase 5
-- approval workflow moves to Phase 6
-- production credential providers move to Phase 6
-- HTTP service, deployment, observability, and plugin architecture move to Phase 7
+- replay and recovery execution move to a later phase
+- approval workflow moves to a later phase
+- production credential providers move to a later phase
+- HTTP service, deployment, observability, and plugin architecture move to a later phase
 
 ### Exit Criteria
 - allowed actions execute only through wrappers
@@ -229,12 +229,12 @@ Completed `v0.4.0` foundation:
 - executable v0.4.0 release validation gate
 - v0.4.0 local-only release tag
 
-Post-`v0.4.0` sequence:
+Post-`v0.4.0` distribution planning sequence:
 
 1. Define the post-v0.4.0 distribution plan.
 2. Select the first downloadable artifact targets.
 3. Add draft artifact workflow and checksum validation only after maintainers approve implementation scope.
-4. Render audit, state, recovery inspection, and recovery plan views read-only when they satisfy release criteria.
+4. Start Phase 5 developer distribution after draft artifacts are portable and checksums verify.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions
@@ -292,12 +292,60 @@ Does this preserve v0.4.0's safety boundaries while moving AEGIS toward a valida
 
 If the answer is no, defer the work.
 
-Downloadable artifacts, signing, notarization, installers, and GitHub Release publishing remain future work until their validation path exists.
+Downloadable artifact publishing remains gated by validation. Signing, notarization, installers, and auto-update remain future work until deliberately scheduled.
 
-## Phase 5: Recovery and Replay Execution
+## Phase 5: Developer Distribution
 
 ### Objective
-Move from read-only recovery inspection and planning to constrained recovery and replay behavior.
+Deliver the first downloadable developer-preview release without weakening the governance properties established in earlier phases.
+
+The primary Phase 5 question is:
+
+```text
+How can another developer download, verify, launch, and evaluate AEGIS without needing the maintainer's machine or source checkout?
+```
+
+This phase is about distribution engineering. It is not a new governance phase.
+
+### Deliverables
+- stripped or remapped debug/source build paths where practical
+- draft GitHub Release workflow
+- draft GitHub Release verification
+- cross-platform artifact validation
+- developer download verification
+- portable launch verification
+- first downloadable developer-preview release
+- clear unsigned developer-preview warnings
+- SHA-256 checksum verification instructions
+
+### Exit Criteria
+- a developer can download AEGIS from GitHub
+- downloaded artifacts verify successfully
+- desktop application launches without a source checkout
+- gateway launches without a source checkout
+- artifacts are portable, reproducible, explainable, verifiable, and disposable
+- artifacts are unsigned and clearly identified as developer previews
+- no maintainer-specific environment is required
+- release validation remains deterministic
+- release governance remains intact
+
+### Non-Goals
+- installers
+- signing
+- notarization
+- auto-update
+- production credentials
+- replay execution
+- approval workflow
+- enterprise deployment
+- cloud distribution
+- plugin ecosystem
+- database backends
+
+## Phase 6: Recovery and Replay Execution
+
+### Objective
+Move from read-only recovery inspection and planning to constrained recovery and replay behavior after developer distribution is usable.
 
 ### Deliverables
 - replay eligibility report
@@ -313,7 +361,7 @@ Move from read-only recovery inspection and planning to constrained recovery and
 - replay and recovery evidence is recorded
 - no UI control can create recovery authority not present in backend evidence
 
-## Phase 6: Approval and Production Credential Providers
+## Phase 7: Approval and Production Credential Providers
 
 ### Objective
 Add human approval workflow and production credential provider boundaries after local execution and UI evidence paths are coherent.
@@ -331,7 +379,7 @@ Add human approval workflow and production credential provider boundaries after 
 - credential providers do not expose secrets to agents, stdout, audit logs, state logs, or UI
 - provider failures fail closed
 
-## Phase 7: Platform and Production Hardening
+## Phase 8: Platform and Production Hardening
 
 ### Objective
 Prepare AEGIS for production-oriented platform evaluation.

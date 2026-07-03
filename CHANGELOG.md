@@ -8,8 +8,9 @@ This changelog follows the Keep a Changelog structure and is governed by the AEG
 
 ### Fixed
 
-- Hardened the draft GitHub Release workflow tag dispatch guard for annotated `v0.4.1` tags.
+- Hardened the draft GitHub Release workflow source guard for annotated release tags.
 - Avoided broad tag fetching that could clobber an existing local tag during direct tag-ref workflow dispatch.
+- Recorded that live verification from the existing `v0.4.1` tag is blocked because the immutable tag contains the earlier workflow definition.
 
 ## [0.2.57] - 2026-07-03
 

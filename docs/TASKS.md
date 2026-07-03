@@ -36,7 +36,9 @@ The first draft GitHub Release exists for `v0.4.1`. It remains draft, prerelease
 
 A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
 
-The draft release tag guard now avoids broad tag fetching, resolves the annotated `v0.4.1` tag target commit, and compares that target to `HEAD`. This preserves fail-closed tag verification while supporting direct annotated-tag dispatch.
+The draft release tag guard on `main` now avoids broad tag fetching, resolves the annotated `v0.4.1` tag target commit, and compares that target to `HEAD`. This preserves fail-closed tag verification for future release tags.
+
+Live verification from the existing `v0.4.1` tag remains blocked because GitHub ran the workflow definition stored at the already-created tag. That tag still contains the older broad tag-fetch guard. Fixing that exact tag would require moving or recreating `v0.4.1`, which release rules prohibit. The hardened guard applies to future tags created after this change.
 
 Phase 5 asks:
 
@@ -65,7 +67,8 @@ If no box is checked, defer the work until Phase 6 or later.
 | Validate artifact naming and checksum generation | complete |
 | Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | complete |
-| Harden direct annotated-tag dispatch for draft release workflow | complete |
+| Harden direct annotated-tag dispatch for future draft release workflow tags | complete |
+| Verify direct tag dispatch on a tag created after guard hardening | planned |
 | Cross-platform artifact validation | planned |
 | Developer download verification | planned |
 | Portable launch verification | planned |
@@ -90,7 +93,7 @@ Completed inputs for Phase 5:
 - `v0.4.1` annotated tag
 - `v0.4.1` draft GitHub Release with expected macOS archives and `SHA256SUMS`
 - local checksum verification of draft release assets
-- hardened annotated-tag dispatch guard for the draft GitHub Release workflow
+- hardened annotated-tag dispatch guard on `main` for future draft GitHub Release workflow tags
 
 Deferred from Phase 5:
 

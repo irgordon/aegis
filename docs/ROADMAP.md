@@ -41,8 +41,11 @@ For engineers and architects, execution remains the primary architectural concer
 
 ## Phase 0: Governance Baseline
 
+### Status
+Complete.
+
 ### Objective
-Establish the repository as a documentation-driven engineering project.
+Established the repository as a documentation-driven engineering project.
 
 ### Deliverables
 - README.md
@@ -79,8 +82,11 @@ Establish the repository as a documentation-driven engineering project.
 
 ## Phase 1: Protocol and Schema Foundation
 
+### Status
+Complete.
+
 ### Objective
-Define the stable protocol contracts used by orchestrators, gateways, policy engines, wrappers, and audit systems.
+Defined the stable protocol contracts used by orchestrators, gateways, policy engines, wrappers, and audit systems.
 
 ### Deliverables
 - ToolCallRequest schema
@@ -109,7 +115,7 @@ Define the stable protocol contracts used by orchestrators, gateways, policy eng
 Complete.
 
 ### Objective
-Implement the minimum local gateway capable of receiving requests, validating schema, verifying a local policy bundle, evaluating simple local policy, returning deterministic decisions, emitting audit evidence, and optionally persisting local audit records.
+Implemented the minimum local gateway capable of receiving requests, validating schema, verifying a local policy bundle, evaluating simple local policy, returning deterministic decisions, emitting audit evidence, and optionally persisting local audit records.
 
 ### Completed Capabilities
 - Rust request and response models
@@ -141,7 +147,7 @@ Implement the minimum local gateway capable of receiving requests, validating sc
 Complete for local built-in execution foundation.
 
 ### Objective
-Execute real AI actions safely under governance.
+Implemented governed local execution under policy, authorization, credential, audit, and state boundaries.
 
 Phase 2 proved that AEGIS can decide and record. Phase 3 proved that AEGIS can execute bounded local actions without violating the architecture: wrappers enforce decisions, credentials stay out of agent hands, mutations require stronger gates, lifecycle state is explicit, and recovery inspection remains read-only.
 
@@ -186,7 +192,7 @@ Phase 2 proved that AEGIS can decide and record. Phase 3 proved that AEGIS can e
 Complete.
 
 ### Objective
-Prepare backend evidence and documentation for a graphical operator surface without giving the UI authority.
+Prepared backend evidence and documentation for a graphical operator surface without giving the UI authority.
 
 ### Completed Capabilities
 - `/docs/wiki/` knowledge base
@@ -208,7 +214,7 @@ Prepare backend evidence and documentation for a graphical operator surface with
 Complete for `v0.4.0`.
 
 ### Objective
-Render governed execution evidence in a non-authoritative graphical desktop operator surface.
+Rendered governed execution evidence in a non-authoritative graphical desktop operator surface.
 
 ### Deliverables
 - Tauri desktop shell with Slint graphical UI layer
@@ -229,12 +235,12 @@ Completed `v0.4.0` foundation:
 - executable v0.4.0 release validation gate
 - v0.4.0 local-only release tag
 
-Post-`v0.4.0` distribution planning sequence:
+Completed post-`v0.4.0` distribution planning sequence:
 
-1. Define the post-v0.4.0 distribution plan.
-2. Select the first downloadable artifact targets.
-3. Add draft artifact workflow and checksum validation only after maintainers approve implementation scope.
-4. Start Phase 5 developer distribution after draft artifacts are portable and checksums verify.
+1. Defined the post-v0.4.0 distribution plan.
+2. Selected the first downloadable artifact targets.
+3. Added the draft artifact workflow and checksum validation after maintainers approved implementation scope.
+4. Started Phase 5 developer distribution after draft artifacts were portable and checksums verified.
 
 ### Exit Criteria
 - UI displays runtime state without owning policy decisions
@@ -250,7 +256,7 @@ Post-`v0.4.0` distribution planning sequence:
 Complete for `v0.4.0`.
 
 ### Objective
-Create the smallest local-only AEGIS release that a user can build, launch, understand, and use safely.
+Created the smallest local-only AEGIS release that a user can build, launch, understand, and use safely.
 
 ### Scope
 - launch the Tauri plus Slint desktop app
@@ -292,7 +298,7 @@ Does this preserve v0.4.0's safety boundaries while moving AEGIS toward a valida
 
 If the answer is no, defer the work.
 
-Downloadable artifact publishing remains gated by validation. Signing, notarization, installers, and auto-update remain future work until deliberately scheduled.
+Downloadable artifact publishing is gated by validation for every release. Signing, notarization, installers, and auto-update remain future work until deliberately scheduled.
 
 ## Phase 5: Developer Distribution
 
@@ -308,15 +314,20 @@ How can another developer download, verify, launch, and evaluate AEGIS without n
 This phase is about distribution engineering. It is not a new governance phase.
 
 ### Deliverables
+Completed:
+
 - stripped or remapped debug/source build paths where practical
 - draft GitHub Release workflow
 - draft GitHub Release verification
-- cross-platform artifact validation
-- developer download verification
-- portable launch verification
 - first downloadable developer-preview release
 - clear unsigned developer-preview warnings
 - SHA-256 checksum verification instructions
+
+Remaining:
+
+- cross-platform artifact validation
+- developer download verification
+- portable launch verification
 
 ### Exit Criteria
 - a developer can download AEGIS from GitHub

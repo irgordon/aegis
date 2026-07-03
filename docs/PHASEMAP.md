@@ -286,15 +286,20 @@ This milestone should let another developer download, verify, launch, and evalua
 Active after publishing the first public Developer Preview.
 
 ### Required Capabilities
+Completed:
+
 - stripped or remapped debug/source build paths where practical
 - draft GitHub Release workflow
 - draft GitHub Release verification
-- cross-platform artifact validation
-- developer download verification
-- portable launch verification
 - first downloadable developer-preview release
 - clear unsigned developer-preview warnings
 - checksum verification instructions
+
+Remaining:
+
+- cross-platform artifact validation
+- developer download verification
+- portable launch verification
 
 ### Exit Criteria
 - AEGIS can be downloaded from GitHub

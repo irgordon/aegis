@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.57] - 2026-07-03
+
+### Added
+
+- Created the first draft GitHub Release for the `v0.4.1` developer preview.
+- Recorded that the draft release remains unpublished, draft-only, prerelease-only, and checksum-verified.
+
+### Changed
+
+- Updated Phase 5 task tracking with the verified draft release status and the annotated-tag dispatch follow-up.
+
 ## [0.2.56] - 2026-07-02
 
 ### Added

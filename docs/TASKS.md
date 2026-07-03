@@ -32,13 +32,13 @@ Artifact-level workflow review confirms release binary path remapping is resolve
 
 The draft GitHub Release workflow now exists. It is manual-only, requires an existing `v0.4.1` tag, requires the workflow checkout to match that tag, creates or updates a draft prerelease for maintainer review, and refuses to modify a non-draft release.
 
-The first draft GitHub Release exists for `v0.4.1`. It remains draft, prerelease, and unpublished. It contains the two macOS archives and the combined `SHA256SUMS` manifest. Local checksum verification passed.
+The first public GitHub Release exists for `v0.4.1`. It remains a prerelease Developer Preview. It contains the two macOS archives and the combined `SHA256SUMS` manifest. Local checksum verification passed before and after publication.
 
 A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
 
 The draft release tag guard on `main` now avoids broad tag fetching, resolves the annotated `v0.4.1` tag target commit, and compares that target to `HEAD`. This preserves fail-closed tag verification for future release tags.
 
-Live verification from the existing `v0.4.1` tag remains blocked because GitHub ran the workflow definition stored at the already-created tag. That tag still contains the older broad tag-fetch guard. Fixing that exact tag would require moving or recreating `v0.4.1`, which release rules prohibit. The hardened guard applies to future tags created after this change.
+Live verification from the existing `v0.4.1` tag remains blocked because GitHub ran the workflow definition stored at the already-created tag. That tag still contains the older broad tag-fetch guard. Fixing that exact tag would require moving or recreating `v0.4.1`, which release rules prohibit. This historical caveat does not affect the published Developer Preview artifacts. The hardened guard applies to future tags created after this change.
 
 Phase 5 asks:
 
@@ -72,9 +72,9 @@ If no box is checked, defer the work until Phase 6 or later.
 | Cross-platform artifact validation | planned |
 | Developer download verification | planned |
 | Portable launch verification | planned |
-| Draft v0.4.1 developer-preview release notes | planned |
-| GitHub Release publishing | planned |
-| Publish first unsigned developer-preview build | planned |
+| Draft v0.4.1 developer-preview release notes | complete |
+| GitHub Release publishing | complete |
+| Publish first unsigned developer-preview build | complete |
 
 Completed inputs for Phase 5:
 
@@ -94,6 +94,8 @@ Completed inputs for Phase 5:
 - `v0.4.1` draft GitHub Release with expected macOS archives and `SHA256SUMS`
 - local checksum verification of draft release assets
 - hardened annotated-tag dispatch guard on `main` for future draft GitHub Release workflow tags
+- published `v0.4.1` Developer Preview GitHub Release
+- post-publish checksum verification of unchanged `v0.4.1` assets
 
 Deferred from Phase 5:
 

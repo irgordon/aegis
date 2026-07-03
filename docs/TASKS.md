@@ -34,7 +34,9 @@ The draft GitHub Release workflow now exists. It is manual-only, requires an exi
 
 The first draft GitHub Release exists for `v0.4.1`. It remains draft, prerelease, and unpublished. It contains the two macOS archives and the combined `SHA256SUMS` manifest. Local checksum verification passed.
 
-A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag. A follow-up should harden direct annotated-tag dispatch before public publishing.
+A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
+
+The draft release tag guard now avoids broad tag fetching, resolves the annotated `v0.4.1` tag target commit, and compares that target to `HEAD`. This preserves fail-closed tag verification while supporting direct annotated-tag dispatch.
 
 Phase 5 asks:
 
@@ -63,7 +65,7 @@ If no box is checked, defer the work until Phase 6 or later.
 | Validate artifact naming and checksum generation | complete |
 | Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | complete |
-| Harden direct annotated-tag dispatch for draft release workflow | planned |
+| Harden direct annotated-tag dispatch for draft release workflow | complete |
 | Cross-platform artifact validation | planned |
 | Developer download verification | planned |
 | Portable launch verification | planned |
@@ -88,6 +90,7 @@ Completed inputs for Phase 5:
 - `v0.4.1` annotated tag
 - `v0.4.1` draft GitHub Release with expected macOS archives and `SHA256SUMS`
 - local checksum verification of draft release assets
+- hardened annotated-tag dispatch guard for the draft GitHub Release workflow
 
 Deferred from Phase 5:
 

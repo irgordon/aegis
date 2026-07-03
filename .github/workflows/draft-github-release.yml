@@ -36,9 +36,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          git fetch --tags origin
+          git ls-remote --exit-code --tags origin "refs/tags/${AEGIS_RELEASE_VERSION}" > /dev/null
 
-          tag_sha="$(git rev-list -n 1 "${AEGIS_RELEASE_VERSION}")"
+          if ! git show-ref --verify --quiet "refs/tags/${AEGIS_RELEASE_VERSION}"; then
+            git fetch --no-tags origin "refs/tags/${AEGIS_RELEASE_VERSION}:refs/tags/${AEGIS_RELEASE_VERSION}"
+          fi
+
+          tag_sha="$(git rev-parse "${AEGIS_RELEASE_VERSION}^{commit}")"
           head_sha="$(git rev-parse HEAD)"
 
           if [ "${head_sha}" != "${tag_sha}" ]; then
@@ -166,9 +170,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          git fetch --tags origin
+          git ls-remote --exit-code --tags origin "refs/tags/${AEGIS_RELEASE_VERSION}" > /dev/null
 
-          tag_sha="$(git rev-list -n 1 "${AEGIS_RELEASE_VERSION}")"
+          if ! git show-ref --verify --quiet "refs/tags/${AEGIS_RELEASE_VERSION}"; then
+            git fetch --no-tags origin "refs/tags/${AEGIS_RELEASE_VERSION}:refs/tags/${AEGIS_RELEASE_VERSION}"
+          fi
+
+          tag_sha="$(git rev-parse "${AEGIS_RELEASE_VERSION}^{commit}")"
           head_sha="$(git rev-parse HEAD)"
 
           if [ "${head_sha}" != "${tag_sha}" ]; then

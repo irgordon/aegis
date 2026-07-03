@@ -44,7 +44,10 @@ fn draft_github_release_workflow_requires_existing_tag() {
     let workflow = read_workflow();
     let required = [
         "Require workflow ref to match v0.4.1 tag",
-        "git rev-list -n 1 \"${AEGIS_RELEASE_VERSION}\"",
+        "git ls-remote --exit-code --tags origin \"refs/tags/${AEGIS_RELEASE_VERSION}\"",
+        "git show-ref --verify --quiet \"refs/tags/${AEGIS_RELEASE_VERSION}\"",
+        "git fetch --no-tags origin \"refs/tags/${AEGIS_RELEASE_VERSION}:refs/tags/${AEGIS_RELEASE_VERSION}\"",
+        "git rev-parse \"${AEGIS_RELEASE_VERSION}^{commit}\"",
         "git rev-parse HEAD",
         "Run this workflow with --ref ${AEGIS_RELEASE_VERSION} after the maintainer-created tag exists.",
         "Require existing v0.4.1 tag",
@@ -54,6 +57,25 @@ fn draft_github_release_workflow_requires_existing_tag() {
     ];
 
     assert_present(&workflow, &required);
+}
+
+#[test]
+fn draft_github_release_workflow_avoids_tag_clobbering() {
+    let workflow = read_workflow();
+    let required = [
+        "git show-ref --verify --quiet \"refs/tags/${AEGIS_RELEASE_VERSION}\"",
+        "git fetch --no-tags origin \"refs/tags/${AEGIS_RELEASE_VERSION}:refs/tags/${AEGIS_RELEASE_VERSION}\"",
+        "git rev-parse \"${AEGIS_RELEASE_VERSION}^{commit}\"",
+    ];
+    let blocked = [
+        "git fetch --tags origin",
+        "git fetch --force --tags",
+        "git fetch -f --tags",
+        "git fetch --prune --tags",
+    ];
+
+    assert_present(&workflow, &required);
+    assert_absent(&workflow, &blocked);
 }
 
 #[test]

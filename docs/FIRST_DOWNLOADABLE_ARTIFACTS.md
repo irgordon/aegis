@@ -2,19 +2,19 @@
 
 ## Decision Summary
 
-The first downloadable developer-preview release should be `v0.4.1`.
+The first downloadable Developer Preview release is `v0.4.1`.
 
-It should publish archive-based artifacts through a future draft GitHub Release after maintainer review.
+It publishes archive-based artifacts through a public prerelease GitHub Release.
 
-Before publishing exists, `.github/workflows/draft-artifacts.yml` builds draft macOS archive artifacts for inspection as GitHub Actions workflow artifacts only.
+Before publication, `.github/workflows/draft-artifacts.yml` built macOS archive artifacts for inspection as GitHub Actions workflow artifacts only.
 
-Stage 1 should target macOS arm64 and macOS x64.
+Stage 1 targets macOS arm64 and macOS x64.
 
 The preferred artifact scope is one archive per platform containing the desktop app and the gateway binary when practical.
 
 The archive should also include the local development policy bundle required by fixed desktop health-check evidence.
 
-The release remains pre-alpha, local-only, unsigned, and not production-ready.
+The release is public, prerelease, unsigned, not notarized, archive-based, and not production-ready.
 
 ## Baseline
 
@@ -28,7 +28,7 @@ This decision does not change `v0.4.0`.
 
 ## Target Version
 
-Decision: use `v0.4.1` for the first downloadable developer-preview artifact set.
+Decision: use `v0.4.1` for the first downloadable Developer Preview artifact set.
 
 Rationale:
 
@@ -122,7 +122,7 @@ Every downloadable artifact must have a SHA-256 checksum.
 
 All checksums must be listed in `SHA256SUMS`.
 
-`SHA256SUMS` must be published with the draft GitHub Release.
+`SHA256SUMS` must be published with the GitHub Release.
 
 Checksum generation must happen after artifact creation.
 
@@ -149,7 +149,7 @@ Combined checksum support is verified in workflow artifacts. The combined `SHA25
 
 It does not create a GitHub Release, publish release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
-The draft GitHub Release workflow now exists for maintainer review.
+The draft GitHub Release workflow exists for maintainer review before publication.
 
 It:
 
@@ -162,9 +162,9 @@ It:
 - refuses to modify a non-draft release
 - attaches only the two macOS archives and `SHA256SUMS`
 
-It does not publish the release, create the tag, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+It does not create the tag, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
-Draft GitHub Release support is not verified until a workflow run confirms the draft release remains draft, prerelease, and correctly attached.
+`v0.4.1` was published only after the draft release was verified as prerelease and correctly attached.
 
 ## Release Notes Requirements
 
@@ -176,7 +176,7 @@ The first downloadable release notes must state:
 - checksum verification steps
 - build validation summary
 - known limitations
-- pre-alpha warning
+- Developer Preview warning
 - unsigned artifact warning
 - no installer warning
 - no auto-update warning
@@ -185,10 +185,10 @@ Release notes must not claim production readiness, enterprise readiness, normal 
 
 ## User Warning Requirements
 
-Future GitHub Release text must include this warning:
+GitHub Release text must include this warning:
 
 ```text
-Developer preview. Unsigned artifacts. Local-only. Not production-ready.
+Developer Preview. Unsigned artifacts. Not notarized. Not production-ready.
 Not enterprise-hardened. No installer. No auto-update.
 Validate SHA-256 checksums before use.
 ```
@@ -197,7 +197,7 @@ Use plain language near the top of the release body.
 
 ## Deferred Items
 
-The first downloadable developer preview does not include:
+The first downloadable Developer Preview does not include:
 
 - GitHub Release auto-publishing
 - installers
@@ -250,13 +250,12 @@ It gave implementation tasks enough detail to create the draft artifact and draf
 
 - Which exact macOS app bundle layout should be used inside the archive?
 - Should checksum manifests be signed in `v0.4.1` or a later version?
-- What validation evidence should be attached to the draft GitHub Release?
+- Which validation evidence should be attached to future release notes?
 
 ## Next Implementation Tasks
 
-1. `test(release): Verify draft GitHub Release`
-2. `docs(release): Draft v0.4.1 developer-preview release notes`
-3. `test(release): Verify developer download and portable launch`
-4. `chore(release): Publish first unsigned developer-preview build`
+1. `test(release): Verify developer download and portable launch`
+2. `test(release): Validate cross-platform artifact path`
+3. `docs(release): Improve first-run Developer Preview guidance`
 
 Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

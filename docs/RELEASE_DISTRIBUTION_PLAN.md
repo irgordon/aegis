@@ -4,7 +4,9 @@
 
 This document defines the post-`v0.4.0` distribution path for AEGIS.
 
-It is a planning document. It does not publish releases, create public downloadable assets, add installers, sign artifacts, or notarize app bundles.
+It began as a planning document. The first planned public Developer Preview has now been published as `v0.4.1`.
+
+This document still does not add installers, sign artifacts, notarize app bundles, or change runtime behavior.
 
 The first concrete artifact target decision is recorded in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
 
@@ -25,15 +27,28 @@ The first concrete artifact target decision is recorded in `docs/FIRST_DOWNLOADA
 
 Do not retroactively expand `v0.4.0`.
 
+`v0.4.1` is the current public Developer Preview.
+
+`v0.4.1` is:
+
+- publicly downloadable from GitHub Releases
+- prerelease
+- unsigned
+- not notarized
+- archive-based
+- checksum-verified with `SHA256SUMS`
+- not production-ready
+- not enterprise-hardened
+
 ## Distribution Goals
 
-The next distribution step should make AEGIS easier to try without requiring a full local development setup.
+The distribution path should make AEGIS easier to try without requiring a full local development setup.
 
 Distribution should:
 
 - publish downloadable artifacts through GitHub Releases
 - preserve release validation before publishing
-- include clear pre-alpha warnings
+- include clear Developer Preview warnings
 - avoid implying production readiness
 - avoid implying enterprise support
 - avoid bypassing governance, tests, or release review
@@ -42,15 +57,13 @@ Distribution should:
 
 This plan does not implement:
 
-- GitHub Release publishing
-- release artifacts
 - cross-platform binaries
 - installers
 - packaging scripts
 - signing
 - notarization
 - auto-update
-- release workflow automation
+- release workflow automation beyond the current manual Developer Preview path
 - runtime behavior
 - UI behavior
 - schema, policy, approval, credential, wrapper, audit, state, or recovery changes
@@ -62,8 +75,8 @@ AEGIS should use staged release channels.
 | Channel | Purpose | Status |
 | --- | --- | --- |
 | Source release | Tag and source checkout only. | `v0.4.0` complete. |
-| Pre-alpha downloadable build | Unsigned downloadable developer-preview artifacts with checksums and strong warnings. | First target selected in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`. |
-| Unsigned developer preview | Early artifact channel for maintainers and technical evaluators. | Draft workflow artifacts exist for inspection only. |
+| Developer Preview download | Unsigned downloadable developer-preview artifacts with checksums and strong warnings. | `v0.4.1` published as a prerelease. |
+| Unsigned developer preview | Early artifact channel for maintainers and technical evaluators. | Public for macOS arm64 and macOS x64 through GitHub Releases. |
 | Signed/notarized release | Downloadable artifacts with platform trust controls. | Deferred. |
 | Installer-based release | Installer packages for normal user installation. | Deferred. |
 
@@ -89,7 +102,7 @@ The first selected rollout starts with macOS arm64 and macOS x64. Windows x64 an
 
 An artifact is a downloadable file attached to a release.
 
-Early pre-alpha artifacts may include:
+Early Developer Preview artifacts may include:
 
 - compressed desktop app bundles
 - compressed gateway binaries where appropriate
@@ -145,7 +158,7 @@ The checksum manifest should be attached to the GitHub Release.
 
 Future work should sign the checksum manifest before broader user-facing distribution.
 
-Do not publish unsigned binaries without clear pre-alpha warnings.
+Do not publish unsigned binaries without clear Developer Preview warnings.
 
 ## Signing and Notarization
 
@@ -155,7 +168,7 @@ Notarization is an Apple review step that lets macOS recognize an app as checked
 
 Signing and notarization are deferred unless deliberately scheduled.
 
-Unsigned artifacts may be acceptable only for an early pre-alpha developer preview if they are clearly labeled.
+Unsigned artifacts may be acceptable only for an early Developer Preview if they are clearly labeled.
 
 Signed and notarized artifacts are required before broader user-facing distribution.
 
@@ -187,7 +200,9 @@ The draft GitHub Release workflow is manually triggered from the existing `v0.4.
 
 It does not publish the release, create or move tags, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
-The draft GitHub Release workflow should be verified in a separate workflow run before any public publishing step.
+The draft GitHub Release workflow was verified before the first public publishing step.
+
+`v0.4.1` is now published as a public prerelease Developer Preview. The release contains the expected two macOS archives and one combined `SHA256SUMS` manifest.
 
 A future publishing workflow should:
 
@@ -247,24 +262,22 @@ Recommended sequence:
 | Version | Distribution posture |
 | --- | --- |
 | `v0.4.0` | Source-only local release. Complete. |
-| `v0.4.1` | Selected first downloadable developer-preview target and active Phase 5 distribution milestone. |
+| `v0.4.1` | First public downloadable Developer Preview. Published as a prerelease with macOS archives and `SHA256SUMS`. |
 | `v0.5.0` | Developer experience after downloadable evaluation works. |
 | `v0.6.0` | Production distribution after developer-preview artifacts are proven. |
 | Later | Signed, notarized, installer-based, and broader user-facing artifacts. |
 
-Phase 5 now focuses on developer distribution. The first downloadable artifact target remains `v0.4.1`.
+Phase 5 now focuses on validating and improving developer distribution after the first public Developer Preview.
 
 ## Open Decisions
 
-- Should checksum manifests be signed in `v0.4.1` or a later version?
-- What validation evidence should be reviewed before a draft release is published?
+- Should checksum manifests be signed in a later version?
 - Which later platform should follow macOS after Stage 1 is verified?
 
 ## Recommended Next Tasks
 
-1. `test(release): Verify draft GitHub Release`
-2. `docs(release): Draft v0.4.1 developer-preview release notes`
-3. `test(release): Verify developer download and portable launch`
-4. `chore(release): Publish first unsigned developer-preview build`
+1. `test(release): Verify developer download and portable launch`
+2. `test(release): Validate cross-platform artifact path`
+3. `docs(release): Improve first-run Developer Preview guidance`
 
 Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

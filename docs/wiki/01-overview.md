@@ -17,9 +17,11 @@ AEGIS exists so execution is not trusted just because an AI requested it. AEGIS 
 
 ## Current Status
 
-AEGIS is pre-alpha.
+AEGIS is a public Developer Preview.
 
 `v0.4.0` is complete, tagged, pushed, and closed as a local-only source release.
+
+`v0.4.1` is the current public prerelease. It is available from the [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) as unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
 
 The repository currently contains a local Rust gateway, a Tauri plus Slint desktop shell, governed built-in wrappers, audit and state evidence, recovery inspection, recovery planning, and an executable release validation gate.
 
@@ -27,9 +29,9 @@ It can validate structured requests, verify a local policy bundle, evaluate loca
 
 AEGIS is not ready for production use.
 
-It does not provide published binaries, installers, packaging, signing, auto-update, production deployment, HTTP service behavior, production identity providers, real external system integrations, approval workflow execution, replay execution, recovery execution, or enterprise hardening.
+It does not provide installers, signing, notarization, auto-update, production deployment, HTTP service behavior, production identity providers, real external system integrations, approval workflow execution, replay execution, recovery execution, or enterprise hardening.
 
-Post-`v0.4.0` distribution planning has started. `v0.4.1` is selected as the first planned downloadable developer-preview target, starting with macOS arm64 and macOS x64 archive artifacts. No public release assets exist yet.
+Post-`v0.4.0` distribution planning produced the first public downloadable Developer Preview in `v0.4.1`, starting with macOS arm64 and macOS x64 archive artifacts.
 
 ## What It Does Today
 
@@ -55,7 +57,6 @@ At a high level, AEGIS can:
 
 AEGIS does not yet:
 
-- publish downloadable release assets
 - provide installers or packaged apps
 - sign or notarize artifacts
 - execute arbitrary external tools

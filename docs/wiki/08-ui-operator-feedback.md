@@ -97,8 +97,8 @@ It shows:
 - one normalized error card
 - sample recovery inspection evidence
 - sample recovery planning guidance
-- pre-alpha status
-- local-only release posture
+- Developer Preview status
+- prerelease distribution posture
 - backend authority-boundary language
 
 It can render fixed live health-check evidence when available.

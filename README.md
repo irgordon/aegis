@@ -25,11 +25,13 @@ Capability without a clear execution boundary creates unnecessary risk. AEGIS ex
 
 ## What?
 
-AEGIS is a Rust execution governance gateway for AI-driven actions.
+AEGIS is a Rust execution governance gateway for AI-driven actions with a desktop operator surface and local gateway.
 
 It validates requests, verifies policy, authorizes execution, checks credential boundaries, dispatches governed wrappers, records audit evidence, and fails closed when it cannot prove an action is safe to continue.
 
-AEGIS is pre-alpha. Do not install, deploy, or rely on this repository to protect real systems yet.
+AEGIS is a public Developer Preview. The current [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) provides unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
+
+AEGIS remains a prerelease. Do not deploy it to protect production systems or treat it as enterprise-hardened.
 
 ## How?
 

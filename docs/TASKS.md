@@ -22,7 +22,7 @@ No other status values should be used unless this document is updated.
 
 `v0.4.0` is complete, tagged, and pushed as a local-only source release.
 
-Current work delivers the first downloadable developer-preview release without changing runtime behavior, UI behavior, gateway authority, or governance boundaries.
+Current work improves the first downloadable Developer Preview without changing runtime behavior, UI behavior, gateway authority, or governance boundaries.
 
 The draft artifact workflow is on `origin/main`. Manual workflow reviews produced inspectable macOS workflow artifacts. The combined `SHA256SUMS` manifest now covers both macOS draft archives and verifies successfully in workflow artifacts.
 
@@ -91,7 +91,7 @@ Completed inputs for Phase 5:
 - draft GitHub Release workflow and static boundary tests
 - draft release asset-name validation before release creation
 - `v0.4.1` annotated tag
-- `v0.4.1` draft GitHub Release with expected macOS archives and `SHA256SUMS`
+- `v0.4.1` GitHub Release with expected macOS archives and `SHA256SUMS`
 - local checksum verification of draft release assets
 - hardened annotated-tag dispatch guard on `main` for future draft GitHub Release workflow tags
 - published `v0.4.1` Developer Preview GitHub Release
@@ -310,7 +310,7 @@ Status: complete for `v0.4.0`.
 
 ## Phase 5: Developer Distribution
 
-Objective: deliver the first downloadable developer-preview release while preserving the governance and security boundaries established by earlier phases.
+Objective: improve the first downloadable Developer Preview while preserving the governance and security boundaries established by earlier phases.
 
 Status: active.
 
@@ -320,13 +320,13 @@ Status: active.
 | Verify release binary source path reduction in workflow artifacts | complete |
 | Validate artifact naming and checksum generation | complete |
 | Add draft GitHub Release workflow | complete |
-| Verify draft GitHub Release | planned |
+| Verify draft GitHub Release | complete |
 | Cross-platform artifact validation | planned |
 | Developer download verification | planned |
 | Portable launch verification | planned |
-| Draft v0.4.1 developer-preview release notes | planned |
-| GitHub Release publishing | planned |
-| Publish first unsigned developer-preview build | planned |
+| Draft v0.4.1 developer-preview release notes | complete |
+| GitHub Release publishing | complete |
+| Publish first unsigned developer-preview build | complete |
 
 ## Phase 6: Developer Experience
 

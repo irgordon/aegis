@@ -63,7 +63,7 @@ This is the main anchoring color. It should communicate structure, trust, and co
 
 `#F4D35E`
 
-Use for warning states, pending states, pre-alpha notices, attention markers, and soft highlights.
+Use for warning states, pending states, Developer Preview notices, attention markers, and soft highlights.
 
 Do not overuse it as a background color. It should guide attention, not dominate the interface.
 
@@ -131,7 +131,7 @@ Color must never be the only indicator of state.
 | Evidence state | Color guidance |
 | --- | --- |
 | Allowed / healthy / completed | Use `#0D3B66` or neutral text treatment. |
-| Warning / pending / pre-alpha | Use `#F4D35E` with clear labels. |
+| Warning / pending / Developer Preview | Use `#F4D35E` with clear labels. |
 | Recovery / planning / operator attention | Use `#EE964B` with clear labels. |
 | Denied / failed-closed / corrupted / error | Use `#F95738` with clear labels. |
 | Surface / grouping | Use `#FAF0CA` or derived light variants. |

@@ -45,7 +45,7 @@ It should not:
 - replace `docs/INVARIANTS.md`
 - behave like a changelog
 - become a development diary
-- imply published downloads, installers, signing, or production readiness before they exist
+- imply installers, signing, or production readiness before they exist
 
 ## Authoritative References
 

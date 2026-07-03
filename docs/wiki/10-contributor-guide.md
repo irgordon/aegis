@@ -77,17 +77,17 @@ cargo check --manifest-path src-tauri/Cargo.toml
 
 Do not retroactively expand it.
 
-It remains local-only, pre-alpha, source-oriented, and has no published release assets, installers, packaging, signing, notarization, or auto-update.
+It remains local-only, source-oriented, and historical. It has no published release assets, installers, packaging, signing, notarization, or auto-update.
 
-Post-`v0.4.0` distribution work targets `v0.4.1` as the first planned downloadable developer-preview release.
+`v0.4.1` is the current public Developer Preview.
 
-Initial planned platforms are macOS arm64 and macOS x64.
+It is available through the [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) as unsigned, not-notarized, archive-based macOS arm64 and macOS x64 downloads with `SHA256SUMS` verification.
 
-Draft artifacts should remain GitHub Actions workflow artifacts only until GitHub Release publishing is deliberately added.
+It is a prerelease. It is not production-ready or enterprise-hardened, and it does not include installers, signing, notarization, or auto-update.
 
 Commit `3ab2874` added the draft artifact workflow and is now on `origin/main`.
 
-The first manual workflow run passed and produced macOS workflow artifacts for inspection. Review found one follow-up before publishing work: produce one combined `SHA256SUMS` manifest for all draft archives.
+The first public Developer Preview is published. Future release work should continue to preserve checksum verification, prerelease warnings, and strict release-boundary checks.
 
 ## GitHub Workflow Scope
 

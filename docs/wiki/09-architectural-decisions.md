@@ -106,19 +106,17 @@ It has no published binaries, installers, packages, signed artifacts, notarizati
 
 Do not retroactively expand `v0.4.0`.
 
-## Decision: Distribution Starts as Draft Artifact Evidence
+## Decision: Distribution Starts as a Public Developer Preview
 
-Post-`v0.4.0` distribution work targets `v0.4.1` as the first planned downloadable developer-preview release.
+Post-`v0.4.0` distribution work produced `v0.4.1` as the first public downloadable Developer Preview.
 
-The first planned platforms are macOS arm64 and macOS x64.
+The first public platforms are macOS arm64 and macOS x64.
 
-Artifacts are planned as unsigned archive-based developer previews with `SHA256SUMS`.
+Artifacts are unsigned, not notarized, archive-based, and verified with `SHA256SUMS`.
 
-Signing, notarization, installers, auto-update, and public GitHub Release publishing remain deferred until deliberately added.
+Signing, notarization, installers, and auto-update remain deferred until deliberately added.
 
-Draft artifacts should be workflow artifacts only until GitHub Release publishing is explicitly implemented.
-
-The draft artifact workflow exists locally in commit `3ab2874`, but the push is blocked until GitHub authentication has `workflow` scope.
+Future release automation should preserve the current guardrails: no forced tags, no hidden asset replacement, and no publishing without validation.
 
 ## Decision: Abstractions Must Earn Their Place
 

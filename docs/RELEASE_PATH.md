@@ -4,6 +4,10 @@
 
 This document defines the minimum usable local release path for AEGIS.
 
+This is the historical release path for `v0.4.0`.
+
+The current public Developer Preview is `v0.4.1`, published through GitHub Releases as unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
+
 The goal is not production readiness. The goal is a small local-only release that a real user can build, launch, understand, and use safely.
 
 The minimum usable release should be small enough to ship and safe enough to explain.
@@ -248,7 +252,7 @@ The final local release task creates the annotated `v0.4.0` tag after maintainer
 5. `main` is pushed to origin.
 6. The `v0.4.0` tag is pushed to origin.
 
-GitHub Release publishing, downloadable binaries, installers, packaging, signing, notarization, auto-update, and distribution workflow remain deferred.
+For `v0.4.0`, GitHub Release publishing, downloadable binaries, installers, packaging, signing, notarization, auto-update, and distribution workflow remain deferred.
 
 ## Post-v0.4.0 Distribution Planning
 
@@ -258,8 +262,10 @@ The plan keeps `v0.4.0` source-only and defines a staged path toward GitHub Rele
 
 The first downloadable artifact targets are selected in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
 
-A manual draft artifact workflow now builds macOS archive-style artifacts for inspection as GitHub Actions workflow artifacts only.
+That first public Developer Preview is now published as `v0.4.1`.
 
-It does not publish a GitHub Release, create release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+The manual draft artifact workflow builds macOS archive-style artifacts for inspection as GitHub Actions workflow artifacts only.
 
-Public downloadable release artifacts remain future work.
+That workflow did not publish a GitHub Release, create release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+
+Public downloadable release artifacts exist for `v0.4.1` as a prerelease Developer Preview. Signing, notarization, installers, and auto-update remain future work.

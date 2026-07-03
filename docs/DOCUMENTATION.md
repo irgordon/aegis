@@ -244,7 +244,7 @@ The UI is for operator feedback and intent capture, not for policy authority.
 
 `README.md` is the stable public entry point for AEGIS.
 
-It should explain the project identity, plain-language purpose, pre-alpha status, high-level execution model, and where to read next.
+It should explain the project identity, plain-language purpose, current release maturity, high-level execution model, and where to read next.
 
 Do not use `README.md` as an implementation diary, roadmap summary, feature list, installation guide, or local usage walkthrough.
 

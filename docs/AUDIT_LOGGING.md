@@ -124,7 +124,7 @@ The Phase 2 local gateway can save audit records to a local file.
 
 For a new reader: this means AEGIS can now keep a local record of why the gateway allowed, denied, or paused a request. These records help explain what happened after the process exits.
 
-This is still pre-alpha. It is not production audit infrastructure.
+This is Developer Preview maturity. It is not production audit infrastructure.
 
 ## JSONL Format
 

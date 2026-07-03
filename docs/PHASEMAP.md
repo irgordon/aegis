@@ -27,7 +27,7 @@ A version is valid only when its documented exit criteria are satisfied.
 | 3 | v0.3.0 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
 | 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
 | 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | None. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
-| 5 | v0.4.1 | Developer Distribution | Active | Deliver the first downloadable developer-preview artifacts without requiring the maintainer machine or source checkout. | Strip source paths, add draft GitHub Release workflow, verify download and launch behavior. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
+| 5 | v0.4.1 | Developer Distribution | Active | Deliver and verify the first downloadable Developer Preview without requiring the maintainer machine or source checkout. | Verify download and launch behavior, then expand platform validation. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
 | 6 | v0.5.0 | Developer Experience | Not started | Improve evaluation, launch, troubleshooting, and read-only evidence review after downloads work. | None. | Replay execution, approval workflow, production credentials, and production distribution. |
 | 7 | v0.6.0 | Production Distribution | Not started | Add signed or clearly bounded production-style distribution after developer-preview artifacts are proven. | None. | Runtime expansion and platform hardening. |
 | 8 | v0.7.0 | Runtime and Platform Expansion | Not started | Add recovery, approval, credential provider, service, deployment, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
@@ -278,12 +278,12 @@ Complete as Phase 5 input.
 ## v0.4.1: Developer Distribution
 
 ### Purpose
-Deliver the first downloadable developer-preview artifacts.
+Deliver and verify the first downloadable Developer Preview.
 
 This milestone should let another developer download, verify, launch, and evaluate AEGIS without the maintainer machine or a source checkout.
 
 ### Status
-Active.
+Active after publishing the first public Developer Preview.
 
 ### Required Capabilities
 - stripped or remapped debug/source build paths where practical

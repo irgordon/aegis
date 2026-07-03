@@ -33,9 +33,9 @@ Phase 4 has a Tauri shell and Slint operator surface. The CLI remains a support 
 
 `v0.4.0` is complete, tagged, and pushed as a local-only, pre-alpha, source-oriented release.
 
-Post-`v0.4.0` distribution planning is complete enough to start Phase 5 implementation. The first downloadable developer-preview target is `v0.4.1`, starting with macOS archives. A manual draft artifact workflow now builds inspection-only GitHub Actions workflow artifacts with verified combined checksums. The next implementation work should remove remaining artifact portability friction, add draft GitHub Release publishing, and verify developer download and launch behavior before any public release is treated as complete.
+Post-`v0.4.0` distribution work produced the first public downloadable Developer Preview in `v0.4.1`, starting with unsigned, not-notarized macOS archives and a combined `SHA256SUMS` manifest. The next implementation work should verify developer download and portable launch behavior, then expand validation toward later platforms.
 
-For contributors, the backlog has been reorganized around the shortest path from a source-only local release to a downloadable developer preview. Completed Phase 2, Phase 3, and Phase 4 foundation work is no longer an active task list. Active work now starts with Phase 5 developer distribution.
+For contributors, the backlog has been reorganized around improving the public Developer Preview. Completed Phase 2, Phase 3, and Phase 4 foundation work is no longer an active task list. Active work remains in Phase 5 developer distribution.
 
 For engineers and architects, execution remains the primary architectural concern. The UI remains non-authoritative. It renders backend evidence; it does not evaluate policy, authorize execution, inject credentials, dispatch wrappers, or invent lifecycle or recovery state.
 

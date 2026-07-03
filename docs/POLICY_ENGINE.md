@@ -86,7 +86,7 @@ Unknown or unclassified tools deny by default.
 
 The Phase 2 local gateway can now read a verified local development policy bundle and use it to make bounded decisions.
 
-This is still pre-alpha. It is not production policy engine maturity.
+This is Developer Preview maturity. It is not production policy engine maturity.
 
 For the local development bundle:
 

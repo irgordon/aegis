@@ -78,7 +78,7 @@ It shows:
 - sample recovery inspection card
 - sample recovery planning card
 - the backend authority boundary
-- pre-alpha status
+- Developer Preview status
 
 The sample fixture lives at `src-tauri/ui/sample_evidence.json`.
 

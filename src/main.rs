@@ -34,6 +34,10 @@ fn run() -> i32 {
 
 fn try_run() -> RuntimeResult<i32> {
     match parse_cli_mode()? {
+        LocalCliMode::Help => {
+            print_help();
+            Ok(0)
+        }
         LocalCliMode::InspectState(path) => inspect_state_log(&path),
         LocalCliMode::PlanRecovery(path) => plan_recovery(&path),
         LocalCliMode::Run(args) => run_gateway(args),
@@ -98,6 +102,7 @@ fn plan_recovery(path: &Path) -> RuntimeResult<i32> {
 }
 
 enum LocalCliMode {
+    Help,
     Run(LocalRuntimeArgs),
     InspectState(PathBuf),
     PlanRecovery(PathBuf),
@@ -114,6 +119,10 @@ struct LocalRuntimeArgs {
 fn parse_cli_mode() -> RuntimeResult<LocalCliMode> {
     let mut args = env::args().skip(1).peekable();
 
+    if matches!(args.peek().map(String::as_str), Some("--help" | "-h")) {
+        return parse_help_args(args);
+    }
+
     if matches!(args.peek().map(String::as_str), Some("--inspect-state")) {
         return parse_inspection_args(args);
     }
@@ -123,6 +132,16 @@ fn parse_cli_mode() -> RuntimeResult<LocalCliMode> {
     }
 
     parse_runtime_args(args).map(LocalCliMode::Run)
+}
+
+fn parse_help_args(mut args: impl Iterator<Item = String>) -> RuntimeResult<LocalCliMode> {
+    let _flag = args.next();
+
+    if args.next().is_some() {
+        return Err(runtime_usage_error());
+    }
+
+    Ok(LocalCliMode::Help)
 }
 
 fn parse_inspection_args(mut args: impl Iterator<Item = String>) -> RuntimeResult<LocalCliMode> {
@@ -341,6 +360,41 @@ fn next_path_arg(
 fn usage() -> String {
     "usage: aegis-gateway --bundle <policy-bundle-path> [--audit-log <audit-jsonl-path>] [--state-log <state-jsonl-path>] [--sandbox-dir <sandbox-path>] [request-json-path]\n       aegis-gateway --inspect-state <state-jsonl-path>\n       aegis-gateway --plan-recovery <state-jsonl-path>"
         .to_string()
+}
+
+fn print_help() {
+    println!("{}", help_text());
+}
+
+fn help_text() -> &'static str {
+    "\
+AEGIS Gateway
+A governed local execution gateway.
+
+Usage:
+  aegis-gateway [OPTIONS] <REQUEST>
+
+Common tasks:
+  Run the bundled smoke test:
+    ./bin/aegis-gateway \\
+      --bundle policy-bundles/local-dev \\
+      examples/health-check-request.json
+
+Options:
+  --bundle <policy-bundle-path>      Required policy bundle directory.
+  --audit-log <audit-jsonl-path>     Append audit JSONL output.
+  --state-log <state-jsonl-path>     Append state JSONL output.
+  --sandbox-dir <sandbox-path>       Optional sandbox directory for requests that require one.
+  --inspect-state <state-jsonl-path> Inspect state JSONL.
+  --plan-recovery <state-jsonl-path> Generate a read-only recovery plan.
+  -h, --help                         Print this help text.
+
+Developer Preview:
+  Unsigned release. Not production-ready.
+  See README.md for current limitations.
+
+Documentation:
+  README.md"
 }
 
 fn runtime_usage_error() -> Box<GatewayErrorReport> {

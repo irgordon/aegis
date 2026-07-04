@@ -77,6 +77,12 @@ Use `cd aegis-v0.4.1-macos-x64` for the Intel macOS archive.
 
 The smoke test is read-only. It uses the bundled local policy bundle and a bundled `health.check` request fixture. It demonstrates request validation, policy verification, authorization, wrapper execution, audit evidence, state evidence, and a structured response.
 
+For concise gateway help, run:
+
+```bash
+./bin/aegis-gateway --help
+```
+
 ## What It Does Today
 
 At a high level, AEGIS can:

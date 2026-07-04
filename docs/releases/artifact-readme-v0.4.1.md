@@ -64,6 +64,12 @@ cd aegis-v0.4.1-macos-x64
 ./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json
 ```
 
+For gateway help, run:
+
+```bash
+./bin/aegis-gateway --help
+```
+
 5. Review the structured output.
 
 Look for evidence that the request was validated, policy was verified, execution was authorized, the `health.check` wrapper ran, audit evidence was produced, state evidence was produced, and execution completed.

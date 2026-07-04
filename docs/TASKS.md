@@ -36,6 +36,8 @@ The first public GitHub Release exists for `v0.4.1`. It remains a prerelease Dev
 
 Generated Developer Preview archives now stage a safe `health.check` request fixture at `examples/health-check-request.json`. The artifact README documents one gateway smoke-test command that uses the bundled policy bundle and does not require a source checkout.
 
+The gateway now treats `--help` and `-h` as conventional help requests. Help output points first-time users to the bundled `health.check` smoke test and returns success instead of a structured invalid-arguments error.
+
 A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
 
 The draft release tag guard on `main` now avoids broad tag fetching, resolves the annotated `v0.4.1` tag target commit, and compares that target to `HEAD`. This preserves fail-closed tag verification for future release tags.
@@ -76,6 +78,7 @@ If no box is checked, defer the work until Phase 6 or later.
 | Portable launch verification | complete |
 | Re-run desktop first-screen validation from an active local display | planned |
 | Add artifact-only gateway smoke-test request or guidance | complete |
+| Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |
@@ -102,6 +105,7 @@ Completed inputs for Phase 5:
 - post-publish checksum verification of unchanged `v0.4.1` assets
 - developer download and portable launch review for public `v0.4.1` assets
 - artifact-only `health.check` gateway smoke-test fixture and artifact README guidance
+- conventional gateway `--help` and `-h` output for the bundled smoke test
 
 Deferred from Phase 5:
 
@@ -332,6 +336,7 @@ Status: active.
 | Portable launch verification | complete |
 | Re-run desktop first-screen validation from an active local display | planned |
 | Add artifact-only gateway smoke-test request or guidance | complete |
+| Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |

@@ -4,6 +4,16 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.62] - 2026-07-03
+
+### Added
+
+- Added developer download and first-run evaluation for the public `v0.4.1` Developer Preview.
+
+### Changed
+
+- Added first-run checksum, extraction, desktop launch, and gateway launch guidance for the Developer Preview.
+
 ## [0.2.61] - 2026-07-03
 
 ### Changed

@@ -33,6 +33,8 @@ AEGIS is a public Developer Preview. The current [`v0.4.1` GitHub Release](https
 
 AEGIS remains a prerelease. Do not deploy it to protect production systems or treat it as enterprise-hardened.
 
+For first-run download, checksum, extraction, and launch notes, start with the [wiki overview](docs/wiki/01-overview.md).
+
 ## How?
 
 AEGIS follows a controlled execution path:

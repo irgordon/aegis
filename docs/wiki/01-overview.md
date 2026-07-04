@@ -33,6 +33,47 @@ It does not provide installers, signing, notarization, auto-update, production d
 
 Post-`v0.4.0` distribution planning produced the first public downloadable Developer Preview in `v0.4.1`, starting with macOS arm64 and macOS x64 archive artifacts.
 
+## First Evaluation Path
+
+Use this path to evaluate `v0.4.1` from the public release:
+
+1. Open the [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1).
+2. Choose `aegis-v0.4.1-macos-arm64.tar.gz` for Apple Silicon Macs or `aegis-v0.4.1-macos-x64.tar.gz` for Intel Macs.
+3. Download the selected archive and `SHA256SUMS`.
+4. Verify only the selected archive:
+
+```bash
+grep 'aegis-v0.4.1-macos-arm64.tar.gz' SHA256SUMS | shasum -a 256 -c -
+```
+
+Replace the archive name with `aegis-v0.4.1-macos-x64.tar.gz` on Intel Macs.
+
+If both macOS archives are downloaded, this also works:
+
+```bash
+shasum -a 256 -c SHA256SUMS
+```
+
+5. Extract the archive:
+
+```bash
+tar -xzf aegis-v0.4.1-macos-arm64.tar.gz
+```
+
+6. Launch the desktop binary from the extracted directory:
+
+```bash
+./aegis-v0.4.1-macos-arm64/desktop/aegis-desktop
+```
+
+7. Launch the gateway binary to see its current command shape:
+
+```bash
+./aegis-v0.4.1-macos-arm64/bin/aegis-gateway
+```
+
+The current archive does not include request fixture files for a complete gateway smoke test. That is a known Developer Preview limitation.
+
 ## What It Does Today
 
 At a high level, AEGIS can:

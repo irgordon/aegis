@@ -70,8 +70,10 @@ If no box is checked, defer the work until Phase 6 or later.
 | Harden direct annotated-tag dispatch for future draft release workflow tags | complete |
 | Verify direct tag dispatch on a tag created after guard hardening | planned |
 | Cross-platform artifact validation | planned |
-| Developer download verification | planned |
-| Portable launch verification | planned |
+| Developer download verification | complete |
+| Portable launch verification | complete |
+| Re-run desktop first-screen validation from an active local display | planned |
+| Add artifact-only gateway smoke-test request or guidance | planned |
 | Draft v0.4.1 developer-preview release notes | complete |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |
@@ -96,6 +98,7 @@ Completed inputs for Phase 5:
 - hardened annotated-tag dispatch guard on `main` for future draft GitHub Release workflow tags
 - published `v0.4.1` Developer Preview GitHub Release
 - post-publish checksum verification of unchanged `v0.4.1` assets
+- developer download and portable launch review for public `v0.4.1` assets
 
 Deferred from Phase 5:
 
@@ -322,8 +325,10 @@ Status: active.
 | Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | complete |
 | Cross-platform artifact validation | planned |
-| Developer download verification | planned |
-| Portable launch verification | planned |
+| Developer download verification | complete |
+| Portable launch verification | complete |
+| Re-run desktop first-screen validation from an active local display | planned |
+| Add artifact-only gateway smoke-test request or guidance | planned |
 | Draft v0.4.1 developer-preview release notes | complete |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |

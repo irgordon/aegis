@@ -38,6 +38,8 @@ Generated Developer Preview archives now stage a safe `health.check` request fix
 
 The gateway now treats `--help` and `-h` as conventional help requests. Help output points first-time users to the bundled `health.check` smoke test and returns success instead of a structured invalid-arguments error.
 
+The desktop first-run review is complete. The desktop launches and communicates governed evidence, but it still shows stale `v0.4.0`, pre-alpha, and local-only labels during the public `v0.4.1` Developer Preview.
+
 A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
 
 The draft release tag guard on `main` now avoids broad tag fetching, resolves the annotated `v0.4.1` tag target commit, and compares that target to `HEAD`. This preserves fail-closed tag verification for future release tags.
@@ -76,7 +78,9 @@ If no box is checked, defer the work until Phase 6 or later.
 | Cross-platform artifact validation | planned |
 | Developer download verification | complete |
 | Portable launch verification | complete |
-| Re-run desktop first-screen validation from an active local display | planned |
+| Re-run desktop first-screen validation from an active local display | complete |
+| Update desktop release identity labels for v0.4.1 Developer Preview | planned |
+| Improve desktop no-error empty state | planned |
 | Add artifact-only gateway smoke-test request or guidance | complete |
 | Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |
@@ -106,6 +110,7 @@ Completed inputs for Phase 5:
 - developer download and portable launch review for public `v0.4.1` assets
 - artifact-only `health.check` gateway smoke-test fixture and artifact README guidance
 - conventional gateway `--help` and `-h` output for the bundled smoke test
+- desktop first-run review for the public `v0.4.1` Developer Preview
 
 Deferred from Phase 5:
 
@@ -334,7 +339,9 @@ Status: active.
 | Cross-platform artifact validation | planned |
 | Developer download verification | complete |
 | Portable launch verification | complete |
-| Re-run desktop first-screen validation from an active local display | planned |
+| Re-run desktop first-screen validation from an active local display | complete |
+| Update desktop release identity labels for v0.4.1 Developer Preview | planned |
+| Improve desktop no-error empty state | planned |
 | Add artifact-only gateway smoke-test request or guidance | complete |
 | Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |

@@ -105,7 +105,9 @@ It can render fixed live health-check evidence when available.
 
 It does not submit arbitrary gateway requests, execute `sandbox.note.write`, choose wrapper names, choose policy bundles, choose audit or state paths, inspect live state logs, generate live recovery plans, replay execution, recover execution, or implement dashboard behavior.
 
-The v0.4.0 UI uses a warm palette, status-first cards, explicit live/sample/error/not-available labels, and an authority-boundary message.
+The current UI uses a warm palette, status-first cards, explicit live/sample/not-available labels, a neutral no-error state, and an authority-boundary message.
+
+The desktop identifies the public `v0.4.1` Developer Preview as a prerelease that is unsigned and not notarized.
 
 The visual readability review passed for v0.4.0. Evidence is recorded in `docs/assets/release/v0.4.0-desktop-readability-review.md`.
 

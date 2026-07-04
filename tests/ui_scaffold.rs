@@ -23,11 +23,12 @@ fn slint_landing_screen_states_ui_boundary() {
     let slint_ui = read(SLINT_UI);
 
     assert!(slint_ui.contains("AEGIS"));
-    assert!(slint_ui.contains("PRE-ALPHA"));
-    assert!(slint_ui.contains("Backend evidence drives this UI"));
-    assert!(slint_ui.contains("The UI is an operator surface, not an authority boundary."));
-    assert!(read(DESKTOP_ENTRYPOINT).contains("Live backend health.check evidence"));
-    assert!(slint_ui.contains("Sample evidence fallback"));
+    assert!(slint_ui.contains("Developer Preview"));
+    assert!(slint_ui.contains("v0.4.1"));
+    assert!(slint_ui.contains("Backend authority."));
+    assert!(slint_ui.contains("UI evidence only."));
+    assert!(read(DESKTOP_ENTRYPOINT).contains("Live: health.check"));
+    assert!(slint_ui.contains("Sample: recovery cards"));
 }
 
 #[test]
@@ -78,26 +79,29 @@ fn slint_ui_uses_serif_first_typography_without_font_assets() {
 }
 
 #[test]
-fn slint_ui_preserves_release_posture_labels() {
+fn slint_ui_uses_current_developer_preview_identity() {
     let slint_ui = read(SLINT_UI);
     let slint_ui_lower = slint_ui.to_lowercase();
 
-    for label in ["PRE-ALPHA", "LOCAL-ONLY", "v0.4.0"] {
+    for label in [
+        "Developer Preview",
+        "v0.4.1",
+        "Public prerelease",
+        "Unsigned",
+        "Not notarized",
+    ] {
         assert!(
             slint_ui.contains(label),
-            "Slint UI must preserve release posture label {label}"
+            "Slint UI must show current release identity label {label}"
         );
     }
 
-    for label in [
-        "developer-oriented",
-        "pre-alpha",
-        "local-only",
-        "not production-ready",
-    ] {
+    assert!(slint_ui_lower.contains("not production-ready"));
+
+    for stale_label in ["pre-alpha", "local-only", "v0.4.0"] {
         assert!(
-            slint_ui_lower.contains(label),
-            "Slint UI must preserve release posture wording {label}"
+            !slint_ui_lower.contains(stale_label),
+            "Slint UI must not show stale release label {stale_label}"
         );
     }
 }
@@ -108,9 +112,9 @@ fn slint_ui_preserves_visual_evidence_labels() {
     let combined_lower = combined.to_lowercase();
 
     for label in [
-        "live backend health.check evidence",
-        "sample evidence",
-        "error evidence",
+        "live: health.check",
+        "sample: recovery cards",
+        "no live error reported",
         "not available",
     ] {
         assert!(
@@ -119,7 +123,28 @@ fn slint_ui_preserves_visual_evidence_labels() {
         );
     }
 
-    assert!(combined.contains("Sample evidence remains labeled"));
+    assert!(combined.contains("The latest health-check evidence did not include an error report."));
+}
+
+#[test]
+fn slint_ui_uses_neutral_no_error_empty_state() {
+    let slint_ui = read(SLINT_UI);
+
+    assert!(slint_ui.contains("in-out property <bool> has_live_error: false"));
+    assert!(slint_ui.contains("active_error: root.has_live_error"));
+    assert!(slint_ui
+        .contains("border-color: root.active_error ? AegisPalette.critical : AegisPalette.border"));
+    assert!(slint_ui
+        .contains("color: root.active_error ? AegisPalette.critical : AegisPalette.primary_dark"));
+    assert!(slint_ui.contains("visible: root.active_error"));
+    assert!(read(DESKTOP_ENTRYPOINT).contains("window.set_has_live_error(evidence.has_live_error)"));
+}
+
+#[test]
+fn slint_ui_includes_first_run_next_step_guidance() {
+    let slint_ui = read(SLINT_UI);
+
+    assert!(slint_ui.contains("Next: Use the archive README to run the gateway smoke test."));
 }
 
 #[test]
@@ -356,10 +381,10 @@ fn sample_evidence_is_static_and_not_live() {
             .and_then(Value::as_bool),
         Some(false)
     );
-    assert!(slint_ui.contains("Sample evidence fallback"));
-    assert!(slint_ui.contains("Fixture-backed operator evidence rendering"));
-    assert!(read(DESKTOP_ENTRYPOINT).contains("Live backend health.check evidence"));
-    assert!(slint_ui.contains("PRE-ALPHA"));
+    assert!(slint_ui.contains("Sample: recovery cards"));
+    assert!(slint_ui.contains("Developer Preview"));
+    assert!(read(DESKTOP_ENTRYPOINT).contains("Live: health.check"));
+    assert!(slint_ui.contains("No live error reported"));
 }
 
 #[test]
@@ -367,11 +392,11 @@ fn live_and_sample_evidence_labels_remain_explicit() {
     let slint_ui = read(SLINT_UI).to_lowercase();
     let entrypoint = read(DESKTOP_ENTRYPOINT).to_lowercase();
 
-    assert!(slint_ui.contains("sample evidence fallback"));
+    assert!(slint_ui.contains("sample: recovery cards"));
     assert!(slint_ui.contains("sample only"));
-    assert!(slint_ui.contains("fixed read-only live health.check evidence"));
-    assert!(entrypoint.contains("live backend health.check evidence"));
-    assert!(entrypoint.contains("error evidence; sample fallback remains labeled"));
+    assert!(slint_ui.contains("live labels come from health.check evidence"));
+    assert!(entrypoint.contains("live: health.check"));
+    assert!(entrypoint.contains("not available"));
 }
 
 #[test]
@@ -456,7 +481,7 @@ fn desktop_crate_depends_on_backend_without_server_or_web_frameworks() {
 fn slint_ui_renders_sample_timeline_stages() {
     let slint_ui = read(SLINT_UI);
 
-    for expected in expected_timeline_stages() {
+    for expected in expected_simplified_timeline_labels() {
         assert!(
             slint_ui.contains(expected),
             "Slint timeline must render {expected}"
@@ -481,7 +506,7 @@ fn sample_evidence_has_status_cards() {
 fn slint_ui_renders_status_card_labels() {
     let slint_ui = read(SLINT_UI);
 
-    for expected in expected_status_cards() {
+    for expected in expected_simplified_status_card_labels() {
         assert!(
             slint_ui.contains(expected),
             "Slint status card grid must render {expected}"
@@ -798,8 +823,10 @@ fn sample_ui_does_not_imply_live_backend_or_runtime_control() {
     ];
 
     assert_absent(&combined, forbidden_live_claims);
-    assert!(combined.contains("fixed read-only live health.check evidence"));
-    assert!(combined.contains("labeled sample recovery evidence"));
+    assert!(combined.contains("health.check evidence"));
+    assert!(combined.contains("sample: recovery cards"));
+    assert!(combined.contains("the ui displays evidence"));
+    assert!(combined.contains("the backend makes decisions"));
 }
 
 #[test]
@@ -1195,6 +1222,38 @@ fn expected_status_cards() -> [&'static str; 10] {
         "Audit Log",
         "State Log",
         "Recovery Inspection",
+        "Recovery Plan",
+    ]
+}
+
+fn expected_simplified_timeline_labels() -> [&'static str; 12] {
+    [
+        "Request",
+        "Validation",
+        "Policy",
+        "Decision",
+        "Authorization",
+        "Credentials",
+        "Credential Handle",
+        "Wrapper Dispatch",
+        "Wrapper",
+        "Audit",
+        "State",
+        "Recovery",
+    ]
+}
+
+fn expected_simplified_status_card_labels() -> [&'static str; 10] {
+    [
+        "Policy",
+        "Decision",
+        "Authorization",
+        "Credentials",
+        "Credential Handle",
+        "Wrapper",
+        "Audit",
+        "State",
+        "Recovery",
         "Recovery Plan",
     ]
 }

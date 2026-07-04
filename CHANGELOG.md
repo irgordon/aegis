@@ -4,6 +4,13 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.66] - 2026-07-04
+
+### Changed
+
+- Updated the desktop UI release identity for the `v0.4.1` Developer Preview.
+- Replaced the no-error panel with a neutral empty state and added a small gateway smoke-test next-step cue.
+
 ## [0.2.65] - 2026-07-04
 
 ### Added

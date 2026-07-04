@@ -154,6 +154,7 @@ fn apply_timeline_to_window(window: &AegisWindow, evidence: &UiEvidence) {
 }
 
 fn apply_error_to_window(window: &AegisWindow, evidence: &UiEvidence) {
+    window.set_has_live_error(evidence.has_live_error);
     window.set_error_title(shared(&evidence.error_title));
     window.set_error_source(shared(&evidence.error_source));
     window.set_error_code(shared(&evidence.error_code));
@@ -171,6 +172,7 @@ fn shared(value: &str) -> SharedString {
 #[derive(Debug, Clone, Default, Serialize)]
 struct UiEvidence {
     live_backend_connected: bool,
+    has_live_error: bool,
     evidence_mode_label: String,
     header_summary: String,
     policy_bundle_status: String,
@@ -292,6 +294,7 @@ impl UiEvidence {
     }
 
     fn apply_error(&mut self, error_report: Option<&GatewayErrorReport>) {
+        self.has_live_error = error_report.is_some();
         self.error_title = error_title(error_report);
         self.error_source = error_source(error_report);
         self.error_code = error_field(error_report, |report| enum_json(&report.code));
@@ -341,15 +344,15 @@ fn capitalize(value: &str) -> String {
 
 fn evidence_mode_label(live_backend_connected: bool) -> String {
     if live_backend_connected {
-        "Live backend health.check evidence".to_string()
+        "Live: health.check".to_string()
     } else {
-        "Error evidence; sample fallback remains labeled".to_string()
+        "Not available".to_string()
     }
 }
 
 fn header_summary(live_backend_connected: bool) -> String {
     if live_backend_connected {
-        "Live read-only health.check evidence from the backend.".to_string()
+        "Live health-check evidence from the backend.".to_string()
     } else {
         "Live evidence unavailable; showing normalized backend error evidence.".to_string()
     }
@@ -450,7 +453,7 @@ fn error_title(report: Option<&GatewayErrorReport>) -> String {
     if report.is_some() {
         "Live Normalized Error".to_string()
     } else {
-        "Live Error Evidence".to_string()
+        "No live error reported".to_string()
     }
 }
 
@@ -458,7 +461,7 @@ fn error_source(report: Option<&GatewayErrorReport>) -> String {
     if report.is_some() {
         "Backend-normalized error_report evidence".to_string()
     } else {
-        "No live backend error_report present".to_string()
+        "The latest health-check evidence did not include an error report.".to_string()
     }
 }
 
@@ -488,10 +491,8 @@ mod tests {
         let evidence = get_health_check_evidence();
 
         assert!(evidence.live_backend_connected);
-        assert_eq!(
-            evidence.evidence_mode_label,
-            "Live backend health.check evidence"
-        );
+        assert!(!evidence.has_live_error);
+        assert_eq!(evidence.evidence_mode_label, "Live: health.check");
         assert_eq!(evidence.policy_bundle_status, "Verified");
         assert_eq!(evidence.policy_decision_status, "Allowed");
         assert_eq!(evidence.wrapper_execution_status, "Executed");
@@ -503,6 +504,7 @@ mod tests {
         let evidence = live_health_check_evidence(Path::new("missing-policy-bundle"));
 
         assert!(!evidence.live_backend_connected);
+        assert!(evidence.has_live_error);
         assert_eq!(evidence.error_title, "Live Normalized Error");
         assert_ne!(evidence.error_code, "Not available");
         assert_ne!(evidence.error_message, "Not available");
@@ -541,6 +543,7 @@ mod tests {
 
         assert_eq!(first, second);
         assert!(first.contains(&"live_backend_connected".to_string()));
+        assert!(first.contains(&"has_live_error".to_string()));
         assert!(first.contains(&"policy_bundle_status".to_string()));
         assert!(first.contains(&"wrapper_execution_status".to_string()));
         assert!(first.contains(&"error_next_action".to_string()));

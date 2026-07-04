@@ -38,7 +38,7 @@ Generated Developer Preview archives now stage a safe `health.check` request fix
 
 The gateway now treats `--help` and `-h` as conventional help requests. Help output points first-time users to the bundled `health.check` smoke test and returns success instead of a structured invalid-arguments error.
 
-The desktop first-run review is complete. The desktop launches and communicates governed evidence, but it still shows stale `v0.4.0`, pre-alpha, and local-only labels during the public `v0.4.1` Developer Preview.
+The desktop first-run review is complete. The desktop launches, communicates governed evidence, and now shows the public `v0.4.1` Developer Preview identity. The no-error state is neutral when live health-check evidence contains no error report.
 
 A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
 
@@ -79,8 +79,9 @@ If no box is checked, defer the work until Phase 6 or later.
 | Developer download verification | complete |
 | Portable launch verification | complete |
 | Re-run desktop first-screen validation from an active local display | complete |
-| Update desktop release identity labels for v0.4.1 Developer Preview | planned |
-| Improve desktop no-error empty state | planned |
+| Update desktop release identity labels for v0.4.1 Developer Preview | complete |
+| Improve desktop no-error empty state | complete |
+| Add desktop next-step cue for the gateway smoke test | complete |
 | Add artifact-only gateway smoke-test request or guidance | complete |
 | Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |
@@ -111,6 +112,7 @@ Completed inputs for Phase 5:
 - artifact-only `health.check` gateway smoke-test fixture and artifact README guidance
 - conventional gateway `--help` and `-h` output for the bundled smoke test
 - desktop first-run review for the public `v0.4.1` Developer Preview
+- updated desktop `v0.4.1` Developer Preview identity and neutral no-error state
 
 Deferred from Phase 5:
 

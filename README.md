@@ -31,9 +31,11 @@ It validates requests, verifies policy, authorizes execution, checks credential 
 
 AEGIS is a public Developer Preview. The current [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) provides unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
 
+Generated Developer Preview archives include a safe `health.check` request fixture so the gateway can run one governed smoke test from the extracted artifact.
+
 AEGIS remains a prerelease. Do not deploy it to protect production systems or treat it as enterprise-hardened.
 
-For first-run download, checksum, extraction, and launch notes, start with the [wiki overview](docs/wiki/01-overview.md).
+For first-run download, checksum, extraction, launch, and gateway smoke-test notes, start with the [wiki overview](docs/wiki/01-overview.md).
 
 ## How?
 

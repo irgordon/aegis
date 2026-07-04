@@ -66,13 +66,16 @@ tar -xzf aegis-v0.4.1-macos-arm64.tar.gz
 ./aegis-v0.4.1-macos-arm64/desktop/aegis-desktop
 ```
 
-7. Launch the gateway binary to see its current command shape:
+7. Run the gateway smoke test from the extracted archive:
 
 ```bash
-./aegis-v0.4.1-macos-arm64/bin/aegis-gateway
+cd aegis-v0.4.1-macos-arm64
+./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json
 ```
 
-The current archive does not include request fixture files for a complete gateway smoke test. That is a known Developer Preview limitation.
+Use `cd aegis-v0.4.1-macos-x64` for the Intel macOS archive.
+
+The smoke test is read-only. It uses the bundled local policy bundle and a bundled `health.check` request fixture. It demonstrates request validation, policy verification, authorization, wrapper execution, audit evidence, state evidence, and a structured response.
 
 ## What It Does Today
 

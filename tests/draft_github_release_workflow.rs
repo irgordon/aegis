@@ -174,6 +174,29 @@ fn draft_github_release_workflow_uploads_only_expected_release_assets() {
 }
 
 #[test]
+fn draft_github_release_workflow_stages_health_check_smoke_fixture() {
+    let workflow = read_workflow();
+    let required = [
+        "mkdir -p \"${staging}/bin\" \"${staging}/desktop\" \"${staging}/examples\"",
+        "examples/artifact/health-check-request.json",
+        "${staging}/examples/health-check-request.json",
+        "It includes examples/health-check-request.json for an artifact-only gateway smoke test.",
+        "./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json",
+    ];
+    let blocked = [
+        "cp -R examples",
+        "cp -r examples",
+        "schemas/examples/valid/SandboxNoteWriteRequest.json",
+        "sandbox.note.write",
+        "approval",
+        "replay",
+    ];
+
+    assert_present(&workflow, &required);
+    assert_absent(&workflow, &blocked);
+}
+
+#[test]
 fn draft_github_release_workflow_verifies_combined_checksums() {
     let workflow = read_workflow();
     let required = [
@@ -235,10 +258,10 @@ fn draft_github_release_body_contains_required_warnings() {
     let body = read_release_body();
     let required = [
         "AEGIS v0.4.1 Developer Preview",
-        "draft GitHub Release for maintainer review",
+        "first public downloadable AEGIS Developer Preview",
         "developer preview",
         "unsigned and not notarized",
-        "local-only, pre-alpha, and developer-oriented",
+        "prerelease, archive-based, and developer-oriented",
         "not production-ready or enterprise-hardened",
         "archive-based",
         "There is no installer",

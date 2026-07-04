@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "request_id": "req_artifact_health_001",
+  "run_id": "run_artifact_health_001",
+  "task_id": "task_artifact_health_001",
+  "action_id": "act_artifact_health_001",
+  "actor": {
+    "actor_id": "developer_preview_user",
+    "actor_type": "agent",
+    "display_name": "Developer Preview User"
+  },
+  "tool": {
+    "name": "health.check",
+    "capability_class": "L0"
+  },
+  "params": {},
+  "environment": "dev",
+  "requested_at": "2026-06-28T00:00:00Z",
+  "orchestrator": {
+    "name": "developer-preview",
+    "run_reference": "artifact_health_check"
+  }
+}

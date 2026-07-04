@@ -114,12 +114,13 @@ jobs:
           rm -rf dist
           policy_bundle="${staging}/policy-bundles/local-dev"
 
-          mkdir -p "${staging}/bin" "${staging}/desktop"
+          mkdir -p "${staging}/bin" "${staging}/desktop" "${staging}/examples"
           mkdir -p "${policy_bundle}/checksums" "${policy_bundle}/signatures"
 
           cp "target/${{ matrix.rust_target }}/release/aegis-gateway" "${staging}/bin/aegis-gateway"
           cp "src-tauri/target/${{ matrix.rust_target }}/release/aegis-desktop" "${staging}/desktop/aegis-desktop"
           cp "docs/releases/artifact-readme-v0.4.1.md" "${staging}/README.md"
+          cp "examples/artifact/health-check-request.json" "${staging}/examples/health-check-request.json"
           cp "examples/policy-bundles/local-dev/manifest.yaml" "${policy_bundle}/manifest.yaml"
           cp "examples/policy-bundles/local-dev/gateway_policy.yaml" "${policy_bundle}/gateway_policy.yaml"
           cp "examples/policy-bundles/local-dev/risk_matrix.yaml" "${policy_bundle}/risk_matrix.yaml"
@@ -132,6 +133,11 @@ jobs:
 
           This draft archive contains the AEGIS gateway binary and the desktop binary build output.
           It also contains the verified local development policy bundle used by fixed health-check evidence.
+          It includes examples/health-check-request.json for an artifact-only gateway smoke test.
+
+          Smoke test command:
+
+          ./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json
 
           This archive may be attached to a draft GitHub Release for maintainer review.
           It does not publish AEGIS.

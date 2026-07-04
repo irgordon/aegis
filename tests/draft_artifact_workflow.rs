@@ -3,6 +3,7 @@ use std::path::Path;
 
 const WORKFLOW_PATH: &str = ".github/workflows/draft-artifacts.yml";
 const ARTIFACT_README_PATH: &str = "docs/releases/artifact-readme-v0.4.1.md";
+const ARTIFACT_FIXTURE_PATH: &str = "examples/artifact/health-check-request.json";
 
 #[test]
 fn draft_artifact_workflow_exists() {
@@ -166,6 +167,29 @@ fn draft_artifact_workflow_stages_local_policy_bundle() {
 }
 
 #[test]
+fn draft_artifact_workflow_stages_health_check_smoke_fixture() {
+    let workflow = read_workflow();
+    let required = [
+        "mkdir -p \"${staging}/bin\" \"${staging}/desktop\" \"${staging}/examples\"",
+        "examples/artifact/health-check-request.json",
+        "${staging}/examples/health-check-request.json",
+        "It includes examples/health-check-request.json for an artifact-only gateway smoke test.",
+        "./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json",
+    ];
+    let blocked = [
+        "cp -R examples",
+        "cp -r examples",
+        "schemas/examples/valid/SandboxNoteWriteRequest.json",
+        "sandbox.note.write",
+        "approval",
+        "replay",
+    ];
+
+    assert_present(&workflow, &required);
+    assert_absent(&workflow, &blocked);
+}
+
+#[test]
 fn draft_artifact_workflow_does_not_stage_private_policy_material() {
     let workflow = read_workflow().to_lowercase();
     let blocked = [
@@ -180,15 +204,47 @@ fn draft_artifact_workflow_does_not_stage_private_policy_material() {
 }
 
 #[test]
+fn artifact_health_check_fixture_is_safe_and_read_only() {
+    let fixture = read_artifact_fixture();
+    let request: serde_json::Value =
+        serde_json::from_str(&fixture).expect("artifact fixture should be valid JSON");
+
+    assert_eq!(request["tool"]["name"], "health.check");
+    assert_eq!(request["tool"]["capability_class"], "L0");
+    assert_eq!(request["params"], serde_json::json!({}));
+
+    let blocked = [
+        "sandbox.note.write",
+        "approval",
+        "approve",
+        "replay",
+        "credential",
+        "password",
+        "token",
+        "secret",
+        "private_key",
+    ];
+
+    assert_absent(&fixture.to_lowercase(), &blocked);
+}
+
+#[test]
 fn artifact_readme_contains_required_warnings() {
     let readme = read_artifact_readme();
     let required = [
         "AEGIS v0.4.1 Developer Preview Artifact",
-        "unsigned and not notarized",
-        "local-only, pre-alpha, and developer-oriented",
+        "unsigned, not notarized",
+        "archive-based, and developer-oriented",
         "not production-ready or enterprise-hardened",
         "archive, not an installer",
-        "bundled local development policy bundle",
+        "safe `health.check` request fixture",
+        "First Five Minutes",
+        "./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json",
+        "request was validated",
+        "policy was verified",
+        "execution was authorized",
+        "audit evidence was produced",
+        "state evidence was produced",
         "Validate the SHA-256 checksum before use",
         "Do not treat this artifact as a trusted production distribution",
     ];
@@ -220,6 +276,11 @@ fn read_workflow() -> String {
 
 fn read_artifact_readme() -> String {
     fs::read_to_string(repo_path(ARTIFACT_README_PATH)).expect("artifact README should be readable")
+}
+
+fn read_artifact_fixture() -> String {
+    fs::read_to_string(repo_path(ARTIFACT_FIXTURE_PATH))
+        .expect("artifact health-check fixture should be readable")
 }
 
 fn workflow_path() -> std::path::PathBuf {

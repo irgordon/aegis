@@ -8,19 +8,27 @@ It is not production-ready or enterprise-hardened.
 
 It is provided as an archive, not an installer.
 
-It contains binary build output and the bundled local development policy bundle used for fixed health-check evidence.
+It contains binary build output, a bundled local development policy bundle, and a safe `health.check` request fixture for a gateway smoke test.
 
-It does not include request fixture files, installer packaging, app bundle packaging, or production configuration.
+It does not include installer packaging, app bundle packaging, production configuration, signing, notarization, or auto-update.
 
-Validate the SHA-256 checksum before use.
+## First Five Minutes
 
-From the directory where you downloaded the archive and `SHA256SUMS`, verify the selected archive:
+Use this flow from the directory where you downloaded the archive and `SHA256SUMS`.
+
+1. Verify the selected archive.
+
+For Apple Silicon Macs:
 
 ```bash
 grep 'aegis-v0.4.1-macos-arm64.tar.gz' SHA256SUMS | shasum -a 256 -c -
 ```
 
-Use `aegis-v0.4.1-macos-x64.tar.gz` in the command for the Intel macOS archive.
+For Intel Macs:
+
+```bash
+grep 'aegis-v0.4.1-macos-x64.tar.gz' SHA256SUMS | shasum -a 256 -c -
+```
 
 If you downloaded both macOS archives and `SHA256SUMS`, verify the full manifest:
 
@@ -28,16 +36,51 @@ If you downloaded both macOS archives and `SHA256SUMS`, verify the full manifest
 shasum -a 256 -c SHA256SUMS
 ```
 
-Launch the desktop binary from the extracted archive:
+2. Extract the archive.
+
+For Apple Silicon Macs:
+
+```bash
+tar -xzf aegis-v0.4.1-macos-arm64.tar.gz
+cd aegis-v0.4.1-macos-arm64
+```
+
+For Intel Macs:
+
+```bash
+tar -xzf aegis-v0.4.1-macos-x64.tar.gz
+cd aegis-v0.4.1-macos-x64
+```
+
+3. Launch the desktop binary.
 
 ```bash
 ./desktop/aegis-desktop
 ```
 
-Launch the gateway binary to see its current command shape:
+4. Run the gateway smoke test.
 
 ```bash
-./bin/aegis-gateway
+./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json
 ```
+
+5. Review the structured output.
+
+Look for evidence that the request was validated, policy was verified, execution was authorized, the `health.check` wrapper ran, audit evidence was produced, state evidence was produced, and execution completed.
+
+The smoke test is read-only. It does not run mutation wrappers, issue credentials, approve work, replay executions, or recover executions.
+
+## Artifact Layout
+
+```text
+README.md
+ARTIFACT-CONTENTS.md
+examples/health-check-request.json
+policy-bundles/local-dev/
+bin/aegis-gateway
+desktop/aegis-desktop
+```
+
+Validate the SHA-256 checksum before use.
 
 Do not treat this artifact as a trusted production distribution.

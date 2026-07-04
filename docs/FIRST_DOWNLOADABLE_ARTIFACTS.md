@@ -14,6 +14,8 @@ The preferred artifact scope is one archive per platform containing the desktop 
 
 The archive should also include the local development policy bundle required by fixed desktop health-check evidence.
 
+Generated archives also include a safe `health.check` request fixture for an artifact-only gateway smoke test.
+
 The release is public, prerelease, unsigned, not notarized, archive-based, and not production-ready.
 
 ## Baseline
@@ -64,6 +66,7 @@ This matches the `v0.4.0` minimum usable local release:
 - the desktop app is the operator surface
 - the gateway binary supports local validation and smoke testing
 - the bundled local development policy bundle lets fixed health-check evidence run without a source checkout
+- the bundled `health.check` request fixture lets a developer run one successful governed gateway command from the archive
 - both are useful for a developer preview
 
 If bundling both is not practical in the first implementation pass, use desktop app first and document the gateway binary as a source-build fallback.

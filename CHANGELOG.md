@@ -4,6 +4,17 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [0.2.63] - 2026-07-03
+
+### Added
+
+- Added a self-contained `health.check` gateway smoke-test fixture for generated Developer Preview artifacts.
+- Updated artifact assembly workflows to stage the smoke-test fixture without packaging mutation examples.
+
+### Changed
+
+- Updated Developer Preview artifact guidance with a first-five-minutes gateway smoke-test command.
+
 ## [0.2.62] - 2026-07-03
 
 ### Added

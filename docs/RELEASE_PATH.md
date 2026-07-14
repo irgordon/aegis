@@ -11,9 +11,9 @@ the public distribution state that followed it.
 GitHub Releases as unsigned, not-notarized, archive-based macOS downloads with
 `SHA256SUMS` verification.
 
-**Current development target:** `v0.4.2 Developer Preview Refresh`. It remains
-unpublished until P0 repository-truth reconciliation and the release validation
-gate are complete.
+**Current development target:** `v0.4.2 Developer Preview Refresh`. P0
+repository-truth reconciliation is complete. The release remains unpublished
+until its P1 artifact validation gate is complete.
 
 The goal is not production readiness. The goal is a small local-only release that a real user can build, launch, understand, and use safely.
 

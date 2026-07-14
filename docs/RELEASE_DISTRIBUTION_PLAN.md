@@ -277,7 +277,11 @@ Recommended sequence:
 | `v0.5.0` | Windows x64 and Linux x64 Developer Preview outcome. |
 | Later | Signed, notarized, installer-based, and broader user-facing artifacts. |
 
-Phase 5 now focuses on P0 truth reconciliation, the `v0.4.2` refresh, and cross-platform Developer Preview validation. Phase 6 remains an engineering phase without a reserved version.
+P1 Complete Phase 5 Developer Distribution is active. It first validates the
+macOS-only `v0.4.2` refresh and publishes it only after artifact evidence
+passes, then validates Windows x64 and Linux x64 as the separate `v0.5.0`
+outcome. Windows ARM64 and Linux ARM64 remain deferred. Phase 6 remains an
+engineering phase without a reserved version.
 
 ## Open Decisions
 
@@ -286,9 +290,9 @@ Phase 5 now focuses on P0 truth reconciliation, the `v0.4.2` refresh, and cross-
 
 ## Recommended Next Tasks
 
-1. `docs(governance): Complete P0 repository truth reconciliation`
-2. `chore(release): Validate v0.4.2 Developer Preview Refresh`
-3. `test(release): Validate Windows x64 artifact path`
-4. `test(release): Validate Linux x64 artifact path`
+1. `chore(release): Validate v0.4.2 Developer Preview Refresh`
+2. `test(release): Record v0.4.2 artifact evidence`
+3. `test(release): Validate Windows x64 artifact path for v0.5.0`
+4. `test(release): Validate Linux x64 artifact path for v0.5.0`
 
 Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

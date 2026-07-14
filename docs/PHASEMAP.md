@@ -22,7 +22,21 @@ Release versions communicate validated outcomes. A phase may span multiple relea
 - Latest published release: `v0.4.1 Developer Preview`
 - Current development target: `v0.4.2 Developer Preview Refresh`
 - Active engineering phase: `Phase 5 Developer Distribution`
-- Active repository priority: `P0 Repository Truth`
+- Active repository priority: `P1 Complete Phase 5 Developer Distribution`
+
+## Repository Priority Gates
+
+Repository priorities order engineering work. They do not reserve release
+versions for phases.
+
+| Priority | Outcome | Status | Exit Gate |
+| --- | --- | --- | --- |
+| P0 | Repository Truth | Complete | Documentation, versions, validation, and release evidence agree. |
+| P1 | Complete Phase 5 Developer Distribution | Active | Publish and verify `v0.4.2`, validate Windows x64 and Linux x64 as the `v0.5.0` outcome, and close Phase 5. |
+| P2 | Deliver Phase 6 Developer Experience | Planned | A new evaluator can understand, launch, inspect, and troubleshoot AEGIS while the UI remains evidence-only. |
+| P3 | Deliver Phase 7 Production Distribution | Planned | Artifacts are signed, verifiable, platform-appropriate, and installable without changing gateway authority. |
+| P4 | Deliver Phase 8 Runtime Expansion | Planned | Runtime expansion remains contract-first, deterministic, fail-closed, and non-bypassable. |
+| P5 | Stabilize v1.0 | Planned | Public contracts, operations, compatibility, and release evidence are stable and aligned. |
 
 ## Current Phase Model
 
@@ -34,7 +48,7 @@ Release versions communicate validated outcomes. A phase may span multiple relea
 | 3 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
 | 3.5 | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
 | 4 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI. | None. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
-| 5 | Developer Distribution | Active | Deliver portable, verifiable Developer Preview artifacts. | Complete P0 Repository Truth, publish `v0.4.2`, then validate Windows x64 and Linux x64. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
+| 5 | Developer Distribution | Active | Deliver portable, verifiable Developer Preview artifacts. | Complete the evidence-gated `v0.4.2` refresh, then validate Windows x64 and Linux x64 as `v0.5.0`. | ARM64 expansion, installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
 | 6 | Developer Experience | Not started | Improve evaluation, launch, troubleshooting, and read-only evidence review after distribution works. | None. | Replay execution, approval workflow, production credentials, and production distribution. |
 | 7 | Production Distribution | Not started | Add signed or clearly bounded production-style distribution after developer-preview artifacts are proven. | None. | Runtime expansion and platform hardening. |
 | 8 | Runtime and Platform Expansion | Not started | Add recovery, approval, credential provider, service, deployment, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
@@ -53,8 +67,8 @@ Release versions communicate validated outcomes. A phase may span multiple relea
 | Version | Outcome | Status |
 | --- | --- | --- |
 | `v0.4.1` | First public macOS Developer Preview. | Published historical release. |
-| `v0.4.2` | Developer Preview Refresh with repository truth and post-tag first-run improvements. | Current development target. |
-| `v0.5.0` | Windows x64 and Linux x64 Developer Preview. | Planned Phase 5 outcome. |
+| `v0.4.2` | macOS Developer Preview Refresh with repository truth and post-tag first-run improvements. | P1 validation in progress; unpublished. |
+| `v0.5.0` | Windows x64 and Linux x64 Developer Preview. | Planned second P1 outcome. |
 
 ## v0.0.0: Initial Repository
 
@@ -349,23 +363,30 @@ Those improvements exist on the current development branch and target `v0.4.2`.
 Publish the post-`v0.4.1` first-run improvements under the Release Truth invariant.
 
 ### Status
-Current development target after P0 Repository Truth closes.
+P1 validation in progress. No tag or GitHub Release may be created until the
+artifact evidence gate passes.
 
 ### Required Capabilities
 - reconciled latest-release and current-development documentation
 - unified release-facing product version identity
+- macOS arm64 and macOS x64 draft artifacts
 - bundled safe `health.check` request fixture
 - conventional gateway `--help` output
 - explicit current-development desktop identity
+- neutral desktop empty states
 - desktop validation in normal CI
-- direct annotated-tag dispatch verification
+- combined `SHA256SUMS`
+- portable launch validation from extracted artifacts
+- annotated-tag guard validation before release publication
 
 ### Exit Criteria
 - P0 Repository Truth is complete
 - public documentation describes the release artifact accurately
 - package, desktop, artifact, tag, and changelog versions agree
 - checksums verify
+- the bundled smoke test succeeds from extracted artifact contents
 - gateway and desktop launch from extracted artifacts
+- the tag and release are created only after artifact evidence passes
 - the immutable `v0.4.1` release remains unchanged
 
 ## v0.5.0: Windows and Linux Developer Preview
@@ -374,7 +395,7 @@ Current development target after P0 Repository Truth closes.
 Add Windows x64 and Linux x64 Developer Preview artifacts after the refreshed macOS path is stable.
 
 ### Status
-Planned Phase 5 release outcome.
+Planned second P1 release outcome.
 
 ### Required Capabilities
 - Windows x64 archive build and validation
@@ -389,7 +410,11 @@ Planned Phase 5 release outcome.
 - platform limitations are explicit
 - release governance remains intact
 
+Windows ARM64 and Linux ARM64 remain deferred beyond Phase 5.
+
 ## Phase 6: Developer Experience
+
+Priority: P2.
 
 ### Purpose
 Improve the experience of evaluating AEGIS after the first downloadable developer preview exists.
@@ -400,15 +425,20 @@ Improve the experience of evaluating AEGIS after the first downloadable develope
 - developer-focused troubleshooting notes
 - artifact validation notes based on real download testing
 - improved local examples and evidence walkthroughs
+- UI Integrity Review before broader UI implementation
+- navigation changes only where evaluation evidence proves confusion
 
 ### Exit Criteria
 - a new developer can evaluate the downloaded artifact without maintainer-specific knowledge
 - UI and CLI evidence remain consistent
 - read-only views do not imply authority or execution
+- the desktop remains evidence-only and gains no execution authority
 - troubleshooting guidance is clear and current
 - no production deployment, replay execution, approval workflow, or credential provider work is introduced
 
 ## Phase 7: Production Distribution
+
+Priority: P3.
 
 ### Purpose
 Move from unsigned developer-preview archives toward normal platform distribution.
@@ -420,44 +450,39 @@ Move from unsigned developer-preview archives toward normal platform distributio
 - installer or app bundle packaging where scheduled
 - auto-update decision and implementation only if explicitly approved
 - production distribution documentation
+- signing material stored outside the repository
+- reproducible release checks
+- installer and upgrade validation
 
 ### Exit Criteria
 - artifacts are signed or clearly documented as unsigned
 - notarization status is explicit
 - installer behavior is documented and validated if installers exist
 - release assets remain reproducible and verifiable
+- installation no longer requires archive-oriented developer steps
 - distribution changes do not alter gateway authority, policy behavior, or runtime governance
 
 ## Phase 8: Runtime and Platform Expansion
 
+Priority: P4.
+
 ### Purpose
 Expand runtime governance and platform capabilities after developer distribution and production distribution boundaries are stable.
 
-### Required Capabilities
-- replay eligibility report
-- replay dry-run plan
-- constrained replay execution
-- audit retry path
-- recovery execution guardrails
-- approval workflow boundary
-- approval evidence and state persistence
-- production credential provider boundary
-- provider compatibility checks
-- HTTP API boundary
-- service deployment model
-- runtime configuration model
-- operational observability
-- plugin or wrapper extension architecture
-- orchestrator integration references
-- production PKI or trust distribution
-- remote policy distribution
-- high-availability deployment guidance
-- performance and load testing
-- security review
-- fuzz testing
-- compatibility guarantees
-- release engineering
-- operational documentation
+### Delivery Sequence
+
+Each contract must be documented before implementation.
+
+1. Approval persistence.
+2. Replay eligibility and dry-run evaluation.
+3. Bounded audit retry and replay.
+4. Production credential providers.
+5. HTTP, service, and configuration boundaries.
+6. Observability.
+7. Extension and orchestrator integration.
+8. Trust and policy distribution.
+9. High-availability work.
+10. Security, fuzz, load, and compatibility validation.
 
 ### Exit Criteria
 - replay uses stored intent and does not call the planning layer
@@ -479,29 +504,26 @@ Expand runtime governance and platform capabilities after developer distribution
 - compatibility guarantees are documented and tested
 - release artifacts and operational procedures are reproducible
 
-## v1.0.0: Reference Architecture Release
+## P5: Stabilize v1.0
 
 ### Purpose
-Establish AEGIS as a stable reference architecture and usable implementation baseline.
+Freeze the public contract and prove operational readiness before ecosystem
+expansion.
 
 ### Required Conditions
-- core governance documents complete
-- gateway MVP complete
-- policy engine complete
-- wrapper baseline complete
-- audit baseline complete
-- durable state baseline complete
-- approval workflow baseline complete
-- policy distribution baseline complete
-- test strategy implemented
-- known limitations documented
+- public schemas and compatibility rules are frozen
+- known operational and compatibility gaps are closed
+- reproducible release checks pass
+- security, fuzz, load, upgrade, and failure-recovery tests pass
+- known limitations are documented
+- a formal v1.0 readiness review is complete
 
 ### Exit Criteria
-- documentation matches implementation
-- tests pass
-- invariants are preserved
-- release artifacts are reproducible
-- public contracts are stable enough for external users
+- documentation, implementation, validation, compatibility, and release
+  evidence align
+- public contracts are stable
+- supported deployment and recovery paths are proven
+- v1.0 can be released without unresolved truth drift
 
 ## Post-1.0 Tracks
 

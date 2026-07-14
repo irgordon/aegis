@@ -17,8 +17,8 @@
   },
   "active_engineering_phase": 5,
   "active_engineering_phase_name": "Developer Distribution",
-  "active_repository_priority": "P0",
-  "active_repository_priority_name": "Repository Truth",
+  "active_repository_priority": "P1",
+  "active_repository_priority_name": "Complete Phase 5 Developer Distribution",
   "planned_platform_order": [
     "macos-arm64",
     "macos-x64",

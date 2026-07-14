@@ -21,6 +21,12 @@ Release target: `v0.4.2 Developer Preview Refresh`.
 - Unified release-facing Cargo, Tauri, changelog, artifact, and tag version policy.
 - Added desktop crate validation to normal continuous integration.
 - Reconciled roadmap, phasemap, tasks, release guidance, and desktop identity.
+- Advanced the canonical repository priority from completed P0 Repository Truth
+  to P1 Complete Phase 5 Developer Distribution.
+- Defined the P1 through P5 engineering gates without assigning future phase
+  work to release versions.
+- Started `v0.4.2` validation under a no-tag, no-publication artifact-evidence
+  gate.
 
 ## [v0.4.1] - 2026-07-03
 

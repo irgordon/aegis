@@ -23,13 +23,14 @@ No other status values should be used unless this document is updated.
 - Latest published release: `v0.4.1 Developer Preview`
 - Current development target: `v0.4.2 Developer Preview Refresh`
 - Active engineering phase: `Phase 5 Developer Distribution`
-- Active repository priority: `P0 Repository Truth`
+- Active repository priority: `P1 Complete Phase 5 Developer Distribution`
 
 The immutable `v0.4.1` artifacts contain two macOS archives and a combined `SHA256SUMS`. They do not contain the later bundled request fixture, conventional CLI help, or corrected desktop identity now present on the development branch.
 
-## Active P0 Work: Repository Truth
+## Completed P0 Work: Repository Truth
 
-P0 pauses release expansion until the repository has one authoritative project, release, and version truth.
+P0 paused release expansion until the repository had one authoritative
+project, release, and version truth.
 
 | Task | Status |
 | --- | --- |
@@ -45,11 +46,17 @@ P0 pauses release expansion until the repository has one authoritative project, 
 | Add desktop validation to normal CI | complete |
 | Complete P0 validation and exit review | complete |
 
-## Active Phase 5 Work: Developer Distribution
+## Active P1 Work: Complete Phase 5 Developer Distribution
 
 `v0.4.0` is complete, tagged, and pushed as a local-only source release.
 
-Phase 5 distribution work resumes after P0. The next bounded release outcome is `v0.4.2 Developer Preview Refresh`, followed by Windows x64 and Linux x64 validation for `v0.5.0`.
+P1 proceeds in strict order. First, validate and publish the bounded macOS
+`v0.4.2 Developer Preview Refresh` outcome. Then validate Windows x64 and Linux
+x64 artifacts as the separate `v0.5.0` outcome. Release versions remain
+outcomes rather than phase containers.
+
+The `v0.4.2` tag and GitHub Release are prohibited until the draft artifact
+evidence gate passes. The immutable `v0.4.1` tag and release must not change.
 
 The draft artifact workflow is on `origin/main`. Manual workflow reviews produced inspectable macOS workflow artifacts. The combined `SHA256SUMS` manifest now covers both macOS draft archives and verifies successfully in workflow artifacts.
 
@@ -105,9 +112,6 @@ If no box is checked, defer the work until Phase 6 or later.
 | Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | complete |
 | Harden direct annotated-tag dispatch for future draft release workflow tags | complete |
-| Verify direct tag dispatch after creating the v0.4.2 tag | planned |
-| Validate Windows x64 artifacts | planned |
-| Validate Linux x64 artifacts | planned |
 | Developer download verification | complete |
 | Portable launch verification | complete |
 | Re-run desktop first-screen validation from an active local display | complete |
@@ -117,9 +121,29 @@ If no box is checked, defer the work until Phase 6 or later.
 | Add artifact-only gateway smoke-test request or guidance | complete |
 | Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |
-| Reconcile and publish v0.4.2 Developer Preview Refresh | planned |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |
+| Validate v0.4.2 release truth against main | in_progress |
+| Build v0.4.2 macOS arm64 draft artifact | planned |
+| Build v0.4.2 macOS x64 draft artifact | planned |
+| Verify v0.4.2 bundled health-check fixture | planned |
+| Verify v0.4.2 desktop identity and neutral empty state | planned |
+| Verify v0.4.2 gateway help output | planned |
+| Verify v0.4.2 combined SHA256SUMS | planned |
+| Verify v0.4.2 portable launch from extracted artifacts | planned |
+| Verify v0.4.2 annotated-tag guard | planned |
+| Publish immutable v0.4.2 without modifying v0.4.1 | planned |
+| Validate v0.5.0 Windows x64 artifacts | planned |
+| Validate v0.5.0 Linux x64 artifacts | planned |
+| Complete Phase 5 exit review | planned |
+
+### P1 Exit Gate
+
+- `v0.4.2` is published and verified only after its artifact evidence passes
+- every platform declared for Phase 5 has validated artifacts
+- a new evaluator can download, verify, extract, launch, and run the bundled
+  smoke test
+- Phase 5 is marked complete only after the exit review passes
 
 Completed inputs for Phase 5:
 
@@ -152,59 +176,76 @@ Deferred from Phase 5:
 ```text
 Installers, signing, notarization, auto-update, production credentials,
 replay execution, approval workflow, enterprise deployment, cloud distribution,
-plugin ecosystem, and database backends remain deferred.
+plugin ecosystem, database backends, Windows ARM64, and Linux ARM64 remain
+deferred.
 ```
 
-## Deferred Phase Work
+## Planned P2-P5 Work
 
-### Phase 6: Developer Experience
+### P2: Deliver Phase 6 Developer Experience
 
 | Task | Status |
 | --- | --- |
-| Improve first-run and launch guidance | planned |
+| Improve first-run guidance from evaluation evidence | planned |
+| Add clear troubleshooting paths | planned |
 | Add read-only audit and state evidence views | planned |
 | Add read-only recovery inspection and recovery plan views | planned |
-| Add developer troubleshooting notes | planned |
-| Add local evaluation walkthroughs | planned |
+| Complete the UI Integrity Review before broader UI work | planned |
+| Improve navigation only where evaluation evidence proves confusion | planned |
+| Verify the desktop remains evidence-only | planned |
 
-### Phase 7: Production Distribution
+Exit gate: a new evaluator can understand, launch, inspect, and troubleshoot
+AEGIS independently, and the UI remains evidence-only.
 
-| Task | Status |
-| --- | --- |
-| Plan signed checksum manifests | planned |
-| Add code signing when scheduled | planned |
-| Add macOS notarization when scheduled | planned |
-| Add installer or app bundle packaging when scheduled | planned |
-| Decide whether auto-update belongs in a later release | planned |
-
-### Phase 8: Runtime and Platform Expansion
+### P3: Deliver Phase 7 Production Distribution
 
 | Task | Status |
 | --- | --- |
-| Add replay eligibility report | planned |
-| Add replay dry-run plan | planned |
-| Add constrained replay execution | planned |
-| Add audit retry path | planned |
-| Add recovery execution guardrails | planned |
-| Add approval workflow boundary | planned |
-| Add approval evidence and state persistence | planned |
-| Add production credential provider boundary | planned |
-| Add provider compatibility checks | planned |
-| Add HTTP API boundary | planned |
-| Add service deployment model | planned |
-| Add runtime configuration model | planned |
+| Sign checksum manifests | planned |
+| Add code signing | planned |
+| Add macOS notarization | planned |
+| Add approved application bundles or installers | planned |
+| Decide whether auto-update belongs in scope | planned |
+| Keep signing material outside the repository | planned |
+| Add reproducible release checks | planned |
+| Validate installer and upgrade behavior | planned |
+
+Exit gate: distributed artifacts are signed, verifiable, platform-appropriate,
+and installable without changing gateway authority.
+
+### P4: Deliver Phase 8 Runtime Expansion
+
+Document each contract before implementation and preserve this delivery order.
+
+| Task | Status |
+| --- | --- |
+| Add approval persistence | planned |
+| Add replay eligibility and dry-run evaluation | planned |
+| Add bounded audit retry and replay | planned |
+| Add production credential providers | planned |
+| Add HTTP service and configuration boundaries | planned |
 | Add operational observability | planned |
-| Add plugin or wrapper extension architecture | planned |
-| Add orchestrator integration references | planned |
-| Add production PKI or trust distribution | planned |
-| Add remote policy distribution | planned |
-| Add high-availability deployment guidance | planned |
-| Add performance and load testing | planned |
-| Complete security review | planned |
-| Add fuzz testing for critical parsers and boundaries | planned |
-| Add compatibility guarantees | planned |
-| Add release engineering | planned |
-| Add operational documentation | planned |
+| Add extension and orchestrator integration | planned |
+| Add trust and policy distribution | planned |
+| Add high-availability capability | planned |
+| Complete security fuzz load and compatibility validation | planned |
+
+Exit gate: runtime expansion remains contract-first, deterministic,
+fail-closed, and unavailable as a UI or transport authority bypass.
+
+### P5: Stabilize v1.0
+
+| Task | Status |
+| --- | --- |
+| Freeze public schemas and compatibility rules | planned |
+| Close known operational and compatibility gaps | planned |
+| Verify reproducible releases for v1.0 | planned |
+| Complete security fuzz load upgrade and recovery testing | planned |
+| Document v1.0 known limitations | planned |
+| Complete the formal v1.0 readiness review | planned |
+
+Exit gate: public contracts are stable, deployment and recovery paths are
+proven, and v1.0 has no unresolved truth drift.
 
 Completed phase history remains below for traceability and repository verification.
 

@@ -584,65 +584,26 @@ The first major release will not include:
 
 Release Strategy
 
-Phase 0
+Engineering phases describe implementation maturity and sequencing.
 
-Documentation
+Release versions describe validated outcomes that users can obtain.
 
-Governance
+Phases and versions are intentionally independent. A phase may span multiple releases, and a release may deliver a bounded outcome without closing a phase.
 
-Architecture
+The governed phase sequence is maintained in ROADMAP.md and PHASEMAP.md.
 
-⸻
+The governed release sequence is maintained through immutable tags, published release evidence, and the release-truth record.
 
-Phase 1
+Current engineering priorities are:
 
-Gateway MVP
+* preserve repository and release truth
+* complete Developer Distribution
+* improve Developer Experience
+* establish Production Distribution
+* expand runtime and platform capabilities
+* stabilize the reference architecture
 
-Policy engine
-
-Audit
-
-⸻
-
-Phase 2
-
-Wrappers
-
-Approval engine
-
-Durable state
-
-⸻
-
-Phase 3
-
-Enterprise deployment
-
-Kubernetes
-
-GitOps
-
-⸻
-
-Phase 4
-
-Production hardening
-
-HA
-
-Performance
-
-Observability
-
-⸻
-
-Phase 5
-
-Reference architecture
-
-Multi-language implementations
-
-SDKs
+Potential versions are assigned only when their release outcome is defined. They are not architectural commitments.
 
 ⸻
 

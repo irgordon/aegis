@@ -67,6 +67,9 @@ Required checks:
 - acceptance criteria exist for planned work
 - roadmap and phasemap align
 - documentation changes accompany behavior changes
+- release-sensitive statements distinguish published release from current development
+- package, desktop, changelog, roadmap, phasemap, and task versions align with the release-truth record
+- duplicate or conflicting task states are rejected
 
 Documentation validation should block work when implementation requires guessing.
 
@@ -245,6 +248,9 @@ Required checks:
 - release artifacts are reproducible
 - security review is complete
 - phasemap exit criteria are satisfied
+- release artifacts match latest-release documentation
+- unreleased changes are labeled as current development
+- release version identity is consistent across release-facing surfaces
 
 ## Negative Path Requirements
 

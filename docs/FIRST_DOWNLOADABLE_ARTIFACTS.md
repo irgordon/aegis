@@ -1,5 +1,13 @@
 # AEGIS First Downloadable Artifact Targets
 
+## Release Truth Note
+
+This document records the historical `v0.4.1` artifact decision and the later development improvements separately.
+
+The immutable published `v0.4.1` archives contain the gateway, desktop binary, local policy bundle, and checksum coverage. They do not contain the later request fixture or conventional gateway help.
+
+The current development workflow adds those improvements for `v0.4.2 Developer Preview Refresh`.
+
 ## Decision Summary
 
 The first downloadable Developer Preview release is `v0.4.1`.
@@ -14,7 +22,7 @@ The preferred artifact scope is one archive per platform containing the desktop 
 
 The archive should also include the local development policy bundle required by fixed desktop health-check evidence.
 
-Generated archives also include a safe `health.check` request fixture for an artifact-only gateway smoke test.
+Current-development archives targeting `v0.4.2` include a safe `health.check` request fixture for an artifact-only gateway smoke test.
 
 The release is public, prerelease, unsigned, not notarized, archive-based, and not production-ready.
 
@@ -66,7 +74,7 @@ This matches the `v0.4.0` minimum usable local release:
 - the desktop app is the operator surface
 - the gateway binary supports local validation and smoke testing
 - the bundled local development policy bundle lets fixed health-check evidence run without a source checkout
-- the bundled `health.check` request fixture lets a developer run one successful governed gateway command from the archive
+- the planned `v0.4.2` bundled `health.check` request fixture lets a developer run one successful governed gateway command from the archive
 - both are useful for a developer preview
 
 If bundling both is not practical in the first implementation pass, use desktop app first and document the gateway binary as a source-build fallback.
@@ -98,21 +106,28 @@ Deferred formats:
 
 ## Artifact Naming
 
-Use one artifact per platform when practical:
+Published `v0.4.1` artifact names:
 
 ```text
 aegis-v0.4.1-macos-arm64.tar.gz
 aegis-v0.4.1-macos-x64.tar.gz
-aegis-v0.4.1-windows-x64.zip
-aegis-v0.4.1-linux-x64.tar.gz
 SHA256SUMS
 ```
 
-If desktop and gateway must ship separately, use:
+Current `v0.4.2` development target names:
 
 ```text
-aegis-desktop-v0.4.1-macos-arm64.tar.gz
-aegis-gateway-v0.4.1-macos-arm64.tar.gz
+aegis-v0.4.2-macos-arm64.tar.gz
+aegis-v0.4.2-macos-x64.tar.gz
+SHA256SUMS
+```
+
+Planned `v0.5.0` cross-platform names:
+
+```text
+aegis-v0.5.0-windows-x64.zip
+aegis-v0.5.0-linux-x64.tar.gz
+SHA256SUMS
 ```
 
 Prefer one combined platform archive unless implementation proves it is unsafe or confusing.
@@ -152,6 +167,8 @@ Combined checksum support is verified in workflow artifacts. The combined `SHA25
 
 It does not create a GitHub Release, publish release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
+That statement records the historical `v0.4.1` workflow. The current-development workflow targets `v0.4.2` and still does not create or move tags.
+
 The draft GitHub Release workflow exists for maintainer review before publication.
 
 It:
@@ -159,15 +176,15 @@ It:
 - runs manually through GitHub Actions
 - rebuilds the same macOS archive set
 - generates and verifies one combined `SHA256SUMS`
-- requires the existing `v0.4.1` tag
-- requires the workflow checkout to match the `v0.4.1` tag
+- requires a maintainer-created `v0.4.2` tag
+- requires the workflow checkout to match the `v0.4.2` tag
 - creates or updates a draft prerelease only
 - refuses to modify a non-draft release
 - attaches only the two macOS archives and `SHA256SUMS`
 
 It does not create the tag, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
-`v0.4.1` was published only after the draft release was verified as prerelease and correctly attached.
+`v0.4.1` was published only after its historical draft release was verified as prerelease and correctly attached. `v0.4.2` requires a new verification run and immutable tag.
 
 ## Release Notes Requirements
 
@@ -252,7 +269,7 @@ It gave implementation tasks enough detail to create the draft artifact and draf
 ## Open Follow-Up Decisions
 
 - Which exact macOS app bundle layout should be used inside the archive?
-- Should checksum manifests be signed in `v0.4.1` or a later version?
+- Which future release should first require signed checksum manifests?
 - Which validation evidence should be attached to future release notes?
 
 ## Next Implementation Tasks

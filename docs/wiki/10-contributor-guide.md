@@ -79,7 +79,7 @@ Do not retroactively expand it.
 
 It remains local-only, source-oriented, and historical. It has no published release assets, installers, packaging, signing, notarization, or auto-update.
 
-`v0.4.1` is the current public Developer Preview.
+`v0.4.1` is the latest published Developer Preview. The current development target is `v0.4.2 Developer Preview Refresh`.
 
 It is available through the [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) as unsigned, not-notarized, archive-based macOS arm64 and macOS x64 downloads with `SHA256SUMS` verification.
 

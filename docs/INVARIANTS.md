@@ -572,6 +572,33 @@ What this prevents:
 - incomplete validation
 - governance theater
 
+## Invariant 26: Release Truth
+
+Every user-facing statement about project capabilities, installation, downloads,
+release status, or supported workflows shall identify whether it describes the
+latest published release or the current development branch.
+
+Documentation shall not silently combine published-release behavior with
+unreleased development behavior.
+
+Release-sensitive facts shall be derived from the governed release-truth record.
+Historical release evidence remains immutable. Development changes require a new
+release rather than mutation of an existing public tag or release.
+
+What this protects:
+
+- user trust
+- release reproducibility
+- documentation accuracy
+- historical release evidence
+
+What this prevents:
+
+- unreleased capabilities being attributed to published artifacts
+- stale or contradictory release labels
+- ambiguous version ownership
+- mutation of historical release truth
+
 ## Required Validation
 
 Future implementations should include automated checks for these invariants where practical.
@@ -585,6 +612,7 @@ Examples:
 - audit tests proving provenance capture
 - policy bundle tests proving signature and compatibility validation
 - negative-path tests proving fail-closed behavior
+- release-truth tests proving documentation and version alignment
 
 ## Change Control
 

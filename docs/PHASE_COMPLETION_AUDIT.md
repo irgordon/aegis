@@ -1,5 +1,16 @@
 # AEGIS Phase Completion Language Audit
 
+## Release Truth Context
+
+This is historical audit evidence from the first `v0.4.1` publication cycle.
+The authoritative current state is recorded in `config/release-truth.json`,
+`docs/ROADMAP.md`, `docs/PHASEMAP.md`, and `docs/TASKS.md`.
+
+- Latest published release: `v0.4.1 Developer Preview`
+- Current development target: `v0.4.2 Developer Preview Refresh`
+- Active engineering phase: `Phase 5 Developer Distribution`
+- Active repository priority: `P0 Repository Truth`
+
 ## Summary
 
 Recommendation: PASS WITH FIXES.
@@ -28,7 +39,10 @@ The completed release milestones remain clear:
 
 Phase 5 remains the current phase.
 
-Current Phase 5 work is Developer Distribution. The published `v0.4.1` Developer Preview is complete. Remaining Phase 5 work focuses on developer download verification, portable launch verification, and later platform validation.
+Current Phase 5 work is Developer Distribution. The published `v0.4.1`
+Developer Preview, developer download verification, and portable launch
+verification are complete. P0 repository-truth reconciliation now precedes the
+`v0.4.2` refresh and later cross-platform validation.
 
 ## Future Phases
 

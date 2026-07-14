@@ -4,6 +4,42 @@ All notable changes to AEGIS are documented in this file.
 
 This changelog follows the Keep a Changelog structure and is governed by the AEGIS Definition of Done. Future releases shall update this file when repository behavior, documentation, schemas, policy contracts, or release artifacts change.
 
+## [Unreleased]
+
+Release target: `v0.4.2 Developer Preview Refresh`.
+
+### Added
+
+- Added the Release Truth invariant and its formal architecture decision.
+- Added a machine-readable release-truth record for repository validation.
+- Added release-truth validation for documentation, task status, and version metadata.
+
+### Changed
+
+- Distinguished immutable `v0.4.1` release behavior from current `v0.4.2` development behavior.
+- Decoupled engineering phases from product release versions.
+- Unified release-facing Cargo, Tauri, changelog, artifact, and tag version policy.
+- Added desktop crate validation to normal continuous integration.
+- Reconciled roadmap, phasemap, tasks, release guidance, and desktop identity.
+
+## [v0.4.1] - 2026-07-03
+
+### Added
+
+- Published the first public AEGIS Developer Preview.
+- Published unsigned macOS arm64 and macOS x64 archives.
+- Published a combined `SHA256SUMS` manifest.
+
+### Known Limitations
+
+- The published archives do not include the later `health.check` request fixture.
+- The published gateway does not provide conventional `--help` output.
+- The published desktop retains the earlier `v0.4.0 pre-alpha local-only` identity.
+
+## Legacy Repository Iteration History
+
+The following `0.2.x` entries record internal repository iterations. They are not public release versions. New work is recorded under `Unreleased` until the next product release.
+
 ## [0.2.66] - 2026-07-04
 
 ### Changed

@@ -33,11 +33,22 @@ Phase 4 has a Tauri shell and Slint operator surface. The CLI remains a support 
 
 `v0.4.0` is complete, tagged, and pushed as a local-only, pre-alpha, source-oriented release.
 
-Post-`v0.4.0` distribution work produced the first public downloadable Developer Preview in `v0.4.1`, starting with unsigned, not-notarized macOS archives and a combined `SHA256SUMS` manifest. The next implementation work should verify developer download and portable launch behavior, then expand validation toward later platforms.
+Post-`v0.4.0` distribution work produced the first public downloadable Developer Preview in `v0.4.1`, starting with unsigned, not-notarized macOS archives and a combined `SHA256SUMS` manifest. Developer download and portable launch verification are complete for those artifacts.
 
-For contributors, the backlog has been reorganized around improving the public Developer Preview. Completed Phase 2, Phase 3, and Phase 4 foundation work is no longer an active task list. Active work remains in Phase 5 developer distribution.
+The immutable `v0.4.1` artifacts do not contain the later bundled request fixture, conventional CLI help, or corrected desktop release identity now present on the development branch.
+
+For contributors, P0 Repository Truth reconciliation is the active priority inside Phase 5. Feature and distribution expansion pause until release-sensitive documentation, version identity, task state, and validation agree.
 
 For engineers and architects, execution remains the primary architectural concern. The UI remains non-authoritative. It renders backend evidence; it does not evaluate policy, authorize execution, inject credentials, dispatch wrappers, or invent lifecycle or recovery state.
+
+## Current Release Truth
+
+- Latest published release: `v0.4.1 Developer Preview`
+- Current development target: `v0.4.2 Developer Preview Refresh`
+- Active engineering phase: `Phase 5 Developer Distribution`
+- Active repository priority: `P0 Repository Truth`
+
+Engineering phases describe maturity. Release versions describe validated outcomes. They are intentionally independent.
 
 ## Phase 0: Governance Baseline
 
@@ -303,7 +314,7 @@ Downloadable artifact publishing is gated by validation for every release. Signi
 ## Phase 5: Developer Distribution
 
 ### Objective
-Deliver the first downloadable developer-preview release without weakening the governance properties established in earlier phases.
+Improve downloadable developer-preview distribution without weakening the governance properties established in earlier phases.
 
 The primary Phase 5 question is:
 
@@ -322,12 +333,17 @@ Completed:
 - first downloadable developer-preview release
 - clear unsigned developer-preview warnings
 - SHA-256 checksum verification instructions
+- developer download verification for published `v0.4.1` artifacts
+- portable launch verification for published `v0.4.1` artifacts
+- current-development smoke-test fixture, CLI help, and desktop identity improvements
 
 Remaining:
 
-- cross-platform artifact validation
-- developer download verification
-- portable launch verification
+- complete P0 Repository Truth reconciliation
+- validate and publish `v0.4.2 Developer Preview Refresh`
+- verify direct annotated-tag dispatch using the new immutable tag
+- validate Windows x64 artifacts
+- validate Linux x64 artifacts
 
 ### Exit Criteria
 - a developer can download AEGIS from GitHub
@@ -352,6 +368,18 @@ Remaining:
 - cloud distribution
 - plugin ecosystem
 - database backends
+
+## Planned Release Outcomes
+
+Release versions remain outcomes rather than phase containers.
+
+| Version | Intended outcome | Phase relationship |
+| --- | --- | --- |
+| `v0.4.1` | Historical first public macOS Developer Preview. | Phase 5 evidence; published. |
+| `v0.4.2` | Developer Preview Refresh containing reconciled identity and first-run improvements. | First release under P0 Release Truth governance. |
+| `v0.5.0` | Windows x64 and Linux x64 Developer Preview. | Phase 5 distribution outcome; does not assign a version to Phase 6. |
+
+Phase 6 begins only after its engineering entry criteria are satisfied. Its release version will be selected when a bounded release outcome is defined.
 
 ## Phase 6: Developer Experience
 

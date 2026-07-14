@@ -51,9 +51,29 @@ Before release:
 
 ## Versioning
 
-Version milestones communicate maturity.
+Engineering phases and release versions are independent.
 
-A version is valid only when its documented exit criteria are satisfied in `PHASEMAP.md` and relevant roadmap scope is complete.
+Engineering phases communicate implementation maturity and sequencing.
+
+Release versions communicate validated, published outcomes. A phase does not reserve a version number, and a release does not imply that an entire engineering phase is complete unless its release evidence says so.
+
+AEGIS uses one product version across:
+
+- Git tags
+- GitHub Releases
+- release artifact names
+- gateway Cargo package metadata
+- desktop Cargo package metadata
+- Tauri application metadata
+- published release changelog headings
+
+Between releases, CHANGELOG uses an `Unreleased` section tied to the governed development target.
+
+Legacy `0.2.x` changelog headings are historical repository iteration labels. They are not public release versions and shall not be continued.
+
+The canonical current values are stored in `config/release-truth.json`.
+
+A version is valid only when its documented release scope and acceptance criteria are satisfied. Phase exit criteria remain engineering gates rather than automatic version assignments.
 
 ## Compatibility
 

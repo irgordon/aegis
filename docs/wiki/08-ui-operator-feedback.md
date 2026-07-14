@@ -107,7 +107,7 @@ It does not submit arbitrary gateway requests, execute `sandbox.note.write`, cho
 
 The current UI uses a warm palette, status-first cards, explicit live/sample/not-available labels, a neutral no-error state, and an authority-boundary message.
 
-The desktop identifies the public `v0.4.1` Developer Preview as a prerelease that is unsigned and not notarized.
+The current development desktop explicitly distinguishes the latest published `v0.4.1` release from the `v0.4.2` development target. The immutable `v0.4.1` desktop artifact retains its earlier `v0.4.0 pre-alpha local-only` identity.
 
 The visual readability review passed for v0.4.0. Evidence is recorded in `docs/assets/release/v0.4.0-desktop-readability-review.md`.
 

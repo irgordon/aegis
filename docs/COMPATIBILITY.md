@@ -116,6 +116,16 @@ Version changes should follow these expectations:
 
 Pre-1.0 versions may evolve quickly, but breaking changes still require documentation, task updates, schema updates, examples, and validation evidence.
 
+## Product Version Identity
+
+AEGIS uses one release-facing product version for Git tags, GitHub Releases, artifacts, gateway and desktop Cargo metadata, Tauri metadata, and published changelog headings.
+
+Engineering phases are not version namespaces. They describe maturity and may span multiple product releases.
+
+The current development product version may be newer than the latest published release. User-facing statements must identify which one they describe.
+
+Legacy `0.2.x` changelog headings record internal repository iterations and do not represent published releases.
+
 ## Compatibility Evidence
 
 Compatibility-sensitive changes must update the relevant evidence:

@@ -29,13 +29,15 @@ AEGIS is a Rust execution governance gateway for AI-driven actions with a deskto
 
 It validates requests, verifies policy, authorizes execution, checks credential boundaries, dispatches governed wrappers, records audit evidence, and fails closed when it cannot prove an action is safe to continue.
 
-AEGIS is a public Developer Preview. The current [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) provides unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
+**Latest published release:** [`v0.4.1` Developer Preview](https://github.com/irgordon/aegis/releases/tag/v0.4.1). It provides unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
 
-Generated Developer Preview archives include a safe `health.check` request fixture so the gateway can run one governed smoke test from the extracted artifact.
+The immutable `v0.4.1` artifacts predate the current first-run refresh. They do not include the later bundled `health.check` request fixture, conventional `--help` output, or updated desktop release identity.
+
+**Current development target:** `v0.4.2 Developer Preview Refresh`. The current development branch contains those unreleased first-run improvements. They are not part of the latest published release until `v0.4.2` is validated and published.
 
 AEGIS remains a prerelease. Do not deploy it to protect production systems or treat it as enterprise-hardened.
 
-For first-run download, checksum, extraction, launch, and gateway smoke-test notes, start with the [wiki overview](docs/wiki/01-overview.md).
+For release-accurate download, checksum, extraction, and launch notes, start with the [wiki overview](docs/wiki/01-overview.md).
 
 ## How?
 

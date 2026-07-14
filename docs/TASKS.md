@@ -18,11 +18,38 @@ Task status values are bounded:
 
 No other status values should be used unless this document is updated.
 
+## Current Release Truth
+
+- Latest published release: `v0.4.1 Developer Preview`
+- Current development target: `v0.4.2 Developer Preview Refresh`
+- Active engineering phase: `Phase 5 Developer Distribution`
+- Active repository priority: `P0 Repository Truth`
+
+The immutable `v0.4.1` artifacts contain two macOS archives and a combined `SHA256SUMS`. They do not contain the later bundled request fixture, conventional CLI help, or corrected desktop identity now present on the development branch.
+
+## Active P0 Work: Repository Truth
+
+P0 pauses release expansion until the repository has one authoritative project, release, and version truth.
+
+| Task | Status |
+| --- | --- |
+| Record the Release Truth architecture decision | complete |
+| Add the Release Truth invariant | complete |
+| Add the machine-readable release-truth record | complete |
+| Define the unified product version policy | complete |
+| Reconcile release-sensitive documentation | complete |
+| Reconcile roadmap, phasemap, and task status | complete |
+| Align Cargo, Tauri, changelog, and UI development versions | complete |
+| Reject duplicate and conflicting task states | complete |
+| Add release-truth checks to repository verification | complete |
+| Add desktop validation to normal CI | complete |
+| Complete P0 validation and exit review | complete |
+
 ## Active Phase 5 Work: Developer Distribution
 
 `v0.4.0` is complete, tagged, and pushed as a local-only source release.
 
-Current work improves the first downloadable Developer Preview without changing runtime behavior, UI behavior, gateway authority, or governance boundaries.
+Phase 5 distribution work resumes after P0. The next bounded release outcome is `v0.4.2 Developer Preview Refresh`, followed by Windows x64 and Linux x64 validation for `v0.5.0`.
 
 The draft artifact workflow is on `origin/main`. Manual workflow reviews produced inspectable macOS workflow artifacts. The combined `SHA256SUMS` manifest now covers both macOS draft archives and verifies successfully in workflow artifacts.
 
@@ -30,15 +57,19 @@ The environment-coupling audit found a release-blocking desktop artifact issue: 
 
 Artifact-level workflow review confirms release binary path remapping is resolved for runtime portability. One Tauri-generated desktop context string remains as deferred release hygiene.
 
-The draft GitHub Release workflow now exists. It is manual-only, requires an existing `v0.4.1` tag, requires the workflow checkout to match that tag, creates or updates a draft prerelease for maintainer review, and refuses to modify a non-draft release.
+The historical draft GitHub Release workflow was manual-only, required the
+existing `v0.4.1` tag and a matching checkout, created or updated a draft
+prerelease for maintainer review, and refused to modify a non-draft release.
+The current-development workflow preserves those safeguards and targets a new
+`v0.4.2` tag.
 
 The first public GitHub Release exists for `v0.4.1`. It remains a prerelease Developer Preview. It contains the two macOS archives and the combined `SHA256SUMS` manifest. Local checksum verification passed before and after publication.
 
-Generated Developer Preview archives now stage a safe `health.check` request fixture at `examples/health-check-request.json`. The artifact README documents one gateway smoke-test command that uses the bundled policy bundle and does not require a source checkout.
+Current-development artifact workflows stage a safe `health.check` request fixture at `examples/health-check-request.json`. The published `v0.4.1` artifacts do not contain that fixture. It targets `v0.4.2`.
 
 The gateway now treats `--help` and `-h` as conventional help requests. Help output points first-time users to the bundled `health.check` smoke test and returns success instead of a structured invalid-arguments error.
 
-The desktop first-run review is complete. The desktop launches, communicates governed evidence, and now shows the public `v0.4.1` Developer Preview identity. The no-error state is neutral when live health-check evidence contains no error report.
+The desktop first-run review is complete on the current development branch. The desktop launches, communicates governed evidence, distinguishes current `v0.4.2` development from the latest `v0.4.1` release, and uses a neutral no-error state when live health-check evidence contains no error report.
 
 A direct workflow dispatch from the annotated `v0.4.1` tag exposed a tag-fetch conflict in the workflow guard. The successful draft release run used `main` at the exact same commit as the `v0.4.1` tag, and the workflow guard verified the checkout matched the tag.
 
@@ -74,17 +105,19 @@ If no box is checked, defer the work until Phase 6 or later.
 | Add draft GitHub Release workflow | complete |
 | Verify draft GitHub Release | complete |
 | Harden direct annotated-tag dispatch for future draft release workflow tags | complete |
-| Verify direct tag dispatch on a tag created after guard hardening | planned |
-| Cross-platform artifact validation | planned |
+| Verify direct tag dispatch after creating the v0.4.2 tag | planned |
+| Validate Windows x64 artifacts | planned |
+| Validate Linux x64 artifacts | planned |
 | Developer download verification | complete |
 | Portable launch verification | complete |
 | Re-run desktop first-screen validation from an active local display | complete |
-| Update desktop release identity labels for v0.4.1 Developer Preview | complete |
+| Distinguish current development from latest release in desktop identity | complete |
 | Improve desktop no-error empty state | complete |
 | Add desktop next-step cue for the gateway smoke test | complete |
 | Add artifact-only gateway smoke-test request or guidance | complete |
 | Improve gateway first-run help output | complete |
 | Draft v0.4.1 developer-preview release notes | complete |
+| Reconcile and publish v0.4.2 Developer Preview Refresh | planned |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |
 
@@ -109,10 +142,10 @@ Completed inputs for Phase 5:
 - published `v0.4.1` Developer Preview GitHub Release
 - post-publish checksum verification of unchanged `v0.4.1` assets
 - developer download and portable launch review for public `v0.4.1` assets
-- artifact-only `health.check` gateway smoke-test fixture and artifact README guidance
-- conventional gateway `--help` and `-h` output for the bundled smoke test
-- desktop first-run review for the public `v0.4.1` Developer Preview
-- updated desktop `v0.4.1` Developer Preview identity and neutral no-error state
+- current-development artifact-only `health.check` gateway smoke-test fixture and guidance targeting `v0.4.2`
+- current-development gateway `--help` and `-h` output targeting `v0.4.2`
+- desktop first-run review comparing public `v0.4.1` with current development
+- current-development desktop identity and neutral no-error state targeting `v0.4.2`
 
 Deferred from Phase 5:
 
@@ -324,86 +357,6 @@ Status: complete for `v0.4.0`.
 | Consolidate draft artifact checksum manifest | complete |
 | Rerun draft artifact workflow and verify combined checksum manifest | complete |
 | Render audit, state, recovery inspection, and recovery plan views read-only after v0.4.0 | planned |
-
-## Phase 5: Developer Distribution
-
-Objective: improve the first downloadable Developer Preview while preserving the governance and security boundaries established by earlier phases.
-
-Status: active.
-
-| Task | Status |
-| --- | --- |
-| Strip or remap source paths in developer-preview binaries | complete |
-| Verify release binary source path reduction in workflow artifacts | complete |
-| Validate artifact naming and checksum generation | complete |
-| Add draft GitHub Release workflow | complete |
-| Verify draft GitHub Release | complete |
-| Cross-platform artifact validation | planned |
-| Developer download verification | complete |
-| Portable launch verification | complete |
-| Re-run desktop first-screen validation from an active local display | complete |
-| Update desktop release identity labels for v0.4.1 Developer Preview | planned |
-| Improve desktop no-error empty state | planned |
-| Add artifact-only gateway smoke-test request or guidance | complete |
-| Improve gateway first-run help output | complete |
-| Draft v0.4.1 developer-preview release notes | complete |
-| GitHub Release publishing | complete |
-| Publish first unsigned developer-preview build | complete |
-
-## Phase 6: Developer Experience
-
-Objective: improve evaluation, launch, troubleshooting, and read-only evidence review after downloadable developer-preview artifacts exist.
-
-| Task | Status |
-| --- | --- |
-| Improve first-run and launch guidance | planned |
-| Add read-only audit and state evidence views | planned |
-| Add read-only recovery inspection and recovery plan views | planned |
-| Add developer troubleshooting notes | planned |
-| Add local evaluation walkthroughs | planned |
-
-## Phase 7: Production Distribution
-
-Objective: move from unsigned developer-preview archives toward normal platform distribution.
-
-| Task | Status |
-| --- | --- |
-| Plan signed checksum manifests | planned |
-| Add code signing when scheduled | planned |
-| Add macOS notarization when scheduled | planned |
-| Add installer or app bundle packaging when scheduled | planned |
-| Decide whether auto-update belongs in a later release | planned |
-
-## Phase 8: Runtime and Platform Expansion
-
-Objective: add runtime governance and platform capabilities after developer and production distribution boundaries are stable.
-
-| Task | Status |
-| --- | --- |
-| Add replay eligibility report | planned |
-| Add replay dry-run plan | planned |
-| Add constrained replay execution | planned |
-| Add audit retry path | planned |
-| Add recovery execution guardrails | planned |
-| Add approval workflow boundary | planned |
-| Add approval evidence and state persistence | planned |
-| Add production credential provider boundary | planned |
-| Add provider compatibility checks | planned |
-| Add HTTP API boundary | planned |
-| Add service deployment model | planned |
-| Add runtime configuration model | planned |
-| Add operational observability | planned |
-| Add plugin or wrapper extension architecture | planned |
-| Add orchestrator integration references | planned |
-| Add production PKI or trust distribution | planned |
-| Add remote policy distribution | planned |
-| Add high-availability deployment guidance | planned |
-| Add performance and load testing | planned |
-| Complete security review | planned |
-| Add fuzz testing for critical parsers and boundaries | planned |
-| Add compatibility guarantees | planned |
-| Add release engineering | planned |
-| Add operational documentation | planned |
 
 ## Governance Maintenance Tasks
 

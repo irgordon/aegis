@@ -3,45 +3,58 @@
 
 ## Purpose
 
-This document maps AEGIS development phases to version milestones.
+This document defines AEGIS engineering maturity gates and records release outcomes without binding a phase to a version number.
 
 The roadmap describes direction.
 
-The phasemap defines versioned maturity gates.
+The phasemap defines engineering maturity gates.
 
-Each version exists to make the project more complete, deterministic, secure, and auditable.
+Release versions provide evidence of bounded outcomes achieved within or across those gates.
 
-## Versioning Principle
+## Phase and Release Principle
 
-AEGIS uses version milestones to communicate maturity, not marketing status.
+Engineering phases communicate maturity and sequencing.
 
-A version is valid only when its documented exit criteria are satisfied.
+Release versions communicate validated outcomes. A phase may span multiple releases, and a release does not automatically close a phase.
+
+## Current Release Truth
+
+- Latest published release: `v0.4.1 Developer Preview`
+- Current development target: `v0.4.2 Developer Preview Refresh`
+- Active engineering phase: `Phase 5 Developer Distribution`
+- Active repository priority: `P0 Repository Truth`
 
 ## Current Phase Model
 
-| Phase | Version Track | Name | Status | Purpose | Current Tasks | Deferred Tasks |
-| --- | --- | --- | --- | --- | --- | --- |
-| 0 | v0.1.x | Governance Baseline | Complete | Establish documentation-driven governance. | None. | None. |
-| 1 | v0.1.x | Contracts and Architecture Foundation | Complete | Define schemas, examples, and compatibility contracts. | None. | None. |
-| 2 | v0.2.0 | Local Gateway MVP | Complete | Prove local governed request-to-response behavior. | None. | None. |
-| 3 | v0.3.0 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
-| 3.5 | v0.3.x | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
-| 4 | v0.4.0 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI and define the minimum usable local release. | None. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
-| 5 | v0.4.1 | Developer Distribution | Active | Deliver and verify the first downloadable Developer Preview without requiring the maintainer machine or source checkout. | Verify download and launch behavior, then expand platform validation. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
-| 6 | v0.5.0 | Developer Experience | Not started | Improve evaluation, launch, troubleshooting, and read-only evidence review after downloads work. | None. | Replay execution, approval workflow, production credentials, and production distribution. |
-| 7 | v0.6.0 | Production Distribution | Not started | Add signed or clearly bounded production-style distribution after developer-preview artifacts are proven. | None. | Runtime expansion and platform hardening. |
-| 8 | v0.7.0 | Runtime and Platform Expansion | Not started | Add recovery, approval, credential provider, service, deployment, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
+| Phase | Name | Status | Purpose | Current Tasks | Deferred Tasks |
+| --- | --- | --- | --- | --- | --- |
+| 0 | Governance Baseline | Complete | Establish documentation-driven governance. | None. | None. |
+| 1 | Contracts and Architecture Foundation | Complete | Define schemas, examples, and compatibility contracts. | None. | None. |
+| 2 | Local Gateway MVP | Complete | Prove local governed request-to-response behavior. | None. | None. |
+| 3 | Governed Execution Engine | Complete for local built-in execution foundation. | Prove safe local wrapper execution under policy, authorization, credential, audit, and state boundaries. | None. | Replay execution, approval workflow, and production credential providers. |
+| 3.5 | UI-Ready Evidence and Documentation | Complete | Make backend evidence understandable and renderable by a future UI. | None. | Live UI rendering and IPC. |
+| 4 | Graphical Operator Surface | Complete for local release. | Render backend evidence in a non-authoritative Tauri plus Slint desktop UI. | None. | HTTP service, platform deployment, replay execution, approval workflow, and production credential providers. |
+| 5 | Developer Distribution | Active | Deliver portable, verifiable Developer Preview artifacts. | Complete P0 Repository Truth, publish `v0.4.2`, then validate Windows x64 and Linux x64. | Installers, signing, notarization, auto-update, replay execution, approval workflow, and production credentials. |
+| 6 | Developer Experience | Not started | Improve evaluation, launch, troubleshooting, and read-only evidence review after distribution works. | None. | Replay execution, approval workflow, production credentials, and production distribution. |
+| 7 | Production Distribution | Not started | Add signed or clearly bounded production-style distribution after developer-preview artifacts are proven. | None. | Runtime expansion and platform hardening. |
+| 8 | Runtime and Platform Expansion | Not started | Add recovery, approval, credential provider, service, deployment, and operational maturity. | None. | Post-1.0 ecosystem tracks. |
 
-## Current Gate Summary
+## Engineering Gate Summary
 
-| Version | Entry Criteria | Exit Criteria |
+| Phase | Entry Criteria | Exit Criteria |
 | --- | --- | --- |
-| v0.3.0 | Phase 2 local Gateway MVP complete. | Local built-in wrapper execution, authorization, credential boundaries, lifecycle, audit, state, recovery inspection, and recovery planning are validated. |
-| v0.4.0 | UI-ready backend evidence exists, local gateway execution works, and Tauri plus Slint direction is documented. | Minimum usable local release checklist passes; the UI renders fixture evidence first, then read-only live evidence, without owning policy, authorization, credential, wrapper, audit, state, or recovery decisions. Complete, tagged, and pushed. |
-| v0.4.1 | v0.4.0 is complete, distribution targets are selected, and draft artifacts are verified as workflow artifacts. | A developer can download, verify, extract, launch, and evaluate AEGIS without the maintainer machine or a source checkout. |
-| v0.5.0 | Downloadable developer-preview artifacts exist and can be evaluated without a source checkout. | Developer evaluation, launch, troubleshooting, and read-only evidence review are clear without adding runtime authority. |
-| v0.6.0 | Developer-preview distribution is stable enough to plan broader distribution. | Production-style distribution controls are documented, validated, and do not alter runtime governance. |
-| v0.7.0 | Developer and production distribution boundaries are stable. | Runtime recovery, approval, credential provider, service, deployment, and operational controls are tested, documented, and reproducible. |
+| 5 | Phase 4 local operator surface and release evidence are complete. | Declared Developer Preview platforms are portable, verifiable, documented, and release-governed. |
+| 6 | Developer distribution works without maintainer-specific knowledge. | Evaluation, launch, troubleshooting, and read-only evidence review are clear without adding runtime authority. |
+| 7 | Developer Preview distribution is stable enough for platform trust work. | Production-style distribution controls are documented, validated, and do not alter runtime governance. |
+| 8 | Developer and production distribution boundaries are stable. | Runtime recovery, approval, credential provider, service, deployment, and operational controls are tested, documented, and reproducible. |
+
+## Release Outcome Summary
+
+| Version | Outcome | Status |
+| --- | --- | --- |
+| `v0.4.1` | First public macOS Developer Preview. | Published historical release. |
+| `v0.4.2` | Developer Preview Refresh with repository truth and post-tag first-run improvements. | Current development target. |
+| `v0.5.0` | Windows x64 and Linux x64 Developer Preview. | Planned Phase 5 outcome. |
 
 ## v0.0.0: Initial Repository
 
@@ -283,7 +296,7 @@ Deliver and verify the first downloadable Developer Preview.
 This milestone should let another developer download, verify, launch, and evaluate AEGIS without the maintainer machine or a source checkout.
 
 ### Status
-Active after publishing the first public Developer Preview.
+Published historical release.
 
 ### Required Capabilities
 Completed:
@@ -294,12 +307,16 @@ Completed:
 - first downloadable developer-preview release
 - clear unsigned developer-preview warnings
 - checksum verification instructions
-
-Remaining:
-
-- cross-platform artifact validation
 - developer download verification
 - portable launch verification
+
+Not included in the immutable release:
+
+- bundled `health.check` request fixture
+- conventional gateway `--help` output
+- corrected desktop Developer Preview identity
+
+Those improvements exist on the current development branch and target `v0.4.2`.
 
 ### Exit Criteria
 - AEGIS can be downloaded from GitHub
@@ -326,7 +343,53 @@ Remaining:
 - plugin ecosystem
 - database backends
 
-## v0.5.0: Developer Experience
+## v0.4.2: Developer Preview Refresh
+
+### Purpose
+Publish the post-`v0.4.1` first-run improvements under the Release Truth invariant.
+
+### Status
+Current development target after P0 Repository Truth closes.
+
+### Required Capabilities
+- reconciled latest-release and current-development documentation
+- unified release-facing product version identity
+- bundled safe `health.check` request fixture
+- conventional gateway `--help` output
+- explicit current-development desktop identity
+- desktop validation in normal CI
+- direct annotated-tag dispatch verification
+
+### Exit Criteria
+- P0 Repository Truth is complete
+- public documentation describes the release artifact accurately
+- package, desktop, artifact, tag, and changelog versions agree
+- checksums verify
+- gateway and desktop launch from extracted artifacts
+- the immutable `v0.4.1` release remains unchanged
+
+## v0.5.0: Windows and Linux Developer Preview
+
+### Purpose
+Add Windows x64 and Linux x64 Developer Preview artifacts after the refreshed macOS path is stable.
+
+### Status
+Planned Phase 5 release outcome.
+
+### Required Capabilities
+- Windows x64 archive build and validation
+- Linux x64 archive build and validation
+- platform-specific artifact smoke tests
+- combined checksum and release-note coverage
+- portable gateway and desktop launch evidence
+
+### Exit Criteria
+- Windows x64 and Linux x64 artifacts are reproducible and verifiable
+- artifacts do not require a source checkout or maintainer machine
+- platform limitations are explicit
+- release governance remains intact
+
+## Phase 6: Developer Experience
 
 ### Purpose
 Improve the experience of evaluating AEGIS after the first downloadable developer preview exists.
@@ -345,7 +408,7 @@ Improve the experience of evaluating AEGIS after the first downloadable develope
 - troubleshooting guidance is clear and current
 - no production deployment, replay execution, approval workflow, or credential provider work is introduced
 
-## v0.6.0: Production Distribution
+## Phase 7: Production Distribution
 
 ### Purpose
 Move from unsigned developer-preview archives toward normal platform distribution.
@@ -365,7 +428,7 @@ Move from unsigned developer-preview archives toward normal platform distributio
 - release assets remain reproducible and verifiable
 - distribution changes do not alter gateway authority, policy behavior, or runtime governance
 
-## v0.7.0: Runtime and Platform Expansion
+## Phase 8: Runtime and Platform Expansion
 
 ### Purpose
 Expand runtime governance and platform capabilities after developer distribution and production distribution boundaries are stable.

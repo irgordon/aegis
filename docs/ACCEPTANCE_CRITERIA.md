@@ -200,6 +200,19 @@ A release is accepted only when:
 - Release artifacts are reproducible.
 - Security implications are reviewed.
 
+## Release Truth Acceptance Criteria
+
+Release truth is accepted only when:
+
+- User-facing release statements identify latest-release or current-development scope.
+- README latest-release facts match the governed release-truth record.
+- Current development target labels match package and desktop metadata.
+- Changelog release headings distinguish published releases from unreleased work.
+- Roadmap, phasemap, and tasks agree on active phase and task status.
+- A task does not appear with conflicting or duplicate status rows.
+- Historical public tags and releases remain unchanged.
+- Automated verification rejects release-truth drift.
+
 ## Definition of Done
 
 Work is done only when:

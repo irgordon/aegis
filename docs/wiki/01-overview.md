@@ -21,9 +21,11 @@ AEGIS is a public Developer Preview.
 
 `v0.4.0` is complete, tagged, pushed, and closed as a local-only source release.
 
-`v0.4.1` is the current public prerelease. It is available from the [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) as unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
+**Latest published release:** `v0.4.1`. It is available from the [`v0.4.1` GitHub Release](https://github.com/irgordon/aegis/releases/tag/v0.4.1) as unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
 
-The repository currently contains a local Rust gateway, a Tauri plus Slint desktop shell, governed built-in wrappers, audit and state evidence, recovery inspection, recovery planning, and an executable release validation gate.
+**Current development target:** `v0.4.2 Developer Preview Refresh`.
+
+The current development branch contains a local Rust gateway, a Tauri plus Slint desktop shell, governed built-in wrappers, audit and state evidence, recovery inspection, recovery planning, and an executable release validation gate.
 
 It can validate structured requests, verify a local policy bundle, evaluate local policy, authorize governed execution, dispatch built-in local wrappers, optionally append local audit and state evidence, inspect local execution state, generate read-only recovery plan reports, and show fixed live health-check evidence in the desktop UI.
 
@@ -66,22 +68,9 @@ tar -xzf aegis-v0.4.1-macos-arm64.tar.gz
 ./aegis-v0.4.1-macos-arm64/desktop/aegis-desktop
 ```
 
-7. Run the gateway smoke test from the extracted archive:
+The immutable `v0.4.1` archive does not include a request fixture and its gateway does not provide conventional `--help` output. Do not use current-development smoke-test instructions with that release.
 
-```bash
-cd aegis-v0.4.1-macos-arm64
-./bin/aegis-gateway --bundle policy-bundles/local-dev examples/health-check-request.json
-```
-
-Use `cd aegis-v0.4.1-macos-x64` for the Intel macOS archive.
-
-The smoke test is read-only. It uses the bundled local policy bundle and a bundled `health.check` request fixture. It demonstrates request validation, policy verification, authorization, wrapper execution, audit evidence, state evidence, and a structured response.
-
-For concise gateway help, run:
-
-```bash
-./bin/aegis-gateway --help
-```
+The current development branch adds the safe request fixture and conventional help for the planned `v0.4.2` refresh.
 
 ## What It Does Today
 

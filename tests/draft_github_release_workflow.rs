@@ -2,7 +2,7 @@ use std::fs;
 use std::path::Path;
 
 const WORKFLOW_PATH: &str = ".github/workflows/draft-github-release.yml";
-const RELEASE_BODY_PATH: &str = "docs/releases/v0.4.1-draft-body.md";
+const RELEASE_BODY_PATH: &str = "docs/releases/v0.4.2-draft-body.md";
 
 #[test]
 fn draft_github_release_workflow_exists() {
@@ -29,10 +29,10 @@ fn draft_github_release_workflow_is_manual_only() {
 fn draft_github_release_workflow_uses_fixed_release_target() {
     let workflow = read_workflow();
     let required = [
-        "AEGIS_RELEASE_VERSION: v0.4.1",
-        "AEGIS_RELEASE_TITLE: AEGIS v0.4.1 Developer Preview",
-        "aegis-v0.4.1-macos-arm64.tar.gz",
-        "aegis-v0.4.1-macos-x64.tar.gz",
+        "AEGIS_RELEASE_VERSION: v0.4.2",
+        "AEGIS_RELEASE_TITLE: AEGIS v0.4.2 Developer Preview Refresh",
+        "aegis-v0.4.2-macos-arm64.tar.gz",
+        "aegis-v0.4.2-macos-x64.tar.gz",
         "SHA256SUMS",
     ];
 
@@ -43,14 +43,14 @@ fn draft_github_release_workflow_uses_fixed_release_target() {
 fn draft_github_release_workflow_requires_existing_tag() {
     let workflow = read_workflow();
     let required = [
-        "Require workflow ref to match v0.4.1 tag",
+        "Require workflow ref to match v0.4.2 tag",
         "git ls-remote --exit-code --tags origin \"refs/tags/${AEGIS_RELEASE_VERSION}\"",
         "git show-ref --verify --quiet \"refs/tags/${AEGIS_RELEASE_VERSION}\"",
         "git fetch --no-tags origin \"refs/tags/${AEGIS_RELEASE_VERSION}:refs/tags/${AEGIS_RELEASE_VERSION}\"",
         "git rev-parse \"${AEGIS_RELEASE_VERSION}^{commit}\"",
         "git rev-parse HEAD",
         "Run this workflow with --ref ${AEGIS_RELEASE_VERSION} after the maintainer-created tag exists.",
-        "Require existing v0.4.1 tag",
+        "Require existing v0.4.2 tag",
         "git ls-remote --exit-code --tags origin \"refs/tags/${AEGIS_RELEASE_VERSION}\"",
         "gh release create \"${AEGIS_RELEASE_VERSION}\" \"${release_assets[@]}\"",
         "--verify-tag",
@@ -105,7 +105,7 @@ fn draft_github_release_workflow_creates_draft_prerelease_only() {
         "--prerelease",
         "--latest=false",
         "--title \"${AEGIS_RELEASE_TITLE}\"",
-        "--notes-file docs/releases/v0.4.1-draft-body.md",
+        "--notes-file docs/releases/v0.4.2-draft-body.md",
     ];
     let blocked = ["--draft=false", "--prerelease=false"];
 
@@ -133,7 +133,7 @@ fn draft_github_release_workflow_validates_assets_before_release_creation() {
         .find("Validate release asset set")
         .expect("release asset validation step should exist");
     let tag_check = workflow
-        .find("Require existing v0.4.1 tag")
+        .find("Require existing v0.4.2 tag")
         .expect("existing tag check step should exist");
     let release_step = workflow
         .find("Create or update draft GitHub Release")
@@ -153,8 +153,8 @@ fn draft_github_release_workflow_validates_assets_before_release_creation() {
 fn draft_github_release_workflow_uploads_only_expected_release_assets() {
     let workflow = read_workflow();
     let required = [
-        "dist/release-assets/aegis-v0.4.1-macos-arm64.tar.gz",
-        "dist/release-assets/aegis-v0.4.1-macos-x64.tar.gz",
+        "dist/release-assets/aegis-v0.4.2-macos-arm64.tar.gz",
+        "dist/release-assets/aegis-v0.4.2-macos-x64.tar.gz",
         "dist/release-assets/SHA256SUMS",
         "gh release upload \"${AEGIS_RELEASE_VERSION}\" \"${release_assets[@]}\"",
         "diff -u \"${RUNNER_TEMP}/expected-release-assets.txt\" \"${RUNNER_TEMP}/actual-release-assets.txt\"",
@@ -201,7 +201,7 @@ fn draft_github_release_workflow_verifies_combined_checksums() {
     let workflow = read_workflow();
     let required = [
         "Generate and verify combined SHA256SUMS",
-        "find . -maxdepth 1 -name 'aegis-v0.4.1-*.tar.gz' -print | sort",
+        "find . -maxdepth 1 -name 'aegis-v0.4.2-*.tar.gz' -print | sort",
         "shasum -a 256 -c SHA256SUMS",
         "grep -F \"  ${archive}\" SHA256SUMS",
     ];
@@ -257,8 +257,9 @@ fn draft_github_release_workflow_does_not_sign_notarize_or_create_installers() {
 fn draft_github_release_body_contains_required_warnings() {
     let body = read_release_body();
     let required = [
-        "AEGIS v0.4.1 Developer Preview",
-        "first public downloadable AEGIS Developer Preview",
+        "AEGIS v0.4.2 Developer Preview Refresh",
+        "refreshes the first public AEGIS Developer Preview",
+        "Release Truth invariant",
         "developer preview",
         "unsigned and not notarized",
         "prerelease, archive-based, and developer-oriented",
@@ -268,6 +269,7 @@ fn draft_github_release_body_contains_required_warnings() {
         "There is no auto-update",
         "Validate SHA-256 checksums before use",
         "shasum -a 256 -c SHA256SUMS",
+        "historical `v0.4.1` tag and release remain unchanged",
     ];
 
     assert_present(&body, &required);

@@ -44,6 +44,21 @@ Documentation checks should verify:
 - roadmap and phasemap align
 - terminology is consistent
 - docs do not contradict invariants
+- release-sensitive statements identify latest-release or current-development scope
+- release versions align with the governed release-truth record
+- task rows are unique and use one bounded status
+
+## Release Truth Tests
+
+Release-truth checks should verify:
+
+- the release-truth record parses and contains required bounded fields
+- README declares both latest published release and current development target
+- Cargo and Tauri versions match the development product version
+- changelog starts with an `Unreleased` section for the development target
+- roadmap, phasemap, and tasks identify the same active engineering phase
+- duplicate or conflicting task rows fail validation
+- historical release labels are not treated as current development labels
 
 ## Schema Tests
 
@@ -137,6 +152,7 @@ pytest
 ruff check
 mypy
 cargo test
+cargo test --manifest-path src-tauri/Cargo.toml
 go test
 npm test
 ```

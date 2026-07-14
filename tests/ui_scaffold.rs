@@ -23,8 +23,9 @@ fn slint_landing_screen_states_ui_boundary() {
     let slint_ui = read(SLINT_UI);
 
     assert!(slint_ui.contains("AEGIS"));
-    assert!(slint_ui.contains("Developer Preview"));
-    assert!(slint_ui.contains("v0.4.1"));
+    assert!(slint_ui.contains("Development branch"));
+    assert!(slint_ui.contains("v0.4.2"));
+    assert!(slint_ui.contains("Latest release v0.4.1"));
     assert!(slint_ui.contains("Backend authority."));
     assert!(slint_ui.contains("UI evidence only."));
     assert!(read(DESKTOP_ENTRYPOINT).contains("Live: health.check"));
@@ -79,14 +80,14 @@ fn slint_ui_uses_serif_first_typography_without_font_assets() {
 }
 
 #[test]
-fn slint_ui_uses_current_developer_preview_identity() {
+fn slint_ui_distinguishes_release_from_development() {
     let slint_ui = read(SLINT_UI);
     let slint_ui_lower = slint_ui.to_lowercase();
 
     for label in [
-        "Developer Preview",
-        "v0.4.1",
-        "Public prerelease",
+        "Current development: v0.4.2",
+        "Development branch",
+        "Latest release v0.4.1",
         "Unsigned",
         "Not notarized",
     ] {
@@ -382,7 +383,8 @@ fn sample_evidence_is_static_and_not_live() {
         Some(false)
     );
     assert!(slint_ui.contains("Sample: recovery cards"));
-    assert!(slint_ui.contains("Developer Preview"));
+    assert!(slint_ui.contains("Development branch"));
+    assert!(slint_ui.contains("Latest release v0.4.1"));
     assert!(read(DESKTOP_ENTRYPOINT).contains("Live: health.check"));
     assert!(slint_ui.contains("No live error reported"));
 }

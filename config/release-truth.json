@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "latest_published_release": {
+    "version": "v0.4.1",
+    "title": "Developer Preview",
+    "platforms": [
+      "macos-arm64",
+      "macos-x64"
+    ],
+    "includes_health_check_fixture": false,
+    "includes_conventional_cli_help": false
+  },
+  "current_development": {
+    "version": "v0.4.2",
+    "product_version": "0.4.2",
+    "title": "Developer Preview Refresh"
+  },
+  "active_engineering_phase": 5,
+  "active_engineering_phase_name": "Developer Distribution",
+  "active_repository_priority": "P0",
+  "active_repository_priority_name": "Repository Truth",
+  "planned_platform_order": [
+    "macos-arm64",
+    "macos-x64",
+    "windows-x64",
+    "linux-x64",
+    "windows-arm64",
+    "linux-arm64"
+  ]
+}

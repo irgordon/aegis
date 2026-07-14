@@ -2,7 +2,7 @@ use std::fs;
 use std::path::Path;
 
 const WORKFLOW_PATH: &str = ".github/workflows/draft-artifacts.yml";
-const ARTIFACT_README_PATH: &str = "docs/releases/artifact-readme-v0.4.1.md";
+const ARTIFACT_README_PATH: &str = "docs/releases/artifact-readme-v0.4.2.md";
 const ARTIFACT_FIXTURE_PATH: &str = "examples/artifact/health-check-request.json";
 
 #[test]
@@ -64,9 +64,9 @@ fn draft_artifact_workflow_does_not_sign_or_create_installers() {
 fn draft_artifact_workflow_references_expected_artifacts() {
     let workflow = read_workflow();
 
-    assert!(workflow.contains("v0.4.1"));
-    assert!(workflow.contains("aegis-v0.4.1-macos-arm64.tar.gz"));
-    assert!(workflow.contains("aegis-v0.4.1-macos-x64.tar.gz"));
+    assert!(workflow.contains("v0.4.2"));
+    assert!(workflow.contains("aegis-v0.4.2-macos-arm64.tar.gz"));
+    assert!(workflow.contains("aegis-v0.4.2-macos-x64.tar.gz"));
     assert!(workflow.contains("SHA256SUMS"));
     assert!(workflow.contains("shasum -a 256"));
 }
@@ -113,10 +113,10 @@ fn draft_artifact_workflow_generates_combined_checksum_manifest() {
         "actions/download-artifact@v4",
         "merge-multiple: true",
         "Generate combined SHA256SUMS",
-        "find . -maxdepth 1 -name 'aegis-v0.4.1-*.tar.gz' -print | sort",
+        "find . -maxdepth 1 -name 'aegis-v0.4.2-*.tar.gz' -print | sort",
         "shasum -a 256 -c SHA256SUMS",
         "Upload combined draft workflow artifact",
-        "name: draft-artifacts-v0.4.1",
+        "name: draft-artifacts-v0.4.2",
     ];
 
     assert_present(&workflow, &required);
@@ -134,7 +134,7 @@ fn draft_artifact_workflow_checksums_final_archives_only() {
     ];
 
     assert_absent(&workflow, &blocked);
-    assert!(workflow.contains("dist/combined/aegis-v0.4.1-*.tar.gz"));
+    assert!(workflow.contains("dist/combined/aegis-v0.4.2-*.tar.gz"));
     assert!(workflow.contains("dist/combined/SHA256SUMS"));
 }
 
@@ -232,7 +232,7 @@ fn artifact_health_check_fixture_is_safe_and_read_only() {
 fn artifact_readme_contains_required_warnings() {
     let readme = read_artifact_readme();
     let required = [
-        "AEGIS v0.4.1 Developer Preview Artifact",
+        "AEGIS v0.4.2 Developer Preview Refresh Artifact",
         "unsigned, not notarized",
         "archive-based, and developer-oriented",
         "not production-ready or enterprise-hardened",

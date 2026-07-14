@@ -8,6 +8,10 @@ It began as a planning document. The first planned public Developer Preview has 
 
 This document still does not add installers, sign artifacts, notarize app bundles, or change runtime behavior.
 
+**Latest published release:** `v0.4.1 Developer Preview`.
+
+**Current development target:** `v0.4.2 Developer Preview Refresh`.
+
 The first concrete artifact target decision is recorded in `docs/FIRST_DOWNLOADABLE_ARTIFACTS.md`.
 
 ## Current Baseline
@@ -27,7 +31,7 @@ The first concrete artifact target decision is recorded in `docs/FIRST_DOWNLOADA
 
 Do not retroactively expand `v0.4.0`.
 
-`v0.4.1` is the current public Developer Preview.
+`v0.4.1` is the latest published Developer Preview.
 
 `v0.4.1` is:
 
@@ -39,6 +43,8 @@ Do not retroactively expand `v0.4.0`.
 - checksum-verified with `SHA256SUMS`
 - not production-ready
 - not enterprise-hardened
+
+The immutable `v0.4.1` artifacts do not include the later request fixture, conventional CLI help, or corrected desktop identity. Those current-development improvements target `v0.4.2`.
 
 ## Distribution Goals
 
@@ -136,11 +142,15 @@ Examples:
 ```text
 aegis-v0.4.1-macos-arm64.tar.gz
 aegis-v0.4.1-macos-x64.tar.gz
-aegis-v0.4.1-windows-x64.zip
-aegis-v0.4.1-linux-x64.tar.gz
+aegis-v0.5.0-windows-x64.zip
+aegis-v0.5.0-linux-x64.tar.gz
 SHA256SUMS
 SHA256SUMS.sig
 ```
+
+The macOS names describe the published release. The Windows and Linux names
+describe the planned `v0.5.0` cross-platform outcome and are not published
+assets.
 
 Exact extensions should be selected when the first artifact target is chosen.
 
@@ -192,15 +202,15 @@ The draft archives stage the local development policy bundle needed by fixed des
 
 Combined checksum support is verified in workflow artifacts. The combined `SHA256SUMS` manifest covers both macOS draft archives from the latest review run.
 
-The draft artifact workflow does not create a GitHub Release, upload release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
+The current-development draft artifact workflow targets `v0.4.2`. It does not create a GitHub Release, upload release assets, create or move tags, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
 `.github/workflows/draft-github-release.yml` can create or update a draft GitHub Release for maintainer review.
 
-The draft GitHub Release workflow is manually triggered from the existing `v0.4.1` tag ref. It rebuilds the macOS archives, generates and verifies one combined `SHA256SUMS`, requires the existing `v0.4.1` tag, refuses to modify a non-draft release, and attaches only the expected archives plus `SHA256SUMS`.
+The current-development draft GitHub Release workflow is manually triggered from a maintainer-created `v0.4.2` tag ref. It rebuilds the macOS archives, generates and verifies one combined `SHA256SUMS`, requires the existing tag, refuses to modify a non-draft release, and attaches only the expected archives plus `SHA256SUMS`.
 
 It does not publish the release, create or move tags, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
-The draft GitHub Release workflow was verified before the first public publishing step.
+The historical `v0.4.1` draft GitHub Release workflow was verified before the first public publishing step. The current-development workflow targets a new immutable `v0.4.2` tag and must be verified again before publication.
 
 `v0.4.1` is now published as a public prerelease Developer Preview. The release contains the expected two macOS archives and one combined `SHA256SUMS` manifest.
 
@@ -263,11 +273,11 @@ Recommended sequence:
 | --- | --- |
 | `v0.4.0` | Source-only local release. Complete. |
 | `v0.4.1` | First public downloadable Developer Preview. Published as a prerelease with macOS archives and `SHA256SUMS`. |
-| `v0.5.0` | Developer experience after downloadable evaluation works. |
-| `v0.6.0` | Production distribution after developer-preview artifacts are proven. |
+| `v0.4.2` | Developer Preview Refresh under Release Truth governance. |
+| `v0.5.0` | Windows x64 and Linux x64 Developer Preview outcome. |
 | Later | Signed, notarized, installer-based, and broader user-facing artifacts. |
 
-Phase 5 now focuses on validating and improving developer distribution after the first public Developer Preview.
+Phase 5 now focuses on P0 truth reconciliation, the `v0.4.2` refresh, and cross-platform Developer Preview validation. Phase 6 remains an engineering phase without a reserved version.
 
 ## Open Decisions
 
@@ -276,8 +286,9 @@ Phase 5 now focuses on validating and improving developer distribution after the
 
 ## Recommended Next Tasks
 
-1. `test(release): Verify developer download and portable launch`
-2. `test(release): Validate cross-platform artifact path`
-3. `docs(release): Improve first-run Developer Preview guidance`
+1. `docs(governance): Complete P0 repository truth reconciliation`
+2. `chore(release): Validate v0.4.2 Developer Preview Refresh`
+3. `test(release): Validate Windows x64 artifact path`
+4. `test(release): Validate Linux x64 artifact path`
 
 Keep installers, signing, notarization, auto-update, production credentials, replay execution, and approval workflow out of Phase 5.

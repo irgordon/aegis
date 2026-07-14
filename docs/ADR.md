@@ -127,3 +127,98 @@ Zig was not selected because Rust currently provides a broader mature ecosystem 
 - CHANGELOG.md
 - docs/TASKS.md
 - .github/workflows/validate.yml
+
+## ADR-0012: Release Truth and Product Version Identity
+
+### Status
+
+Accepted
+
+### Date
+
+2026-07-14
+
+### Context
+
+The public `v0.4.1` release and the current development branch diverged after the
+release tag was created. Documentation began describing smoke-test guidance,
+first-run help, and desktop identity changes that existed on the development
+branch but not in the immutable published artifacts.
+
+The repository also used unrelated version labels across GitHub releases,
+changelog entries, Cargo packages, and Tauri metadata. That made it unclear
+whether a version described a public release, crate compatibility, or an internal
+repository iteration.
+
+### Decision
+
+Adopt a Release Truth invariant.
+
+Maintain one machine-readable release-truth record containing the latest
+published release, the current development target, the active engineering phase,
+and the planned platform order.
+
+Use one product version for release-facing Git tags, GitHub Releases, artifact
+names, Cargo package versions, Tauri application metadata, and release changelog
+headings. Use an `Unreleased` changelog section between published releases.
+
+Engineering phases describe implementation maturity. Release versions describe
+validated outcomes. A phase does not reserve a version number.
+
+Preserve existing public tags and releases as immutable historical evidence.
+
+### UI Integrity Review
+
+The landing screen identity text changes from an ambiguous release label to
+explicit latest-release and current-development labels. It shows no new runtime
+state, requests no user action, changes no navigation, and adds no authority.
+The explicit text prevents users from mistaking development behavior for the
+published artifact. Meaning does not depend on color, and the existing layout,
+evidence labels, accessibility treatment, and backend authority boundary remain
+unchanged.
+
+### Consequences
+
+Repository verification must reject contradictory release statements, duplicate
+task states, and version metadata that differs from the governed development
+target.
+
+Public documentation defaults to latest-release truth. Development behavior must
+be labeled explicitly.
+
+The historical `v0.4.1` release remains unchanged. The first release under this
+decision is the planned `v0.4.2` Developer Preview Refresh.
+
+Legacy `0.2.x` changelog headings remain historical repository iteration labels.
+They are not public release versions and no new headings use that scheme.
+
+### Alternatives Considered
+
+Keeping separate undocumented versions for Cargo, Tauri, changelog entries, and
+GitHub Releases was rejected because it preserves ambiguity.
+
+Moving or recreating `v0.4.1` was rejected because it would destroy immutable
+release evidence.
+
+Waiting until `v0.5.0` was rejected because the post-tag work improves the
+existing Developer Preview without introducing a larger capability milestone.
+
+### Affected Documents
+
+- README.md
+- CHANGELOG.md
+- docs/PRD.md
+- docs/ARCHITECTURE.md
+- docs/INVARIANTS.md
+- docs/DOCUMENTATION.md
+- docs/ACCEPTANCE_CRITERIA.md
+- docs/TEST_STRATEGY.md
+- docs/VALIDATION.md
+- docs/RELEASE_PROCESS.md
+- docs/COMPATIBILITY.md
+- docs/ROADMAP.md
+- docs/PHASEMAP.md
+- docs/TASKS.md
+- config/release-truth.json
+- scripts/verify.py
+- .github/workflows/validate.yml

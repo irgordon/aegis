@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 env:
-  AEGIS_DRAFT_VERSION: v0.4.1
+  AEGIS_DRAFT_VERSION: v0.4.2
 
 jobs:
   macos-draft-artifacts:
@@ -19,10 +19,10 @@ jobs:
         include:
           - platform: macos-arm64
             rust_target: aarch64-apple-darwin
-            archive_name: aegis-v0.4.1-macos-arm64.tar.gz
+            archive_name: aegis-v0.4.2-macos-arm64.tar.gz
           - platform: macos-x64
             rust_target: x86_64-apple-darwin
-            archive_name: aegis-v0.4.1-macos-x64.tar.gz
+            archive_name: aegis-v0.4.2-macos-x64.tar.gz
 
     steps:
       - name: Checkout repository
@@ -97,7 +97,7 @@ jobs:
 
           cp "target/${{ matrix.rust_target }}/release/aegis-gateway" "${staging}/bin/aegis-gateway"
           cp "src-tauri/target/${{ matrix.rust_target }}/release/aegis-desktop" "${staging}/desktop/aegis-desktop"
-          cp "docs/releases/artifact-readme-v0.4.1.md" "${staging}/README.md"
+          cp "docs/releases/artifact-readme-v0.4.2.md" "${staging}/README.md"
           cp "examples/artifact/health-check-request.json" "${staging}/examples/health-check-request.json"
           cp "examples/policy-bundles/local-dev/manifest.yaml" "${policy_bundle}/manifest.yaml"
           cp "examples/policy-bundles/local-dev/gateway_policy.yaml" "${policy_bundle}/gateway_policy.yaml"
@@ -132,7 +132,7 @@ jobs:
       - name: Upload draft workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: draft-${{ matrix.platform }}-v0.4.1
+          name: draft-${{ matrix.platform }}-v0.4.2
           if-no-files-found: error
           path: dist/${{ matrix.archive_name }}
 
@@ -145,7 +145,7 @@ jobs:
       - name: Download draft archive artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: draft-macos-*-v0.4.1
+          pattern: draft-macos-*-v0.4.2
           path: dist/combined
           merge-multiple: true
 
@@ -157,15 +157,15 @@ jobs:
           cd dist/combined
 
           expected_archives=(
-            "aegis-v0.4.1-macos-arm64.tar.gz"
-            "aegis-v0.4.1-macos-x64.tar.gz"
+            "aegis-v0.4.2-macos-arm64.tar.gz"
+            "aegis-v0.4.2-macos-x64.tar.gz"
           )
 
           for archive in "${expected_archives[@]}"; do
             test -s "${archive}"
           done
 
-          find . -maxdepth 1 -name 'aegis-v0.4.1-*.tar.gz' -print | sort > archives.txt
+          find . -maxdepth 1 -name 'aegis-v0.4.2-*.tar.gz' -print | sort > archives.txt
 
           expected_count="${#expected_archives[@]}"
           actual_count="$(wc -l < archives.txt | tr -d ' ')"
@@ -187,8 +187,8 @@ jobs:
       - name: Upload combined draft workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: draft-artifacts-v0.4.1
+          name: draft-artifacts-v0.4.2
           if-no-files-found: error
           path: |
-            dist/combined/aegis-v0.4.1-*.tar.gz
+            dist/combined/aegis-v0.4.2-*.tar.gz
             dist/combined/SHA256SUMS

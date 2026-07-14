@@ -280,6 +280,32 @@ The release path is an authoritative planning input.
 
 During a release cycle, documentation updates should help readers verify the current release objective, understand release limitations, remove release blockers, or maintain the current release checklist.
 
+## Release Truth Standard
+
+Release-sensitive documentation must explicitly describe one of these states:
+
+- **Latest published release**: behavior proven by the immutable public tag and its published artifacts.
+- **Current development branch**: unreleased behavior present on the repository's active development branch.
+
+Documentation must never silently combine the two states.
+
+Public orientation and download instructions default to the latest published release. Development behavior must be introduced with an explicit current-development label.
+
+The machine-readable `config/release-truth.json` file is the repository source for:
+
+- latest published release
+- current development target
+- product version
+- active engineering phase
+- active repository priority
+- planned platform order
+
+Release-sensitive version labels in README, changelog, package metadata, desktop metadata, roadmap, phasemap, and tasks must align with that record.
+
+Historical release review documents may describe an earlier point in time. They must remain clearly historical and must not be presented as current release instructions.
+
+Existing public tags and releases are immutable. Later corrections belong to a new release.
+
 ## If You Are Looking For...
 
 | Goal | Read |
@@ -647,6 +673,7 @@ Reviewers should ask:
 - Is it readable by a broad audience?
 - Is the technical detail accurate?
 - Does it point readers to the right next document?
+- Does release-sensitive language identify latest-release or current-development truth?
 
 ## Cross References
 

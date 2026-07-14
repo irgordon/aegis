@@ -161,10 +161,25 @@ It can:
 * optionally append a local JSONL audit record
 * optionally append a local JSONL execution state log
 * expose lifecycle state
+* inspect local execution state and generate bounded read-only recovery plans
+* render fixed read-only `health.check` evidence in a Tauri plus Slint desktop UI
 
-It does not yet provide external wrapper execution, production credential injection, vault integration, approval workflow, durable execution state, replay, HTTP, UI, or production deployment.
+It does not yet provide external wrapper execution, production credential injection, vault integration, approval workflow, replay execution, HTTP service behavior, or production deployment.
 
 This section describes current implementation state. The remaining architecture describes the target system boundaries that current and future implementations must preserve.
+
+Release Truth Boundary
+
+AEGIS distinguishes two repository states:
+
+* the latest published release, represented by its immutable tag and published artifacts
+* the current development branch, which may contain unreleased changes
+
+User-facing documentation and application identity must identify which state they describe.
+
+The governed release-truth record defines the latest published release and the current development target. Release workflows, package metadata, documentation, and UI identity consume that record or are validated against it.
+
+An existing public tag or release must not be moved or recreated to incorporate later development changes. Those changes require a new release.
 
 ⸻
 

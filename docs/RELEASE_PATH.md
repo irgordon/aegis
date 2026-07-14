@@ -4,9 +4,16 @@
 
 This document defines the minimum usable local release path for AEGIS.
 
-This is the historical release path for `v0.4.0`.
+This document begins with the historical release path for `v0.4.0` and records
+the public distribution state that followed it.
 
-The current public Developer Preview is `v0.4.1`, published through GitHub Releases as unsigned, not-notarized, archive-based macOS downloads with `SHA256SUMS` verification.
+**Latest published release:** `v0.4.1 Developer Preview`. It is available through
+GitHub Releases as unsigned, not-notarized, archive-based macOS downloads with
+`SHA256SUMS` verification.
+
+**Current development target:** `v0.4.2 Developer Preview Refresh`. It remains
+unpublished until P0 repository-truth reconciliation and the release validation
+gate are complete.
 
 The goal is not production readiness. The goal is a small local-only release that a real user can build, launch, understand, and use safely.
 
@@ -239,7 +246,9 @@ The final local release task creates the annotated `v0.4.0` tag after maintainer
 - Local logs are development artifacts and are not production audit storage.
 - Recovery planning is read-only guidance and may be mistaken for recovery execution.
 - The local credential handle is safe development evidence, not a real credential provider.
-- Without packaging, users must launch from source.
+- The historical `v0.4.0` release required a source checkout. The latest
+  published `v0.4.1` release provides extracted archive binaries instead of an
+  installer.
 
 ## Final Release Closure
 
@@ -269,3 +278,6 @@ The manual draft artifact workflow builds macOS archive-style artifacts for insp
 That workflow did not publish a GitHub Release, create release assets, tag `v0.4.1`, sign artifacts, notarize artifacts, create installers, or auto-update anything.
 
 Public downloadable release artifacts exist for `v0.4.1` as a prerelease Developer Preview. Signing, notarization, installers, and auto-update remain future work.
+
+The current development branch targets a new immutable `v0.4.2` release. It
+must not change the existing `v0.4.1` tag or release assets.

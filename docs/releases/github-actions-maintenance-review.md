@@ -156,6 +156,39 @@ action majors, explicit runner labels, architecture mapping, credential
 handling, hidden-file exclusion, immutable artifact uploads, and current-run
 artifact downloads.
 
+## Live GitHub Actions Evidence
+
+Both maintenance workflows ran from commit
+`2d4f430b741daceae4a13c5fa0ac7564c088073e` on the isolated branch.
+
+| Workflow | Run | Result |
+| --- | --- | --- |
+| Validate | [29383232515](https://github.com/irgordon/aegis/actions/runs/29383232515) | PASS |
+| Draft Release Artifacts | [29383232518](https://github.com/irgordon/aegis/actions/runs/29383232518) | PASS |
+
+The Validate run passed governance and contract validation, Rust validation,
+and desktop validation. It emitted no Node 20 deprecation annotation.
+
+The non-publishing artifact run passed:
+
+- native arm64 build on `macos-15`
+- native x64 build on `macos-15-intel`
+- combined checksum generation and verification on `macos-15`
+- v7 artifact uploads
+- v8 current-run artifact download and digest verification
+
+The artifact names remain:
+
+- `draft-macos-arm64-v0.4.2`
+- `draft-macos-x64-v0.4.2`
+- `draft-artifacts-v0.4.2`
+
+The maintenance run is validation evidence for this branch only. Its artifacts
+do not replace the frozen candidate from run `29374158498`.
+
+No local or remote `v0.4.2` tag exists, and no `v0.4.2` GitHub Release exists.
+The draft GitHub Release workflow was not dispatched.
+
 ## Changelog Policy
 
 The canonical changelog policy records new work under `Unreleased` until the

@@ -42,6 +42,8 @@ Release target: `v0.4.2 Developer Preview Refresh`.
 - Added static enforcement for approved action majors, runner architecture,
   normal desktop CI, release permissions, triggers, artifact names, checksum
   stages, and publication boundaries.
+- Validated the maintenance branch through normal gateway, desktop, and
+  governance CI plus a non-publishing arm64 and x64 draft-artifact run.
 
 ## [v0.4.1] - 2026-07-03
 

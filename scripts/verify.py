@@ -93,6 +93,27 @@ RELEASE_TRUTH_DOCS = [
     "docs/TASKS.md",
     "docs/wiki/01-overview.md",
 ]
+WORKFLOW_PATHS = [
+    ".github/workflows/validate.yml",
+    ".github/workflows/draft-artifacts.yml",
+    ".github/workflows/draft-github-release.yml",
+]
+APPROVED_GITHUB_ACTIONS = {
+    "actions/checkout": "v7",
+    "actions/setup-python": "v6",
+    "actions/upload-artifact": "v7",
+    "actions/download-artifact": "v8",
+}
+BLOCKED_WRITE_PERMISSIONS = [
+    "id-token: write",
+    "packages: write",
+    "deployments: write",
+    "issues: write",
+    "pull-requests: write",
+    "security-events: write",
+]
+
+
 def main() -> int:
     failures: list[str] = []
     checks = [
@@ -473,14 +494,73 @@ def workflow_version_failures(current: str, latest: str) -> list[str]:
 
 
 def check_ci_validation() -> list[str]:
-    workflow = read(".github/workflows/validate.yml")
-    return desktop_ci_failures(workflow)
+    failures = []
+    for path in WORKFLOW_PATHS:
+        failures.extend(workflow_maintenance_failures(path))
+    failures.extend(desktop_workflow_failures())
+    return failures
+
+
+def workflow_maintenance_failures(path: str) -> list[str]:
+    workflow = read(path)
+    failures = workflow_action_version_failures(path, workflow)
+    failures.extend(checkout_credential_failures(path, workflow))
+    failures.extend(macos_runner_failures(path, workflow))
+    failures.extend(workflow_permission_failures(path, workflow))
+    return failures
+
+
+def desktop_workflow_failures() -> list[str]:
+    return desktop_ci_failures(read(WORKFLOW_PATHS[0]))
+
+
+def workflow_action_version_failures(path: str, workflow: str) -> list[str]:
+    failures = []
+    for action, revision in github_action_references(workflow):
+        expected = APPROVED_GITHUB_ACTIONS.get(action)
+        if expected is None:
+            failures.append(f"{path} uses unapproved GitHub action: {action}@{revision}")
+        elif revision != expected:
+            failures.append(f"{path} must use {action}@{expected}, found @{revision}")
+    return failures
+
+
+def github_action_references(workflow: str) -> list[tuple[str, str]]:
+    pattern = r"uses:\s*(actions/[A-Za-z0-9_.-]+)@([^\s#]+)"
+    return re.findall(pattern, workflow)
+
+
+def checkout_credential_failures(path: str, workflow: str) -> list[str]:
+    checkouts = workflow.count("uses: actions/checkout@v7")
+    disabled = workflow.count("persist-credentials: false")
+    if checkouts != disabled:
+        return [f"{path} must disable persisted credentials for every checkout"]
+    return []
+
+
+def macos_runner_failures(path: str, workflow: str) -> list[str]:
+    if "macos-latest" in workflow:
+        return [f"{path} must not use the migrating macos-latest label"]
+    return []
+
+
+def workflow_permission_failures(path: str, workflow: str) -> list[str]:
+    failures = []
+    if "permissions:\n  contents: read" not in workflow:
+        failures.append(f"{path} must default to contents: read")
+    for permission in BLOCKED_WRITE_PERMISSIONS:
+        if permission in workflow:
+            failures.append(f"{path} broadens workflow permission: {permission}")
+    expected_writes = 1 if path.endswith("draft-github-release.yml") else 0
+    if workflow.count("contents: write") != expected_writes:
+        failures.append(f"{path} has an unexpected contents: write boundary")
+    return failures
 
 
 def desktop_ci_failures(workflow: str) -> list[str]:
     required = [
         "desktop:",
-        "runs-on: macos-latest",
+        "runs-on: macos-15",
         "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
         "cargo clippy --locked --manifest-path src-tauri/Cargo.toml",
         "cargo test --locked --manifest-path src-tauri/Cargo.toml",

@@ -101,5 +101,50 @@ class DesktopCiTests(unittest.TestCase):
         self.assertTrue(any("cargo test" in failure for failure in failures))
 
 
+class WorkflowMaintenanceTests(unittest.TestCase):
+    def test_current_workflows_use_approved_actions(self) -> None:
+        for path in verify.WORKFLOW_PATHS:
+            with self.subTest(path=path):
+                workflow = Path(path).read_text(encoding="utf-8")
+                failures = verify.workflow_action_version_failures(path, workflow)
+                self.assertEqual(failures, [])
+
+    def test_current_workflows_use_minimal_permissions(self) -> None:
+        for path in verify.WORKFLOW_PATHS:
+            with self.subTest(path=path):
+                workflow = Path(path).read_text(encoding="utf-8")
+                failures = verify.workflow_permission_failures(path, workflow)
+                self.assertEqual(failures, [])
+
+    def test_deprecated_action_major_fails(self) -> None:
+        workflow = "steps:\n  - uses: actions/checkout@v4"
+
+        failures = verify.workflow_action_version_failures("workflow.yml", workflow)
+        self.assertIn("actions/checkout@v7", failures[0])
+
+    def test_unapproved_github_action_fails(self) -> None:
+        workflow = "steps:\n  - uses: actions/cache@v4"
+
+        failures = verify.workflow_action_version_failures("workflow.yml", workflow)
+        self.assertIn("unapproved GitHub action", failures[0])
+
+    def test_checkout_requires_disabled_credentials(self) -> None:
+        workflow = "steps:\n  - uses: actions/checkout@v7"
+
+        failures = verify.checkout_credential_failures("workflow.yml", workflow)
+        self.assertIn("disable persisted credentials", failures[0])
+
+    def test_macos_latest_runner_fails(self) -> None:
+        failures = verify.macos_runner_failures("workflow.yml", "runs-on: macos-latest")
+
+        self.assertIn("must not use", failures[0])
+
+    def test_broad_workflow_permission_fails(self) -> None:
+        workflow = "permissions:\n  contents: read\n  id-token: write"
+
+        failures = verify.workflow_permission_failures("workflow.yml", workflow)
+        self.assertTrue(any("id-token: write" in failure for failure in failures))
+
+
 if __name__ == "__main__":
     unittest.main()

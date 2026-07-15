@@ -26,6 +26,69 @@ fn draft_github_release_workflow_is_manual_only() {
 }
 
 #[test]
+fn draft_github_release_workflow_uses_approved_actions() {
+    let workflow = read_workflow();
+    let required = [
+        "actions/checkout@v7",
+        "actions/setup-python@v6",
+        "actions/upload-artifact@v7",
+        "actions/download-artifact@v8",
+        "dtolnay/rust-toolchain@stable",
+    ];
+    let blocked = [
+        "actions/checkout@v4",
+        "actions/setup-python@v5",
+        "actions/upload-artifact@v4",
+        "actions/download-artifact@v4",
+    ];
+
+    assert_present(&workflow, &required);
+    assert_absent(&workflow, &blocked);
+}
+
+#[test]
+fn draft_github_release_workflow_pins_architecture_runners() {
+    let workflow = read_workflow();
+    let arm64 = matrix_entry(&workflow, "macos-arm64");
+    let x64 = matrix_entry(&workflow, "macos-x64");
+
+    assert!(workflow.contains("runs-on: ${{ matrix.runner }}"));
+    assert!(workflow.contains(
+        "draft-github-release:\n    name: Create draft GitHub Release\n    runs-on: macos-15"
+    ));
+    assert!(arm64.contains("runner: macos-15\n"));
+    assert!(arm64.contains("rust_target: aarch64-apple-darwin"));
+    assert!(x64.contains("runner: macos-15-intel\n"));
+    assert!(x64.contains("rust_target: x86_64-apple-darwin"));
+    assert!(!workflow.contains("macos-latest"));
+}
+
+#[test]
+fn draft_github_release_workflow_preserves_action_boundaries() {
+    let workflow = read_workflow();
+
+    assert_eq!(workflow.matches("actions/checkout@v7").count(), 2);
+    assert_eq!(workflow.matches("persist-credentials: false").count(), 2);
+    assert_eq!(workflow.matches("overwrite: false").count(), 1);
+    assert_eq!(workflow.matches("include-hidden-files: false").count(), 1);
+    assert_eq!(workflow.matches("archive: true").count(), 1);
+    assert!(workflow.contains("skip-decompress: false"));
+    assert!(workflow.contains("digest-mismatch: error"));
+    assert!(workflow.contains("tar -czf \"dist/${archive}\""));
+
+    assert_absent(
+        &workflow,
+        &[
+            "overwrite: true",
+            "include-hidden-files: true",
+            "archive: false",
+            "github-token:",
+            "run-id:",
+        ],
+    );
+}
+
+#[test]
 fn draft_github_release_workflow_uses_fixed_release_target() {
     let workflow = read_workflow();
     let required = [
@@ -308,4 +371,17 @@ fn workflow_path() -> std::path::PathBuf {
 
 fn repo_path(path: &str) -> std::path::PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join(path)
+}
+
+fn matrix_entry<'a>(workflow: &'a str, platform: &str) -> &'a str {
+    let marker = format!("- platform: {platform}");
+    let start = workflow
+        .find(&marker)
+        .expect("matrix platform should exist");
+    let entry = &workflow[start..];
+    let next = entry[marker.len()..]
+        .find("\n          - platform:")
+        .map(|offset| marker.len() + offset)
+        .unwrap_or(entry.len());
+    &entry[..next]
 }

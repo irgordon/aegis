@@ -12,24 +12,28 @@ env:
 jobs:
   macos-draft-artifacts:
     name: Draft macOS artifact (${{ matrix.platform }})
-    runs-on: macos-latest
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - platform: macos-arm64
+            runner: macos-15
             rust_target: aarch64-apple-darwin
             archive_name: aegis-v0.4.2-macos-arm64.tar.gz
           - platform: macos-x64
+            runner: macos-15-intel
             rust_target: x86_64-apple-darwin
             archive_name: aegis-v0.4.2-macos-x64.tar.gz
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -130,24 +134,29 @@ jobs:
           test -s "dist/${{ matrix.archive_name }}"
 
       - name: Upload draft workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: draft-${{ matrix.platform }}-v0.4.2
           if-no-files-found: error
+          overwrite: false
+          include-hidden-files: false
+          archive: true
           path: dist/${{ matrix.archive_name }}
 
   combined-draft-artifacts:
     name: Combined draft artifact checksums
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: macos-draft-artifacts
 
     steps:
       - name: Download draft archive artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: draft-macos-*-v0.4.2
           path: dist/combined
           merge-multiple: true
+          skip-decompress: false
+          digest-mismatch: error
 
       - name: Generate combined SHA256SUMS
         shell: bash
@@ -185,10 +194,13 @@ jobs:
           done < archives.txt
 
       - name: Upload combined draft workflow artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: draft-artifacts-v0.4.2
           if-no-files-found: error
+          overwrite: false
+          include-hidden-files: false
+          archive: true
           path: |
             dist/combined/aegis-v0.4.2-*.tar.gz
             dist/combined/SHA256SUMS

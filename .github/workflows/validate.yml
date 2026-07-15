@@ -13,14 +13,16 @@ permissions:
 jobs:
   governance-and-contracts:
     name: Governance and contract validation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -77,11 +79,13 @@ jobs:
 
   rust:
     name: Rust validation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -99,11 +103,13 @@ jobs:
 
   desktop:
     name: Desktop validation
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable

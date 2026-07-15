@@ -13,7 +13,7 @@ env:
 jobs:
   macos-release-assets:
     name: Build draft release asset (${{ matrix.platform }})
-    runs-on: macos-latest
+    runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
     strategy:
@@ -21,15 +21,19 @@ jobs:
       matrix:
         include:
           - platform: macos-arm64
+            runner: macos-15
             rust_target: aarch64-apple-darwin
             archive_name: aegis-v0.4.2-macos-arm64.tar.gz
           - platform: macos-x64
+            runner: macos-15-intel
             rust_target: x86_64-apple-darwin
             archive_name: aegis-v0.4.2-macos-x64.tar.gz
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Require workflow ref to match v0.4.2 tag
         shell: bash
@@ -51,7 +55,7 @@ jobs:
           fi
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -152,24 +156,28 @@ jobs:
           test -s "dist/${{ matrix.archive_name }}"
 
       - name: Upload draft release asset artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: draft-release-${{ matrix.platform }}-v0.4.2
           if-no-files-found: error
+          overwrite: false
+          include-hidden-files: false
+          archive: true
           path: dist/${{ matrix.archive_name }}
 
   draft-github-release:
     name: Create draft GitHub Release
-    runs-on: macos-latest
+    runs-on: macos-15
     needs: macos-release-assets
     permissions:
       contents: write
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Require workflow ref to match v0.4.2 tag
         shell: bash
@@ -191,11 +199,13 @@ jobs:
           fi
 
       - name: Download draft release assets
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: draft-release-macos-*-v0.4.2
           path: dist/release-assets
           merge-multiple: true
+          skip-decompress: false
+          digest-mismatch: error
 
       - name: Generate and verify combined SHA256SUMS
         shell: bash

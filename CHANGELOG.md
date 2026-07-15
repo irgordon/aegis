@@ -34,6 +34,14 @@ Release target: `v0.4.2 Developer Preview Refresh`.
   preconditions without creating a tag or GitHub Release.
 - Tracked Node runtime and macOS runner warnings separately as bounded release
   workflow maintenance.
+- Updated supported GitHub Actions dependencies to Node 24-based majors and
+  pinned explicit Ubuntu 24.04 and macOS 15 runner labels.
+- Made checkout credential removal, archived artifact uploads, hidden-file
+  exclusion, immutable artifact names, and fail-closed artifact digest checks
+  explicit without changing release output names or content selection.
+- Added static enforcement for approved action majors, runner architecture,
+  normal desktop CI, release permissions, triggers, artifact names, checksum
+  stages, and publication boundaries.
 
 ## [v0.4.1] - 2026-07-03
 

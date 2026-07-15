@@ -158,8 +158,13 @@ These tasks are tracked separately from artifact evidence and are not current
 
 | Task | Status |
 | --- | --- |
-| Upgrade GitHub Actions away from Node 20 runtimes | planned |
-| Validate the macos-latest runner migration and choose bounded labels | planned |
+| Upgrade GitHub Actions away from Node 20 runtimes | in_progress |
+| Validate the macos-latest runner migration and choose bounded labels | in_progress |
+| Enforce approved workflow actions and runner labels | in_progress |
+
+The [GitHub Actions maintenance review](releases/github-actions-maintenance-review.md)
+records the selected action majors, runner labels, security review, artifact
+boundaries, and release-candidate isolation rule.
 
 Completed inputs for Phase 5:
 

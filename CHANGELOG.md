@@ -13,6 +13,8 @@ Release target: `v0.4.2 Developer Preview Refresh`.
 - Added the Release Truth invariant and its formal architecture decision.
 - Added a machine-readable release-truth record for repository validation.
 - Added release-truth validation for documentation, task status, and version metadata.
+- Added the `v0.4.2` draft artifact evidence review with a fail-closed BLOCKED
+  result for unavailable desktop visual evidence.
 
 ### Changed
 
@@ -27,6 +29,11 @@ Release target: `v0.4.2 Developer Preview Refresh`.
   work to release versions.
 - Started `v0.4.2` validation under a no-tag, no-publication artifact-evidence
   gate.
+- Verified both draft archives, combined checksums, archive-only gateway paths,
+  desktop process launches, portability conditions, and annotated-tag guard
+  preconditions without creating a tag or GitHub Release.
+- Tracked Node runtime and macOS runner warnings separately as bounded release
+  workflow maintenance.
 
 ## [v0.4.1] - 2026-07-03
 

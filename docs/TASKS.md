@@ -123,19 +123,25 @@ If no box is checked, defer the work until Phase 6 or later.
 | Draft v0.4.1 developer-preview release notes | complete |
 | GitHub Release publishing | complete |
 | Publish first unsigned developer-preview build | complete |
-| Validate v0.4.2 release truth against main | in_progress |
-| Build v0.4.2 macOS arm64 draft artifact | planned |
-| Build v0.4.2 macOS x64 draft artifact | planned |
-| Verify v0.4.2 bundled health-check fixture | planned |
-| Verify v0.4.2 desktop identity and neutral empty state | planned |
-| Verify v0.4.2 gateway help output | planned |
-| Verify v0.4.2 combined SHA256SUMS | planned |
-| Verify v0.4.2 portable launch from extracted artifacts | planned |
-| Verify v0.4.2 annotated-tag guard | planned |
+| Validate v0.4.2 release truth against main | complete |
+| Build v0.4.2 macOS arm64 draft artifact | complete |
+| Build v0.4.2 macOS x64 draft artifact | complete |
+| Verify v0.4.2 bundled health-check fixture | complete |
+| Verify v0.4.2 desktop identity and neutral empty state | blocked |
+| Verify v0.4.2 gateway help output | complete |
+| Verify v0.4.2 combined SHA256SUMS | complete |
+| Verify v0.4.2 portable launch from extracted artifacts | complete |
+| Verify v0.4.2 annotated-tag guard | complete |
+| Record v0.4.2 artifact evidence | blocked |
 | Publish immutable v0.4.2 without modifying v0.4.1 | planned |
 | Validate v0.5.0 Windows x64 artifacts | planned |
 | Validate v0.5.0 Linux x64 artifacts | planned |
 | Complete Phase 5 exit review | planned |
+
+The [v0.4.2 draft artifact evidence](releases/draft-artifact-evidence-v0.4.2.md)
+records a BLOCKED result because the remote macOS display session could not
+provide the required visual desktop evidence. Tagging and publication remain
+prohibited.
 
 ### P1 Exit Gate
 
@@ -144,6 +150,16 @@ If no box is checked, defer the work until Phase 6 or later.
 - a new evaluator can download, verify, extract, launch, and run the bundled
   smoke test
 - Phase 5 is marked complete only after the exit review passes
+
+### Bounded Release Workflow Maintenance
+
+These tasks are tracked separately from artifact evidence and are not current
+`v0.4.2` release blockers.
+
+| Task | Status |
+| --- | --- |
+| Upgrade GitHub Actions away from Node 20 runtimes | planned |
+| Validate the macos-latest runner migration and choose bounded labels | planned |
 
 Completed inputs for Phase 5:
 
